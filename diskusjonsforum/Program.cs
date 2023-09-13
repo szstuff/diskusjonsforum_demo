@@ -1,7 +1,15 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using diskusjonsforum.Models;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<ItemDbContext>(options =>
+{
+    options.UseSqlite(builder.Configuration["ConnectionStrings:ItemDbContextConnection"]);
+});
+
 
 var app = builder.Build();
 
