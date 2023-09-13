@@ -8,7 +8,8 @@ namespace diskusjonsforum.Models
 			Database.EnsureCreated();
 		}
 
-        public DbSet<Post> Posts { get; set; }
+        public DbSet<DiscussionThread> Threads { get; set; }
+		public DbSet<Post> Posts { get; set; }
 	}
 }
 

@@ -9,4 +9,3 @@ namespace diskusjonsforum.Models
 		public int UserID { get; set; } //FK: Creator UserID 
 	}
 }
-
