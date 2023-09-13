@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 namespace diskusjonsforum.Models
 {
-	public class ItemDbContext : DbContext
+	public class DiscussionDbContext : DbContext
 	{
-		public ItemDbContext(DbContextOptions<ItemDbContext> options): base(options)
+		public DiscussionDbContext(DbContextOptions<DiscussionDbContext> options): base(options)
 		{
 			Database.EnsureCreated();
 		}
