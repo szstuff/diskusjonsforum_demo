@@ -1,11 +1,24 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using diskusjonsforum_ITPE3200
+﻿//using Microsoft.EntityFrameworkCore;
+//using Microsoft.AspNetCore.Mvc;
+//using diskusjonsforum.Models;
+//namespace diskusjonsforum.Controllers
 
-	namespace diskusjonsforum_ITPE3200
-public class ItemController : Controller
-{
-	public IActionResult ()
-	{
-	}
-}
+//{
+//	public class ItemController : Controller
+//	{
+//		private readonly ItemDbContext _itemDbContext;
+
+//        public ItemController(ItemDbContext _itemDbContext)
+//		{
+//			db = _itemDbContext;
+//		}
+
+//		public IActionResult Table()
+//		{
+//			List<Item> items = _itemDbContext.Items.ToList();
+//			var listItemViewModel = new ListItemViewModel(items, "Table");
+//			return View;
+//		}
+//	}
+//}
+
