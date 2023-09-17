@@ -4,11 +4,18 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <NoWarn>$(NoWarn);NU1701</NoWarn> <!-- Supresses compatability warnings -->
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.11" />
     <PackageReference Include="Microsoft.VisualStudio.LiveShare" Version="1.1.57" />
     <PackageReference Include="Microsoft.VisualStudio.LiveShare.LanguageServices" Version="2.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="ViewModels\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
   </ItemGroup>
 </Project>
