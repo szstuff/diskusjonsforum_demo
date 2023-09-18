@@ -9,12 +9,12 @@ namespace diskusjonsforum.Controllers
 {
     public class DiscussionThreadController : Controller
     {
-        //private readonly DiscussionDbContext _discussionDbContext;
+        private readonly DiscussionDbContext _discussionDbContext;
 
-        //public DiscussionController(DiscussionDbContext discussionDbContext)
-        //{
-        //    _discussionDbContext = discussionDbContext;
-        //} Tror dette kan slettes?
+        public DiscussionThreadController(DiscussionDbContext discussionDbContext)
+        {
+            _discussionDbContext = discussionDbContext;
+        }
 
         public IActionResult Table()
         {
