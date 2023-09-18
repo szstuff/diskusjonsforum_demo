@@ -5,11 +5,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<DiscussionDbContext>(options =>
-{
-    options.UseSqlite(builder.Configuration["ConnectionStrings:DiscussionDbContextConnection"]);
-});
 
+builder.Services.AddDbContext<DiscussionDbContext>(options => {
+    options.UseSqlite(
+        builder.Configuration["ConnectionStrings:DiscussionDbContextConnection"]);
+});
 
 var app = builder.Build();
 
