@@ -1,0 +1,19 @@
+@model DiscussionListViewModel
+
+<h1>List of discussion threads (@Model.CurrentViewName Name)</h1>
+<!-- <a href="/DiscussionThread/Grid">Grid View</a> -->
+
+<div class="container">
+    <table class="table table-striped">
+        <tr><th>User</th><th>Title</th><th>Comments</th></tr>
+        @foreach (var discussionThread in Model.DiscussionThreads)
+{
+                <tr>
+                    <td>@discussionThread.CreatedBy</td>
+                    <td>@discussionThread.Title</td>
+                    <td>@discussionThread.Posts</td>
+                    <td></td>
+                </tr>
+}
+    </table>
+</div>

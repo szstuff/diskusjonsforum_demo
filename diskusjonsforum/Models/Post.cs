@@ -7,12 +7,12 @@ namespace diskusjonsforum.Models
 	{
 		public int PostID { get; set; }
         [Required]
-        public String Title { get; set; }
+        public String Title { get; set; } = null!; //null! "promises" the compiler that the value wont be null. Use Regex!
         //public String Category { get; set; } //Like a subreddit
         public String? Body { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DiscussionThread Thread { get; set; } //Parent thread
-        public int UserID { get; set; } // Foreign key: creator UserID
+        public DiscussionThread Thread { get; set; } = null!; //null! "promises" the compiler that the value wont be null. Use Regex!
+                                                              //Parent thread
+        public User CreatedBy { get; set; } = null!; //null! "promises" the compiler that the value wont be null. Use Regex!
     }
 }
-
