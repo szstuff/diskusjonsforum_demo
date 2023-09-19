@@ -6,12 +6,12 @@
 <div class="container">
     <table class="table table-striped">
         <tr><th>User</th><th>Title</th><th>Comments</th></tr>
-        @foreach (var discussionThread in Model.DiscussionThreads)
+        @foreach (var thread in Model.Threads)
 {
                 <tr>
-                    <td>@discussionThread.CreatedBy</td>
-                    <td>@discussionThread.Title</td>
-                    <td>@discussionThread.Posts</td>
+                    <td>@thread.CreatedBy</td>
+                    <td>@thread.Title</td>
+                    <td>@thread.Posts</td>
                     <td></td>
                 </tr>
 }
