@@ -11,16 +11,16 @@ namespace diskusjonsforum.Controllers;
 
 public class ThreadController : Controller
 {
-    private readonly ThreadDbContext db;
+    private readonly ThreadDbContext _threadDbContext;
 
-    public ThreadController(ThreadDbContext _db)
+    public ThreadController(ThreadDbContext threadDbContext)
     {
-        db = _db;
+        _threadDbContext = threadDbContext;
     }
 
     public IActionResult Table()
     {
-        List<Thread> threads = db.Threads.ToList();
+        List<Thread> threads = _threadDbContext.Threads.ToList();
         var threadListViewModel = new ThreadListViewModel(threads, "Table");
         return View(threadListViewModel);
     }
@@ -30,6 +30,7 @@ public class ThreadController : Controller
         var threads = new List<Thread>();
         var thread1 = new Thread
         {
+            CreatedAt = DateTime.Now,
             Category = "Category1",
             Description = "test descirption",
             Title = "Hei"

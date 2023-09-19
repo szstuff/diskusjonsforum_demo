@@ -8,7 +8,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ThreadDbContext>(options => {
     options.UseSqlite(
-        builder.Configuration["ConnectionStrings:DiscussionDbContextConnection"]);
+        builder.Configuration["ConnectionStrings:ThreadDbContextConnection"]);
 });
 
 var app = builder.Build();
