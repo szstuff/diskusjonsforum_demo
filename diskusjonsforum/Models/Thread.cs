@@ -1,7 +1,7 @@
 ﻿
 namespace diskusjonsforum.Models
 {
-    public class Discussion
+    public class Thread
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!; //null! "promises" the compiler that the value wont be null. Use Regex!
