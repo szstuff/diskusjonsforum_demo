@@ -11,7 +11,7 @@ namespace diskusjonsforum.Models
         //public String Category { get; set; } //Like a subreddit
         public String? Body { get; set; }
         public DateTime CreatedAt { get; set; }
-        public Discussion Thread { get; set; } = null!; //null! "promises" the compiler that the value wont be null. Use Regex!
+        public Thread Thread { get; set; } = null!; //null! "promises" the compiler that the value wont be null. Use Regex!
                                                               //Parent thread
         public User CreatedBy { get; set; } = null!; //null! "promises" the compiler that the value wont be null. Use Regex!
     }
