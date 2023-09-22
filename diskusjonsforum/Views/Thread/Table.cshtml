@@ -10,8 +10,9 @@
 {
                 <tr>
                     <td>@thread.CreatedBy</td>
-                    <td>@thread.Title</td>
-                    <td>@thread.Posts</td>
+                    <td><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.Id">@thread.Title</a></td>
+                    <td>@thread.Comments</td>
+                    <td>@thread.Id</td>
                     <td></td>
                 </tr>
 }

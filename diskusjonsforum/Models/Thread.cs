@@ -14,6 +14,6 @@ namespace diskusjonsforum.Models
         public DateTime CreatedAt { get; set; }
         [ForeignKey("User")]
         public int CreatedBy { get; set; }
-        public ICollection<Comment>? Posts { get; set; }
+        public List<Comment> Comments { get; set; }
     }
 }

@@ -38,6 +38,46 @@ public class ThreadController : Controller
         threads.Add(thread1);
         return threads;
     }
+
+    public IActionResult Thread(int threadId)
+    {
+        var thread = _threadDbContext.Threads.Include(t => t.Comments).FirstOrDefault(t => t.Id == threadId);
+
+        if (thread == null)
+        {
+            return NotFound();
+        }
+
+        thread.Comments = SortComments(thread.Comments);
+
+        return View(thread);
+        
+    }
+
+    //100% chatGPT, vi burde kanskje se om vi kan finne artikler på nett med samme struktur for kilde
+    public List<Comment> SortComments(List<Comment> comments)
+    {
+        var sortedComments = new List<Comment>();
+
+        foreach (var comment in comments.Where(c => c.ParentCommentId == null))
+        {
+            sortedComments.Add(comment);
+            AddChildComments(comment, comments, sortedComments);
+        }
+
+        return sortedComments;
+    }
+
+    private void AddChildComments(Comment parent, List<Comment> allComments, List<Comment> sortedComments)
+    {
+        var childComments = allComments.Where(c => c.ParentCommentId == parent.CommentId).ToList();
+        foreach (var comment in childComments)
+        {
+            sortedComments.Add(comment);
+            AddChildComments(comment, allComments, sortedComments);
+        }
+    }
+    
 }
 
     //public IActionResult ListView()
