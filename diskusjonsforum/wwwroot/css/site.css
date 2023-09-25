@@ -18,6 +18,7 @@ body {
 }
 
 .custom-font {
-    font-family: 'Impact', sans-serif; /* Fallback to a default font */
+    font-family: Impact, sans-serif;
+    font-weight: bold;
+    color: #b41064; /* Text color */
 }
-
