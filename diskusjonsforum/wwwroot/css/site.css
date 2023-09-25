@@ -17,3 +17,7 @@ body {
   margin-bottom: 60px;
 }
 
+.custom-font {
+    font-family: 'Impact', sans-serif; /* Fallback to a default font */
+}
+
