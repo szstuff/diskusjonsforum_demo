@@ -7,7 +7,7 @@ public class ThreadDbContext : DbContext
 {
 	public ThreadDbContext(DbContextOptions<ThreadDbContext> options) : base(options)
 	{
-		Database.EnsureCreated();
+		//Database.EnsureCreated();
 	}
 
     public DbSet<Thread> Threads { get; set; }
