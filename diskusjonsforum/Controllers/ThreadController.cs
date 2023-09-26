@@ -16,6 +16,12 @@ public class ThreadController : Controller
     public ThreadController(ThreadDbContext threadDbContext)
     {
         _threadDbContext = threadDbContext;
+        //Creates dummy data for testing
+        _threadDbContext.Database.ExecuteSqlRaw("insert INTO Users (Name, PasswordHash, Email, Administrator) VALUES (\"stilian\", \"pass\", \"email@email.com\", True)\n");
+        _threadDbContext.Database.ExecuteSqlRaw("insert into Threads (Title, Description, Category, CreatedAt, CreatedBy) VALUES (\"Hei\", \"Heihiehiehue\", \"Hei\", \"2020-09-10\", 1)\n");
+        _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (Body, CreatedAt, Thread, User, ParentCommentId) values (\"Hei1\", \"2020-09-10\", 1, 1, null) ");
+        _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (Body, CreatedAt, Thread, User, ParentCommentId) values (\"HeiHei2\", \"2020-09-10\", 1, 1, 1) ");
+        _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (Body, CreatedAt, Thread, User, ParentCommentId) values (\"HeiHeiHei3\", \"2020-09-10\", 1, 1, 2) ");
     }
 
     public IActionResult Table()

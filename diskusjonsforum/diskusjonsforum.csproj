@@ -16,6 +16,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="ViewModels\" />
+    <None Remove="DiscussionDatabase.db" />
+    <None Remove="DiscussionDatabase.db-shm" />
+    <None Remove="DiscussionDatabase.db-wal" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Models\UserDbContext.cs" />
