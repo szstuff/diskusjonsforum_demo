@@ -17,4 +17,8 @@
   <ItemGroup>
     <None Remove="ViewModels\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Models\UserDbContext.cs" />
+    <Compile Remove="Models\PostDbContext.cs" />
+  </ItemGroup>
 </Project>
