@@ -9,10 +9,9 @@
         @foreach (var thread in Model.Threads)
 {
                 <tr>
-                    <td>@thread.CreatedBy</td>
-                    <td><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.Id">@thread.Title</a></td>
-                    <td>@thread.Comments</td>
-                    <td>@thread.Id</td>
+                    <td>By @thread.CreatedBy on @thread.CreatedAt</td>
+                    <td><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.Id">@thread.Title: @thread.Description</a></td>
+                    @* <td>@thread.CommentCount</td> Fungerer ikke. ThreadController må telle og gi det viewet  *@
                     <td></td>
                 </tr>
 }
