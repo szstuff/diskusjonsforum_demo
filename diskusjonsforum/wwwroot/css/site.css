@@ -15,9 +15,11 @@ html {
 
 body {
   margin-bottom: 60px;
+  background-color: #6c112e
 }
 
 .custom-font {
-    font-family: 'Impact', sans-serif; /* Fallback to a default font */
+    font-family: Impact, sans-serif;
+    font-weight: bold;
+    color: #bb5b17
 }
-
