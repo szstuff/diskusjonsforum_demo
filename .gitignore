@@ -403,3 +403,5 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+/diskusjonsforum/DiscussionDatabase.db-shm
+/diskusjonsforum/DiscussionDatabase.db-wal
