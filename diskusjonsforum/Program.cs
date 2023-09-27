@@ -1,7 +1,7 @@
 using diskusjonsforum.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using diskusjonsforum.Areas.Identity.Data;
+//using diskusjonsforum.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("ItemDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ItemDbContextConnection' not found.");
@@ -17,7 +17,7 @@ builder.Services.AddDbContext<ThreadDbContext>(options => {
 });
 
 builder.Services.AddDefaultIdentity<IdentityUser>()
-    .AddEntityFrameworkStores<ItemDbContext>();
+    .AddEntityFrameworkStores<ThreadDbContext>();
 
 // builder.Services.AddScoped<>() Fant dette i koden hans i uke 8/authentication. Hvis vi ikke har lagt det til har vi nok hoppet over noe (før authentication)
 

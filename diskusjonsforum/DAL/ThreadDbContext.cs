@@ -10,7 +10,7 @@ public class ThreadDbContext : IdentityDbContext
 {
 	public ThreadDbContext(DbContextOptions<ThreadDbContext> options) : base(options)
 	{
-		Database.EnsureDeleted(); //Deletes database on each run to ensure it's "refreshed" every time 
+		//Database.EnsureDeleted(); //Deletes database on each run to ensure it's "refreshed" every time 
 		Database.EnsureCreated();
 	}
 

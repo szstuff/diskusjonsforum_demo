@@ -25,4 +25,7 @@
   <ItemGroup>
     <None Remove="ViewModels\" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Areas\" />
+  </ItemGroup>
 </Project>
