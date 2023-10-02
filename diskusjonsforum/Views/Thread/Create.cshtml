@@ -1,0 +1,33 @@
+@model Thread
+
+<h2> Create a thread </h2>
+
+<form asp-action="Create">
+    <div class="form-group">
+            <label asp-for="CreatedBy"></label><span class="text-danger"></span>
+            <input asp-for="CreatedBy" class="form-control"/>
+            <span asp-validation-for="CreatedBy" class="text-danger"></span>
+    </div> 
+    <div class="form-group">
+            <label asp-for="CreatedAt"></label><span class="text-danger"></span>
+            <input asp-for="CreatedAt" class="form-control"/>
+            <span asp-validation-for="CreatedAt" class="text-danger"></span>
+        </div> 
+    <div class="form-group">
+        <label asp-for="Category"></label><span class="text-danger"></span>
+        <input asp-for="Category" class="form-control"/>
+        <span asp-validation-for="Category" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Title"></label><span class="text-danger"></span>
+        <input asp-for="Title" class="form-control"/>
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description"></label><span class="text-danger"></span>
+        <input asp-for="Description" class="form-control"/>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-action="Table" class="btn btn-secondary"> Return </a>
+</form>
