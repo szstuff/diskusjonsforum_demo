@@ -9,10 +9,10 @@
         @foreach (var thread in Model.Threads)
         {
             <tr>
-                <td>@thread.CreatedBy</td>
-                <td><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.Id">@thread.Title</a></td>
-                <td>@thread.Comments</td>
-                <td>@thread.Id</td>
+                <td>@thread.UserId</td>
+                <td><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a></td>
+                <td>@thread.ThreadComments</td>
+                <td>@thread.ThreadId</td>
                 <td></td>
             </tr>
         }

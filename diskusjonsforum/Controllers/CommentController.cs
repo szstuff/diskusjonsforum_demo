@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using diskusjonsforum.Models;
+using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
-using Thread = diskusjonsforum.Models.Comment;
+using Thread = Diskusjonsforum.Models.Comment;
 
 //using diskusjonsforum.ViewModels; //Kan slettes hvis vi ikke lager ViewModels
 
@@ -29,5 +29,22 @@ public class CommentController : Controller
     {
         var comments = new List<Comment>();
         return comments;
+    }
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Create(Comment comment)
+    {
+        if (ModelState.IsValid)
+        {
+            _threadDbContext.Comments.Add(comment);
+            _threadDbContext.SaveChanges();
+            return RedirectToAction(nameof(Table));
+        }
+
+        return View(comment);
     }
 }

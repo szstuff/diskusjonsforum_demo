@@ -2,31 +2,31 @@
 
 <h2> Create a thread </h2>
 
-<form asp-action="Create">
+<form asp-controller="Thread" asp-action="Create">
     <div class="form-group">
-            <label asp-for="CreatedBy"></label><span class="text-danger"></span>
-            <input asp-for="CreatedBy" class="form-control"/>
-            <span asp-validation-for="CreatedBy" class="text-danger"></span>
+            <label asp-for="UserId"></label><span class="text-danger"></span>
+            <input asp-for="UserId" class="form-control"/>
+            <span asp-validation-for="UserId" class="text-danger"></span>
     </div> 
     <div class="form-group">
-            <label asp-for="CreatedAt"></label><span class="text-danger"></span>
-            <input asp-for="CreatedAt" class="form-control"/>
-            <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            <label asp-for="ThreadCreatedAt"></label><span class="text-danger"></span>
+            <input asp-for="ThreadCreatedAt" class="form-control"/>
+            <span asp-validation-for="ThreadCreatedAt" class="text-danger"></span>
         </div> 
     <div class="form-group">
-        <label asp-for="Category"></label><span class="text-danger"></span>
-        <input asp-for="Category" class="form-control"/>
-        <span asp-validation-for="Category" class="text-danger"></span>
+        <label asp-for="ThreadCategory"></label><span class="text-danger"></span>
+        <input asp-for="ThreadCategory" class="form-control"/>
+        <span asp-validation-for="ThreadCategory" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Title"></label><span class="text-danger"></span>
-        <input asp-for="Title" class="form-control"/>
-        <span asp-validation-for="Title" class="text-danger"></span>
+        <label asp-for="ThreadTitle"></label><span class="text-danger"></span>
+        <input asp-for="ThreadTitle" class="form-control"/>
+        <span asp-validation-for="ThreadTitle" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Description"></label><span class="text-danger"></span>
-        <input asp-for="Description" class="form-control"/>
-        <span asp-validation-for="Description" class="text-danger"></span>
+        <label asp-for="ThreadBody"></label><span class="text-danger"></span>
+        <input asp-for="ThreadBody" class="form-control"/>
+        <span asp-validation-for="ThreadBody" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Create</button>
     <a asp-action="Table" class="btn btn-secondary"> Return </a>

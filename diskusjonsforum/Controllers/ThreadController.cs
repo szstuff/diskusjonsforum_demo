@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using diskusjonsforum.Models;
+using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
-using Thread = diskusjonsforum.Models.Thread;
+using Thread = Diskusjonsforum.Models.Thread;
 
 //using diskusjonsforum.ViewModels; //Kan slettes hvis vi ikke lager ViewModels
 
@@ -17,11 +17,11 @@ public class ThreadController : Controller
     {
         _threadDbContext = threadDbContext;
         //Creates dummy data for testing
-        // _threadDbContext.Database.ExecuteSqlRaw("insert INTO Users (Name, PasswordHash, Email, Administrator) VALUES (\"stilian\", \"pass\", \"email@email.com\", True)\n");
-        // _threadDbContext.Database.ExecuteSqlRaw("insert into Threads (Title, Description, Category, CreatedAt, CreatedBy) VALUES (\"Hei\", \"Heihiehiehue\", \"Hei\", \"2020-09-10\", 1)\n");
-        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (Body, CreatedAt, Thread, User, ParentCommentId) values (\"Hei1\", \"2020-09-10\", 1, 1, null) ");
-        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (Body, CreatedAt, Thread, User, ParentCommentId) values (\"HeiHei2\", \"2020-09-10\", 1, 1, 1) ");
-        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (Body, CreatedAt, Thread, User, ParentCommentId) values (\"HeiHeiHei3\", \"2020-09-10\", 1, 1, 2) ");
+         _threadDbContext.Database.ExecuteSqlRaw("insert INTO Users (Name, PasswordHash, Email, Administrator) VALUES (\"stilian\", \"pass\", \"email@email.com\", True)\n");
+        // _threadDbContext.Database.ExecuteSqlRaw("insert into Threads (ThreadTitle, ThreadBody, ThreadCategory, ThreadCreatedAt, UserId) VALUES (\"Hei\", \"Heihiehiehue\", \"Hei\", \"2020-09-10\", 1)\n");
+        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, User, ParentCommentId) values (\"Hei1\", \"2020-09-10\", 1, 1, null) ");
+        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, User, ParentCommentId) values (\"HeiHei2\", \"2020-09-10\", 1, 1, 1) ");
+        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, User, ParentCommentId) values (\"HeiHeiHei3\", \"2020-09-10\", 1, 1, 2) ");
     }
 
     public IActionResult Table()
@@ -36,10 +36,10 @@ public class ThreadController : Controller
         var threads = new List<Thread>();
         var thread1 = new Thread
         {
-            CreatedAt = DateTime.Now,
-            Category = "Category1",
-            Description = "test descirption",
-            Title = "Hei"
+            ThreadCreatedAt = DateTime.Now,
+            ThreadCategory = "Category1",
+            ThreadBody = "test descirption",
+            ThreadTitle = "Hei"
         };
         threads.Add(thread1);
         return threads;
@@ -47,14 +47,14 @@ public class ThreadController : Controller
 
     public IActionResult Thread(int threadId)
     {
-        var thread = _threadDbContext.Threads.Include(t => t.Comments).FirstOrDefault(t => t.Id == threadId);
+        var thread = _threadDbContext.Threads.Include(t => t.ThreadComments).FirstOrDefault(t => t.ThreadId == threadId);
 
         if (thread == null)
         {
             return NotFound();
         }
 
-        thread.Comments = SortComments(thread.Comments);
+        thread.ThreadComments = SortComments(thread.ThreadComments);
 
         return View(thread);
         
