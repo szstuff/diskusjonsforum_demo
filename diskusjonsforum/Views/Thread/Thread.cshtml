@@ -1,15 +1,21 @@
-﻿@model diskusjonsforum.Models.Thread
+﻿@model Diskusjonsforum.Models.Thread
 
-<h1> @Model.Title</h1>
-<p> Posted in @Model.Category </p>
-<p> by @Model.CreatedBy on  @Model.CreatedAt. </p>
-<p> @Model.Description </p>
+<h1> @Model.ThreadTitle</h1>
+<p> Posted in @Model.ThreadCategory </p>
+<p> by @Model.UserId on  @Model.ThreadCreatedAt. </p>
+<p> @Model.ThreadBody </p>
+<p>
+            <a class="btn btn-secondary"
+               asp-controller="Comment"
+               asp-action="Create"> reply </a>
+        </p>
 
 <h2> Comments </h2>
 <ul>
-    @foreach (var comment in Model.Comments.Where(c=> c.ParentCommentId == null))
+    @foreach (var comment in Model.ThreadComments.Where(c=> c.ParentCommentId == null))
     {
         DisplayComment(comment);
+        
     }
 </ul>
     
@@ -19,13 +25,13 @@
         void DisplayComment(Comment comment)
         {
                 <div style="border: 2px solid black; padding: 2px">
-                    <p> Posted by @comment.CreatedBy on @comment.CreatedAt </p>
-                    <p> @comment.Body</p>
+                    <p> Posted by @comment.UserId on @comment.CommentCreatedAt </p>
+                    <p> @comment.CommentBody</p>
 
                     <!-- også ren chatgpt. vi bør kanskje finne kilde på nett -->
                     <a href="#" class="btn-secondary" data-parent-comment-id="@comment.CommentId"> Reply </a>
 
-                    @foreach (var child in Model.Comments.Where(c => c.ParentCommentId == comment.CommentId))
+                    @foreach (var child in Model.ThreadComments.Where(c => c.ParentCommentId == comment.CommentId))
                     {
                         DisplayComment(child);
                     }

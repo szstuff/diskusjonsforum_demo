@@ -1,0 +1,38 @@
+﻿@model Comment
+
+<h2> Create a reply </h2>
+
+<form asp-controller="Comment" asp-action="Create">
+    <div class="form-group">
+        <label asp-for="CommentId"></label><span class="text-danger"></span>
+        <input asp-for="CommentId" class="form-control"/>
+        <span asp-validation-for="CommentId" class="text-danger"></span>
+    </div> 
+    <div class="form-group">
+        <label asp-for="CommentBody"></label><span class="text-danger"></span>
+        <input asp-for="CommentBody" class="form-control"/>
+        <span asp-validation-for="CommentBody" class="text-danger"></span>
+    </div> 
+    <div class="form-group">
+        <label asp-for="CommentCreatedAt"></label><span class="text-danger"></span>
+        <input asp-for="CommentCreatedAt" class="form-control"/>
+        <span asp-validation-for="CommentCreatedAt" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ThreadId"></label><span class="text-danger"></span>
+        <input asp-for="ThreadId" class="form-control"/>
+        <span asp-validation-for="ThreadId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ParentCommentId"></label><span class="text-danger"></span>
+        <input asp-for="ParentCommentId" class="form-control"/>
+        <span asp-validation-for="ParentCommentId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+            <label asp-for="UserId"></label><span class="text-danger"></span>
+            <input asp-for="UserId" class="form-control"/>
+            <span asp-validation-for="UserId" class="text-danger"></span>
+        </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-action="Table" class="btn btn-secondary"> Return </a>
+</form>

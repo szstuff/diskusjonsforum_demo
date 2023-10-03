@@ -1,23 +1,24 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using SQLite;namespace diskusjonsforum.Models
+using SQLite;namespace Diskusjonsforum.Models
 {
     public class Comment
 	{
-        [PrimaryKey, AutoIncrement]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int CommentId { get; set; }
         [Required]
-        public String? Body { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public String? CommentBody { get; set; }
+        public DateTime CommentCreatedAt { get; set; }
         [ForeignKey("Thread")]
-        public Thread Parent { get; set; } = null!; //null! "promises" the compiler that the value wont be null. Use Regex!
+        public Thread ThreadId { get; set; }
 
         public int? ParentCommentId { get; set; } 
 
         //Parent thread
         [ForeignKey("User")]
-        public User CreatedBy { get; set; } = null!; //null! "promises" the compiler that the value wont be null. Use Regex!
+        public User UserId { get; set; }
     }
 }
 

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using diskusjonsforum.Models;
+using Diskusjonsforum.Models;
 
 namespace diskusjonsforum.Controllers;
 

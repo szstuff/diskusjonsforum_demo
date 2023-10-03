@@ -1,14 +1,14 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 
-namespace diskusjonsforum.Models;
+namespace Diskusjonsforum.Models;
 
 public class ThreadDbContext : DbContext
 {
 	public ThreadDbContext(DbContextOptions<ThreadDbContext> options) : base(options)
 	{
-		//Database.EnsureDeleted();
-		//Database.EnsureCreated();
+		Database.EnsureDeleted();
+		Database.EnsureCreated();
 	}
 
     public DbSet<Thread> Threads { get; set; }
