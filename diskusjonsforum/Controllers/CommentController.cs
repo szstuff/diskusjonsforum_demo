@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Diskusjonsforum.Models;
-using diskusjonsforum.ViewModels;
 using Thread = Diskusjonsforum.Models.Comment;
 
 //using diskusjonsforum.ViewModels; //Kan slettes hvis vi ikke lager ViewModels
@@ -18,33 +16,33 @@ public class CommentController : Controller
         _threadDbContext = threadDbContext;
     }
 
-    public async Task<IActionResult> Table()
-    {
-        List<Comment> comments = _threadDbContext.Comments.ToList();
-        var commentListViewModel = new CommentListViewModel(comments, "Table");
-        return View(commentListViewModel);
-    }
-
     public async Task<List<Comment>> GetComments()
     {
         var comments = new List<Comment>();
         return comments;
     }
-    public IActionResult Create()
-    {
-        return View();
-    }
 
     [HttpPost]
-    public async Task<IActionResult> Create(Comment comment)
+    public async Task<IActionResult> Create(Comment comment, int threadId)
     {
         if (ModelState.IsValid)
         {
             _threadDbContext.Comments.Add(comment);
-            _threadDbContext.SaveChangesAsync();
-            return RedirectToAction(nameof(Table));
+            await _threadDbContext.SaveChangesAsync();
+            return RedirectToAction("Thread", "Thread", new {threadId});
         }
 
-        return View(comment);
+        return RedirectToAction("Thread", "Thread", new {threadId});
+    }
+    
+    public IActionResult Create()
+    {
+        // Retrieve query parameters
+        ViewData["ThreadId"] = HttpContext.Request.Query["thread"];
+        ViewData["ParentCommentId"] = HttpContext.Request.Query["comment"];
+
+        // Pass the data to the view using a ViewModel or ViewData
+        return View();
     }
 }
+

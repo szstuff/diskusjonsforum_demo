@@ -27,7 +27,11 @@ public static class DBInit
         {
             var threads = new List<Thread>
             {
-                new Thread {ThreadTitle = "Hei1", ThreadBody = "heiiiiii", ThreadCategory = "Kategori1", ThreadCreatedAt = Convert.ToDateTime(DateTime.Today.ToString("dd-MM-yyyy")), UserId = 1}
+                new Thread {ThreadTitle = "Hei1", 
+                    ThreadBody = "heiiiiii", 
+                    ThreadCategory = "Kategori1", 
+                    ThreadCreatedAt = Convert.ToDateTime(DateTime.Today.ToString("dd-MM-yyyy")),
+                    UserId = 1}
             };
             context.AddRange(threads);
             context.SaveChanges();
@@ -35,7 +39,34 @@ public static class DBInit
         
         if (!context.Comments.Any())
         {
-            var comments = new List<Comment>();
+            var comments = new List<Comment>
+            {
+                new Comment {
+                    CommentBody = "Hahahahahahaahhah 😂😂😂😂",
+                    CommentCreatedAt = Convert.ToDateTime(DateTime.Today.ToString("dd-MM-yyyy")),
+                    ParentCommentId = null,
+                    ThreadId = 1,
+                    UserId = 1 },
+                new Comment {
+                    CommentBody = "Hahahahah😂😂",
+                    CommentCreatedAt = Convert.ToDateTime(DateTime.Today.ToString("dd-MM-yyyy")),
+                    ParentCommentId = 1,
+                    ThreadId = 1,
+                    UserId = 2 },
+                new Comment {
+                    CommentBody = ":(",
+                    CommentCreatedAt = Convert.ToDateTime(DateTime.Today.ToString("dd-MM-yyyy")),
+                    ParentCommentId = 2,
+                    ThreadId = 1,
+                    UserId = 1 },
+                new Comment {
+                    CommentBody = "døøøøøde",
+                    CommentCreatedAt = Convert.ToDateTime(DateTime.Today.ToString("dd-MM-yyyy")),
+                    ParentCommentId = null,
+                    ThreadId = 1,
+                    UserId = 2 },
+                
+            };
             context.AddRange(comments);
             context.SaveChanges();
         }

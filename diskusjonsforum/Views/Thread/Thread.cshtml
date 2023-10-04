@@ -4,11 +4,7 @@
 <p> Posted in @Model.ThreadCategory </p>
 <p> by @Model.User on  @Model.ThreadCreatedAt. </p>
 <p> @Model.ThreadBody </p>
-<p>
-            <a class="btn btn-secondary"
-               asp-controller="Comment"
-               asp-action="Create"> reply </a>
-        </p>
+<a class="btn btn-primary" href="/Comment/Create?thread=@Model.ThreadId&comment="null"> Reply </a>
 
 <h2> Comments </h2>
 <ul>
@@ -25,12 +21,12 @@
         void DisplayComment(Comment comment)
         {
                 <div style="border: 2px solid black; padding: 2px">
-                    <p> Posted by @comment.User on @comment.CommentCreatedAt </p>
+                    <p> Posted by @comment.User.Name on @comment.CommentCreatedAt </p>
                     <p> @comment.CommentBody</p>
 
                     <!-- også ren chatgpt. vi bør kanskje finne kilde på nett -->
-                    <a href="#" class="btn-secondary" data-parent-comment-id="@comment.CommentId"> Reply </a>
-
+                    <a class="btn btn-primary" href="/Comment/Create?thread=@Model.ThreadId&comment=@comment.CommentId"> Reply to comment @comment.CommentId </a>
+                    
                     @foreach (var child in Model.ThreadComments.Where(c => c.ParentCommentId == comment.CommentId))
                     {
                         DisplayComment(child);
