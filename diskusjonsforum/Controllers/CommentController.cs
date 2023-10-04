@@ -18,14 +18,14 @@ public class CommentController : Controller
         _threadDbContext = threadDbContext;
     }
 
-    public IActionResult Table()
+    public async Task<IActionResult> Table()
     {
         List<Comment> comments = _threadDbContext.Comments.ToList();
         var commentListViewModel = new CommentListViewModel(comments, "Table");
         return View(commentListViewModel);
     }
 
-    public List<Comment> GetComments()
+    public async Task<List<Comment>> GetComments()
     {
         var comments = new List<Comment>();
         return comments;
@@ -36,12 +36,12 @@ public class CommentController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(Comment comment)
+    public async Task<IActionResult> Create(Comment comment)
     {
         if (ModelState.IsValid)
         {
             _threadDbContext.Comments.Add(comment);
-            _threadDbContext.SaveChanges();
+            _threadDbContext.SaveChangesAsync();
             return RedirectToAction(nameof(Table));
         }
 
