@@ -4,7 +4,7 @@
 <p> Posted in @Model.ThreadCategory </p>
 <p> by @Model.User on  @Model.ThreadCreatedAt. </p>
 <p> @Model.ThreadBody </p>
-<a class="btn btn-primary" href="/Comment/Create?thread=@Model.ThreadId&comment="null"> Reply </a>
+<a class="btn btn-primary" href="/Comment/Create?thread=@Model.ThreadId&comment='null'"> Reply </a>
 
 <h2> Comments </h2>
 <ul>
@@ -18,14 +18,20 @@
     
     @functions {
 
-        void DisplayComment(Comment comment)
+        async Task DisplayComment(Comment comment)
         {
                 <div style="border: 2px solid black; padding: 2px">
                     <p> Posted by @comment.User.Name on @comment.CommentCreatedAt </p>
                     <p> @comment.CommentBody</p>
 
                     <!-- også ren chatgpt. vi bør kanskje finne kilde på nett -->
-                    <a class="btn btn-primary" href="/Comment/Create?thread=@Model.ThreadId&comment=@comment.CommentId"> Reply to comment @comment.CommentId </a>
+                    @* <a class="btn btn-primary" href="/Comment/Create?thread=@Model.ThreadId&comment=@comment.CommentId"> Reply to comment @comment.CommentId </a> *@
+                    @* <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-commentId="@comment.CommentId" asp-route-threadId="@Model.ThreadId"> Reply to comment @comment.CommentId </a> *@
+                                        <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-commentId="@comment.CommentId"> Reply to comment @comment.CommentId </a>
+
+                    <a class="btn btn-secondary" asp-controller="Comment" asp-action="Comment" asp-route-commentId="@comment.CommentId"> Expand @comment.CommentId</a>
+                    
+
                     
                     @foreach (var child in Model.ThreadComments.Where(c => c.ParentCommentId == comment.CommentId))
                     {
