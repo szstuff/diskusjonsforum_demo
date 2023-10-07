@@ -43,13 +43,19 @@ $1$ Tuple inkluderer: Comment-klassen, int for threadId som blir besvart, int fo
 
 
 <h1> Creating reply for: </h1>
-<h1>Thread ID: @ViewData["ThreadId"]</h1>
-<h1>Comment ID: @ViewData["ParentCommentId"]</h1>
+<h1>Thread ID: @Model.ThreadId</h1>
+<h1>Comment ID: @Model.CommentId</h1>
 
 
-@model Comment
+@model Diskusjonsforum.Models.Comment
 
-<h2> Create a reply </h2>
+<p> <b> @Model.Thread.User.Name posted on the @Model.Thread.ThreadCreatedAt </b></p>
+<h2> @Model.Thread.ThreadTitle </h2>
+<p> @Model.Thread.ThreadBody</p>
+<hr/>
+<p><b> @Model.User.Name replied on the @Model.CommentCreatedAt </b></p>
+<p> @Model.CommentBody </p>
+
 
 <form asp-controller="Comment" asp-action="Create">
     <input type="hidden" asp-for="ThreadId" value="@ViewData["ThreadId"]" />
@@ -76,5 +82,5 @@ $1$ Tuple inkluderer: Comment-klassen, int for threadId som blir besvart, int fo
         <span asp-validation-for="UserId" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Create</button>
-    <a asp-controller="Thread" asp-action="Thread" asp-route-threadId="@ViewData["ThreadId"]" class="btn btn-secondary"> Return </a>
+    <a asp-controller="Thread" asp-action="Thread" asp-route-threadId="@Model.ThreadId" class="btn btn-secondary"> Return </a>
 </form>
