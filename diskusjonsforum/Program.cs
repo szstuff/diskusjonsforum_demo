@@ -22,6 +22,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "Save",
+        pattern: "Comment/Save",
+        defaults: new { controller = "Comment", action = "Save" }
+    );
+
+});
+
 app.MapDefaultControllerRoute();
 
 app.Run();

@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Diskusjonsforum.Models;
-using Microsoft.EntityFrameworkCore;
-using Thread = Diskusjonsforum.Models.Comment;
+using diskusjonsforum.ViewModels;
+using Thread = Diskusjonsforum.Models.Thread;
+
 
 //using diskusjonsforum.ViewModels; //Kan slettes hvis vi ikke lager ViewModels
 
@@ -22,50 +23,38 @@ public class CommentController : Controller
         var comments = new List<Comment>();
         return comments;
     }
+    
+    [HttpGet("create/{{commentId}}/{{threadId}}")]
+    public IActionResult Create(int commentId, int threadId)
+    {
+        Comment parentComment = _threadDbContext.Comments.FirstOrDefault(c=>c.CommentId == commentId);
+        Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId);
+        // Retrieve query parameters
+        // Create a CommentViewModel and populate it with data
+        var viewModel = new CommentCreateViewModel()
+        {
+            ThreadId = threadId,
+            ParentCommentId = commentId,
+            ParentComment = parentComment,
+            Thread = thread
+        };
 
-    [HttpPost]
-    public async Task<IActionResult> Create(Comment comment, int threadId)
+        // Pass the CommentViewModel to the view
+        return View(viewModel);
+    }
+    [HttpPost("comment/save")]
+    public async Task<IActionResult> Save(Comment comment)
     {
         if (ModelState.IsValid)
         {
             _threadDbContext.Comments.Add(comment);
             await _threadDbContext.SaveChangesAsync();
-            return RedirectToAction("Thread", "Thread", new {threadId});
+            return RedirectToAction("Thread", "Thread", new {comment.ThreadId});
         }
 
-        return RedirectToAction("Thread", "Thread", new {threadId});
+        return RedirectToAction("Thread", "Thread", new {comment.ThreadId});
     }
-    public IActionResult Comment(int commentId)
-    {
-        var comment = _threadDbContext.Comments.Include(c => c.Thread).ThenInclude(c => c.User)
-            .FirstOrDefault(c => c.CommentId == commentId);
+   
 
-        if (comment == null)
-        {
-            return NotFound();
-        }
-        
-        return View(comment);
-
-    }
-    
-    public IActionResult Create(int commentId/*, int threadId*/)
-    {
-        // Retrieve query parameters
-       // ViewData["ThreadId"] = HttpContext.Request.Query["thread"];
-        //ViewData["ParentCommentId"] = HttpContext.Request.Query["comment"];
-        // Pass the data to the view using a ViewModel or ViewData
-        //return View();
-        
-        var comment = _threadDbContext.Comments.Include(c => c.Thread).ThenInclude(c => c.User)
-            .FirstOrDefault(c => c.CommentId == commentId);
-
-        if (comment == null)
-        {
-            return NotFound();
-        }
-        
-        return View(comment);
-    }
 }
 

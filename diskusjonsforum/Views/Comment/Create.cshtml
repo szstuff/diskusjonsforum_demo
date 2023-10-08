@@ -42,29 +42,26 @@ $1$ Tuple inkluderer: Comment-klassen, int for threadId som blir besvart, int fo
 
 
 
+@model CommentCreateViewModel
 <h1> Creating reply for: </h1>
-<h1>Thread ID: @Model.ThreadId</h1>
-<h1>Comment ID: @Model.CommentId</h1>
+<h1>Thread ID: @Model.Thread.ThreadId</h1>
+<h1>Comment ID: @Model.ParentComment?.CommentBody</h1>
 
+@* <p> Thread: @(Model.Thread != null ? Model.Thread.ThreadTitle : "Thread not found")</p> *@
+<p> Thread: @Model.ParentComment?.Thread?.ThreadTitle</p>
+<p> Comment: @Model.ParentComment?.CommentBody </p>
+<h2> Create a reply </h2>
 
-@model Diskusjonsforum.Models.Comment
+@using (Html.BeginForm("Save","Comment",FormMethod.Post))
 
-<p> <b> @Model.Thread.User.Name posted on the @Model.Thread.ThreadCreatedAt </b></p>
-<h2> @Model.Thread.ThreadTitle </h2>
-<p> @Model.Thread.ThreadBody</p>
-<hr/>
-<p><b> @Model.User.Name replied on the @Model.CommentCreatedAt </b></p>
-<p> @Model.CommentBody </p>
-
-
-<form asp-controller="Comment" asp-action="Create">
-    <input type="hidden" asp-for="ThreadId" value="@ViewData["ThreadId"]" />
-    <input type="hidden" asp-for="ParentCommentId" value="@ViewData["ParentCommentId"]" />
+{<form asp-controller="Comment" asp-action="Create">
+    <input type="hidden" asp-for="Comment.ThreadId" value="@Model.Thread.ThreadId" />
+    <input type="hidden" asp-for="Comment.ParentCommentId" value="@Model.ParentComment?.CommentId" />
 
     <div class="form-group">
-        <label asp-for="CommentBody"></label><span class="text-danger"></span>
-        <input asp-for="CommentBody" class="form-control"/>
-        <span asp-validation-for="CommentBody" class="text-danger"></span>
+        <label asp-for="Comment.CommentBody"></label><span class="text-danger"></span>
+        <input asp-for="Comment.CommentBody" class="form-control"/>
+        <span asp-validation-for="Comment.CommentBody" class="text-danger"></span>
     </div>
     @*<div class="form-group">
         <label asp-for="ThreadId"></label><span class="text-danger"></span>
@@ -77,10 +74,10 @@ $1$ Tuple inkluderer: Comment-klassen, int for threadId som blir besvart, int fo
         <span asp-validation-for="ParentCommentId" class="text-danger"></span>
     </div>*@
     <div class="form-group">
-        <label asp-for="UserId"></label><span class="text-danger"></span>
-        <input asp-for="UserId" class="form-control"/>
-        <span asp-validation-for="UserId" class="text-danger"></span>
+        <label asp-for="Comment.UserId"></label><span class="text-danger"></span>
+        <input asp-for="Comment.UserId" class="form-control"/>
+        <span asp-validation-for="Comment.UserId" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Create</button>
+    <input type="submit" value="Post reply" class="btn btn-primary" onclick="location.href='@Url.Action("Save", "Comment")'" />
     <a asp-controller="Thread" asp-action="Thread" asp-route-threadId="@Model.ThreadId" class="btn btn-secondary"> Return </a>
-</form>
+</form>}
