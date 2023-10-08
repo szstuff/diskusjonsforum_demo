@@ -2,9 +2,9 @@
 
 <h1> @Model.ThreadTitle</h1>
 <p> Posted in @Model.ThreadCategory </p>
-<p> by @Model.User on  @Model.ThreadCreatedAt. </p>
+<p> by @Model.User.Name on  @Model.ThreadCreatedAt. </p>
 <p> @Model.ThreadBody </p>
-<a class="btn btn-primary" href="/Comment/Create?thread=@Model.ThreadId&comment='null'"> Reply </a>
+<a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-threadId="@Model.ThreadId"> Reply to Thread @Model.ThreadId </a>
 
 <h2> Comments </h2>
 <ul>
@@ -27,9 +27,7 @@
                     <!-- også ren chatgpt. vi bør kanskje finne kilde på nett -->
                     @* <a class="btn btn-primary" href="/Comment/Create?thread=@Model.ThreadId&comment=@comment.CommentId"> Reply to comment @comment.CommentId </a> *@
                     @* <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-commentId="@comment.CommentId" asp-route-threadId="@Model.ThreadId"> Reply to comment @comment.CommentId </a> *@
-                                        <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-commentId="@comment.CommentId"> Reply to comment @comment.CommentId </a>
-
-                    <a class="btn btn-secondary" asp-controller="Comment" asp-action="Comment" asp-route-commentId="@comment.CommentId"> Expand @comment.CommentId</a>
+                                        <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Reply to comment @comment.CommentId </a>
                     
 
                     
