@@ -1,0 +1,43 @@
+@model CommentCreateViewModel
+<h1> Editing reply for: </h1>
+<h1>Thread ID: @Model.Thread.ThreadId</h1>
+<h1>Comment ID: @Model.ParentComment?.CommentBody</h1>
+
+@* <p> Thread: @(Model.Thread != null ? Model.Thread.ThreadTitle : "Thread not found")</p> *@
+<p> Thread: @Model.ParentComment?.Thread?.ThreadTitle</p>
+<p> Comment: @Model.ParentComment?.CommentBody </p>
+<h2> Edit your reply </h2>
+
+
+
+@using (Html.BeginForm("SaveEdit","Comment",FormMethod.Post))
+
+{<form asp-controller="Comment" asp-action="Create">
+    <input type="hidden" asp-for="Comment.ThreadId" value="@Model.Thread.ThreadId" />
+    <input type="hidden" asp-for="Comment.ParentCommentId" value="@Model.CommentToEdit.ParentCommentId" />
+    <input type="hidden" asp-for="Comment.CommentId" value="@Model.CommentToEdit.CommentId"/>
+    <input type="hidden" asp-for="Comment.CommentCreatedAt" value="@Model.CommentToEdit.CommentCreatedAt"/>
+
+    <div class="form-group">
+        <label asp-for="Comment.CommentBody" ></label><span class="text-danger"></span>
+        <input asp-for="Comment.CommentBody" class="form-control" value="@Model.CommentToEdit.CommentBody"/>
+        <span asp-validation-for="Comment.CommentBody" class="text-danger"></span>
+    </div>
+    @*<div class="form-group">
+        <label asp-for="ThreadId"></label><span class="text-danger"></span>
+        <input asp-for="ThreadId" class="form-control"/>
+        <span asp-validation-for="ThreadId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ParentCommentId"></label><span class="text-danger"></span>
+        <input asp-for="ParentCommentId" class="form-control"/>
+        <span asp-validation-for="ParentCommentId" class="text-danger"></span>
+    </div>*@
+    <div class="form-group">
+        <label asp-for="Comment.UserId"></label><span class="text-danger"></span>
+        <input asp-for="Comment.UserId" class="form-control" value = "@Model.CommentToEdit.UserId"/>
+        <span asp-validation-for="Comment.UserId" class="text-danger"></span>
+    </div>
+    <input type="submit" value="Post reply" class="btn btn-primary" onclick="location.href='@Url.Action("SaveEdit", "Comment")'" />
+    <a asp-controller="Thread" asp-action="Thread" asp-route-threadId="@Model.ThreadId" class="btn btn-secondary"> Return </a>
+</form>}
