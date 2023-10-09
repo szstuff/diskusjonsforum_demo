@@ -10,6 +10,7 @@ using SQLite;namespace Diskusjonsforum.Models
         public String? CommentBody { get; set; }
 
         public DateTime CommentCreatedAt { get; set; } = DateTime.Now;
+        public DateTime CommentLastEditedAt { get; set; } = DateTime.Now;
         public int ThreadId { get; set; }
 
         public virtual Thread? Thread { get; set; } = default!;  //skal egt IKKE være nullable (?), men får invalid ModelState hvis den ikke er det. Løsning: https://stackoverflow.com/questions/70966537/modelstate-isvalid-includes-a-navigation-property-always-false-only-net-6-0

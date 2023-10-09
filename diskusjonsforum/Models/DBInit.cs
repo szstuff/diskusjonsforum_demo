@@ -30,7 +30,8 @@ public static class DBInit
                 new Thread {ThreadTitle = "Hei1", 
                     ThreadBody = "heiiiiii", 
                     ThreadCategory = "Kategori1", 
-                    ThreadCreatedAt = Convert.ToDateTime(DateTime.Today.ToString("dd-MM-yyyy")),
+                    ThreadCreatedAt = Convert.ToDateTime("09/10/2023 11:01:15"),
+                    ThreadLastEditedAt = Convert.ToDateTime("09/10/2023 11:03:03"),
                     UserId = 1}
             };
             context.AddRange(threads);
@@ -43,25 +44,29 @@ public static class DBInit
             {
                 new Comment {
                     CommentBody = "Hahahahahahaahhah 😂😂😂😂",
-                    CommentCreatedAt = Convert.ToDateTime(DateTime.Today.ToString("dd-MM-yyyy")),
+                    CommentCreatedAt = Convert.ToDateTime("09/10/2023 11:05:00"),
+                    CommentLastEditedAt = Convert.ToDateTime("09/10/2023 11:05:00"),
                     ParentCommentId = null,
                     ThreadId = 1,
                     UserId = 1 },
                 new Comment {
                     CommentBody = "Hahahahah😂😂",
-                    CommentCreatedAt = Convert.ToDateTime(DateTime.Today.ToString("dd-MM-yyyy")),
+                    CommentCreatedAt = Convert.ToDateTime("09/10/2023 11:06:00"),
+                    CommentLastEditedAt = Convert.ToDateTime("09/10/2023 11:07:15"),
                     ParentCommentId = 1,
                     ThreadId = 1,
                     UserId = 2 },
                 new Comment {
                     CommentBody = ":(",
-                    CommentCreatedAt = Convert.ToDateTime(DateTime.Today.ToString("dd-MM-yyyy")),
+                    CommentCreatedAt = Convert.ToDateTime("09/10/2023 11:13:10"),
+                    CommentLastEditedAt = Convert.ToDateTime("09/10/2023 11:13:10"),
                     ParentCommentId = 2,
                     ThreadId = 1,
                     UserId = 1 },
                 new Comment {
                     CommentBody = "døøøøøde",
-                    CommentCreatedAt = Convert.ToDateTime(DateTime.Today.ToString("dd-MM-yyyy")),
+                    CommentCreatedAt = Convert.ToDateTime("09/10/2023 11:15:00"),
+                    CommentLastEditedAt = Convert.ToDateTime("09/10/2023 11:25:10"),
                     ParentCommentId = null,
                     ThreadId = 1,
                     UserId = 2 },

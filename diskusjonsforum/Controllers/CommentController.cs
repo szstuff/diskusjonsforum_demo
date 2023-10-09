@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Xml.XPath;
+using Microsoft.AspNetCore.Mvc;
 using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
 using Thread = Diskusjonsforum.Models.Thread;
@@ -25,16 +26,16 @@ public class CommentController : Controller
     }
     
     [HttpGet("create/{{commentId}}/{{threadId}}")]
-    public IActionResult Create(int commentId, int threadId)
+    public IActionResult Create(int parentCommentId, int threadId)
     {
-        Comment parentComment = _threadDbContext.Comments.FirstOrDefault(c=>c.CommentId == commentId);
+        Comment parentComment = _threadDbContext.Comments.FirstOrDefault(c=>c.CommentId == parentCommentId);
         Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId);
         // Retrieve query parameters
         // Create a CommentViewModel and populate it with data
         var viewModel = new CommentCreateViewModel()
         {
             ThreadId = threadId,
-            ParentCommentId = commentId,
+            ParentCommentId = parentCommentId,
             ParentComment = parentComment,
             Thread = thread
         };
@@ -48,6 +49,40 @@ public class CommentController : Controller
         if (ModelState.IsValid)
         {
             _threadDbContext.Comments.Add(comment);
+            await _threadDbContext.SaveChangesAsync();
+            return RedirectToAction("Thread", "Thread", new {comment.ThreadId});
+        }
+
+        return RedirectToAction("Thread", "Thread", new {comment.ThreadId});
+    }
+    
+    [HttpGet("edit/{{commentId}}/{{threadId}}")]
+    public IActionResult Edit(int commentId, int threadId)
+    {
+        Comment commentToEdit = _threadDbContext.Comments.FirstOrDefault(c=>c.CommentId == commentId);
+        Comment parentComment =
+            _threadDbContext.Comments.FirstOrDefault(c => c.CommentId == commentToEdit.ParentCommentId);
+        Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId);
+        // Retrieve query parameters
+        // Create a CommentViewModel and populate it with data
+        var viewModel = new CommentCreateViewModel()
+        {
+            ThreadId = threadId,
+            ParentCommentId = commentId,
+            ParentComment = parentComment,
+            CommentToEdit = commentToEdit,
+            Thread = thread
+        };
+
+        // Pass the CommentViewModel to the view
+        return View(viewModel);
+    }
+    [HttpPost("comment/saveEdit")]
+    public async Task<IActionResult> SaveEdit(Comment comment)
+    {
+        if (ModelState.IsValid)
+        {
+            _threadDbContext.Comments.Update(comment);
             await _threadDbContext.SaveChangesAsync();
             return RedirectToAction("Thread", "Thread", new {comment.ThreadId});
         }
