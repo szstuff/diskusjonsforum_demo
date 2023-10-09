@@ -1,47 +1,58 @@
 ﻿@model Diskusjonsforum.Models.Thread
+<link href="Stylesheet.css" rel="stylesheet" type="text/css" />
 
-<h1> @Model.ThreadTitle</h1>
-<p> Posted in @Model.ThreadCategory </p>
-<p> by @Model.User?.Name on  @Model.ThreadCreatedAt.  
+<h1 class="heading"> @Model.ThreadTitle</h1>
+<p class="subheading"> Posted in @Model.ThreadCategory </p>
+<p class="subheading"> by @Model.User?.Name on  @Model.ThreadCreatedAt.  
     @if (@Model.ThreadCreatedAt != @Model.ThreadLastEditedAt)
     { <b> Last edited at @Model.ThreadLastEditedAt </b> } </p>
-<p> @Model.ThreadBody </p>
+<p class="threadbody"> @Model.ThreadBody </p>
 <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-threadId="@Model.ThreadId"> Reply to Thread @Model.ThreadId </a>
 
-<h2> Comments </h2>
+<h2 class="heading"> Comments </h2>
 <ul>
-    @foreach (var comment in Model.ThreadComments.Where(c=> c.ParentCommentId == null))
+    <div class="outermost-container">
+    @foreach (var comment in Model.ThreadComments.Where(c => c.ParentCommentId == null))
     {
         DisplayComment(comment);
-        
+
     }
+    </div>
 </ul>
+
     
     
-    @functions {
+@functions {
 
         async Task DisplayComment(Comment comment)
         {
-                <div style="border: 2px solid black; padding: 2px">
-                    <p> Posted by @comment.User.Name on @comment.CommentCreatedAt. 
-                        @if (comment.CommentCreatedAt != comment.CommentLastEditedAt)
-                        {<b> Last edited at @comment.CommentLastEditedAt.</b>} </p>
-                    <p> @comment.CommentBody</p>
+            <div class="nested-container">
+                <div class="commentDiv">
+
+                    <div class="commentBody">
+                        <p class="subheading"> Posted by @comment.User.Name on @comment.CommentCreatedAt.
+                            @if (comment.CommentCreatedAt != comment.CommentLastEditedAt)
+                            {<b> Last edited at @comment.CommentLastEditedAt.</b>}
+                        </p>
+                        <p class="commentbody"> @comment.CommentBody</p>
+                    </div>
 
                     <!-- også ren chatgpt. vi bør kanskje finne kilde på nett -->
                     @* <a class="btn btn-primary" href="/Comment/Create?thread=@Model.ThreadId&comment=@comment.CommentId"> Reply to comment @comment.CommentId </a> *@
                     @* <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-commentId="@comment.CommentId" asp-route-threadId="@Model.ThreadId"> Reply to comment @comment.CommentId </a> *@
-                    <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-parentCommentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Reply to comment @comment.CommentId </a>
-                    <a class="btn btn-primary" asp-controller="Comment" asp-action="Edit" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Edit this reply with ID @comment.CommentId </a>
-                    <a class="btn btn-primary" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> Delete reply and all children @comment.CommentId </a>
+                    <div class="vertical-button-container" style="float: right">
+                        <button class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-parentCommentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Reply @comment.CommentId </button>
+                        <button class="btn btn-primary" asp-controller="Comment" asp-action="Edit" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Edit @comment.CommentId </button>
+                        <button class="btn btn-primary" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> Delete @comment.CommentId </button>
+                    </div>
 
-                    
-
-                    
-                    @foreach (var child in Model.ThreadComments.Where(c => c.ParentCommentId == comment.CommentId))
-                    {
-                        DisplayComment(child);
-                    }
                 </div>
+
+                @foreach (var child in Model.ThreadComments.Where(c => c.ParentCommentId == comment.CommentId))
+                {
+                    DisplayComment(child);
+                }
+            </div>
         }
     }
+}
