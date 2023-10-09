@@ -1,5 +1,4 @@
-﻿using System.Xml.XPath;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
 using Thread = Diskusjonsforum.Models.Thread;
@@ -28,8 +27,8 @@ public class CommentController : Controller
     [HttpGet("create/{{commentId}}/{{threadId}}")]
     public IActionResult Create(int parentCommentId, int threadId)
     {
-        Comment parentComment = _threadDbContext.Comments.FirstOrDefault(c=>c.CommentId == parentCommentId);
-        Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId);
+        Comment parentComment = _threadDbContext.Comments.FirstOrDefault(c=>c.CommentId == parentCommentId) ?? throw new InvalidOperationException("Requested comment not found. CommentId: " + parentCommentId);
+        Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId) ?? throw new InvalidOperationException("Requested thread not found. ThreadId: " + threadId);
         // Retrieve query parameters
         // Create a CommentViewModel and populate it with data
         var viewModel = new CommentCreateViewModel()
@@ -59,10 +58,10 @@ public class CommentController : Controller
     [HttpGet("edit/{{commentId}}/{{threadId}}")]
     public IActionResult Edit(int commentId, int threadId)
     {
-        Comment commentToEdit = _threadDbContext.Comments.FirstOrDefault(c=>c.CommentId == commentId);
+        Comment commentToEdit = _threadDbContext.Comments.FirstOrDefault(c=>c.CommentId == commentId) ?? throw new InvalidOperationException("Requested comment not found. commentId:" + commentId);
         Comment parentComment =
-            _threadDbContext.Comments.FirstOrDefault(c => c.CommentId == commentToEdit.ParentCommentId);
-        Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId);
+            _threadDbContext.Comments.FirstOrDefault(c => c.CommentId == commentToEdit.ParentCommentId) ?? throw new InvalidOperationException("Requested comment not found. commentToEdit.ParentCommentId:" + commentToEdit.ParentCommentId);
+        Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId) ?? throw new InvalidOperationException("Requested thread not found. ThreadId: " + threadId);
         // Retrieve query parameters
         // Create a CommentViewModel and populate it with data
         var viewModel = new CommentCreateViewModel()
@@ -89,7 +88,35 @@ public class CommentController : Controller
 
         return RedirectToAction("Thread", "Thread", new {comment.ThreadId});
     }
-   
+
+    public async Task<IActionResult> DeleteComment(int commentId)
+    {
+        Comment comment = _threadDbContext.Comments.FirstOrDefault(c => c.CommentId == commentId) ?? throw new InvalidOperationException("Requested comment not found. CommentId: " + commentId);
+        List<Comment> childcomments = AddChildren(comment);
+
+        foreach (var child in childcomments)
+        {
+            _threadDbContext.Comments.Remove(child);
+            await _threadDbContext.SaveChangesAsync();
+        }
+
+        _threadDbContext.Comments.Remove(comment);
+        await _threadDbContext.SaveChangesAsync();
+
+        return RedirectToAction("Thread", "Thread", new {comment.ThreadId});
+
+        List<Comment> AddChildren(Comment parentComment)
+        {
+            List<Comment> newChildren = _threadDbContext.Comments.Where(c => c.ParentCommentId == parentComment.CommentId).ToList();
+            List<Comment> newerChildren = new List<Comment>();
+            foreach (Comment child in newChildren)
+            {
+                newerChildren.AddRange(AddChildren(child));
+            }
+            newChildren.AddRange(newerChildren);
+            return newChildren;
+        }
+    }
 
 }
 
