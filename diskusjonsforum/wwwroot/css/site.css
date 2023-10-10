@@ -56,7 +56,7 @@ body {
 display: inline-block;
 }
 
-.vertical-button-container button {
+.vertical-button-container a {
     background-color: lightblue; /* Optional background color for the inner div */
     border: 1px solid green; /* Green border */
     border-radius: 10%;

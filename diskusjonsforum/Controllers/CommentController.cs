@@ -27,7 +27,7 @@ public class CommentController : Controller
     [HttpGet("create/{{commentId}}/{{threadId}}")]
     public IActionResult Create(int parentCommentId, int threadId)
     {
-        Comment parentComment = _threadDbContext.Comments.FirstOrDefault(c=>c.CommentId == parentCommentId) ?? throw new InvalidOperationException("Requested comment not found. CommentId: " + parentCommentId);
+        Comment parentComment = _threadDbContext.Comments.FirstOrDefault(c => c.CommentId == parentCommentId); //Throws no exception because parentComment should be null when the user replies to the thread 
         Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId) ?? throw new InvalidOperationException("Requested thread not found. ThreadId: " + threadId);
         // Retrieve query parameters
         // Create a CommentViewModel and populate it with data
