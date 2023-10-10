@@ -17,11 +17,11 @@ public class ThreadController : Controller
     {
         _threadDbContext = threadDbContext;
         //Creates dummy data for testing
-        _threadDbContext.Database.ExecuteSqlRaw("insert INTO Users (Name, PasswordHash, Email, Administrator) VALUES (\"stilian\", \"pass\", \"email@email.com\", True)\n");
-        _threadDbContext.Database.ExecuteSqlRaw("insert into Threads (Title, Description, Category, CreatedAt, CreatedBy) VALUES (\"Hei\", \"Heihiehiehue\", \"Hei\", \"2020-09-10\", 1)\n");
-        _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (Body, CreatedAt, Thread, User, ParentCommentId) values (\"Hei1\", \"2020-09-10\", 1, 1, null) ");
-        _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (Body, CreatedAt, Thread, User, ParentCommentId) values (\"HeiHei2\", \"2020-09-10\", 1, 1, 1) ");
-        _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (Body, CreatedAt, Thread, User, ParentCommentId) values (\"HeiHeiHei3\", \"2020-09-10\", 1, 1, 2) ");
+        //_threadDbContext.Database.ExecuteSqlRaw("insert INTO Users (Name, PasswordHash, Email, Administrator) VALUES (\"stilian\", \"pass\", \"email@email.com\", True)\n");
+        //_threadDbContext.Database.ExecuteSqlRaw("insert into Threads (Title, Description, Category, CreatedAt, CreatedBy) VALUES (\"Hei\", \"Heihiehiehue\", \"Hei\", \"2020-09-10\", 1)\n");
+        //_threadDbContext.Database.ExecuteSqlRaw("insert into Comments (Body, CreatedAt, Thread, User, ParentCommentId) values (\"Hei1\", \"2020-09-10\", 1, 1, null) ");
+        //_threadDbContext.Database.ExecuteSqlRaw("insert into Comments (Body, CreatedAt, Thread, User, ParentCommentId) values (\"HeiHei2\", \"2020-09-10\", 1, 1, 1) ");
+        //_threadDbContext.Database.ExecuteSqlRaw("insert into Comments (Body, CreatedAt, Thread, User, ParentCommentId) values (\"HeiHeiHei3\", \"2020-09-10\", 1, 1, 2) ");
     }
 
     public IActionResult Table()
@@ -29,6 +29,55 @@ public class ThreadController : Controller
         List<Thread> threads = _threadDbContext.Threads.ToList();
         var threadListViewModel = new ThreadListViewModel(threads, "Table");
         return View(threadListViewModel);
+    }
+
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(Thread thread)
+    {
+        if (ModelState.IsValid)
+        {
+            await _threadRepository.Create(thread);
+            return RedirectToAction(nameof(Table);
+        }
+        return View(thread);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Update(int id)
+    {
+        var thread = await _threadRepository.GetThreadById(id);
+        if(thread = null)
+        {
+            return NotFound();
+        }
+        return View(thread);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Update(Thread thread)
+    {
+        if (ModelState.IsValid)
+        {
+            await _threadRepository.Udate(thread);
+            return RedirectToAction(nameof(Table));
+        }
+        return View(thread);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var thread = await _threadRepository.GetThreadById(id);
+        if (thread == null) 
+        { 
+            return NotFound(); 
+        }
     }
 
     public List<Thread> GetThreads()
