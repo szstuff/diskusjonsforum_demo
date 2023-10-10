@@ -1,4 +1,4 @@
-﻿namespace diskusjonsforum.Models;
+﻿namespace Diskusjonsforum.Models;
 
 public class ErrorViewModel
 {
