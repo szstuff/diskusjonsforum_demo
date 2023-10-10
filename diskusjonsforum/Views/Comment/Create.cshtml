@@ -1,47 +1,4 @@
-﻿@*
-@model Tuple<Diskusjonsforum.Models.Comment, int, int> 
-$1$ Tuple inkluderer: Comment-klassen, int for threadId som blir besvart, int for commentId som blir besvart (null hvis rot-kommentar)#1#       
-       <h2> Create a reply </h2>
-       
-@using (Html.BeginForm("Create", "Comment", new {threadId = Model.Item2, parentCommentId = Model.Item3}))
-{<form asp-controller="Comment" asp-action="Create">
-           <div class="form-group">
-               <label asp-for="Item1.CommentId"></label><span class="text-danger"></span>
-               <input asp-for="Item1.CommentId" class="form-control"/>
-               <span asp-validation-for="Item1.CommentId" class="text-danger"></span>
-           </div> 
-           <div class="form-group">
-               <label asp-for="Item1.CommentBody"></label><span class="text-danger"></span>
-               <input asp-for="Item1.CommentBody" class="form-control"/>
-               <span asp-validation-for="Item1.CommentBody" class="text-danger"></span>
-           </div> 
-           <div class="form-group">
-               <label asp-for="Item1.CommentCreatedAt"></label><span class="text-danger"></span>
-               <input asp-for="Item1.CommentCreatedAt" class="form-control"/>
-               <span asp-validation-for="Item1.CommentCreatedAt" class="text-danger"></span>
-           </div>
-           $1$<div class="form-group">
-               <label asp-for="Item1.ThreadId"></label><span class="text-danger"></span>
-               <input asp-for="Item1.ThreadId" class="form-control"/>
-               <span asp-validation-for="Item1.ThreadId" class="text-danger"></span>
-           </div>
-           <div class="form-group">
-               <label asp-for="Item1.ParentCommentId"></label><span class="text-danger"></span>
-               <input asp-for="Item1.ParentCommentId" class="form-control"/>
-               <span asp-validation-for="Item1.ParentCommentId" class="text-danger"></span>
-           </div>#1#
-           <div class="form-group">
-                   <label asp-for="Item1.UserId"></label><span class="text-danger"></span>
-                   <input asp-for="Item1.UserId" class="form-control"/>
-                   <span asp-validation-for="Item1.UserId" class="text-danger"></span>
-               </div>
-           <button type="submit" class="btn btn-primary">Create</button>
-           <a asp-controller="Thread" asp-action="Thread" asp-route-threadId="@Model.Item2" class="btn btn-secondary"> Cancel </a>
-       </form>}
-       *@
-
-
-
+﻿
 @model CommentCreateViewModel
 <h1> Creating reply for: </h1>
 <h1>Thread ID: @Model.Thread.ThreadId</h1>

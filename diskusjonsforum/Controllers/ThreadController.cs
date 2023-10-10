@@ -33,55 +33,6 @@ public class ThreadController : Controller
         return View(threadListViewModel);
     }
 
-    [HttpGet]
-    public IActionResult Create()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Create(Thread thread)
-    {
-        if (ModelState.IsValid)
-        {
-            await _threadRepository.Create(thread);
-            return RedirectToAction(nameof(Table);
-        }
-        return View(thread);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> Update(int id)
-    {
-        var thread = await _threadRepository.GetThreadById(id);
-        if(thread = null)
-        {
-            return NotFound();
-        }
-        return View(thread);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Update(Thread thread)
-    {
-        if (ModelState.IsValid)
-        {
-            await _threadRepository.Udate(thread);
-            return RedirectToAction(nameof(Table));
-        }
-        return View(thread);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> Delete(int id)
-    {
-        var thread = await _threadRepository.GetThreadById(id);
-        if (thread == null) 
-        { 
-            return NotFound(); 
-        }
-    }
-
     public List<Thread> GetThreads()
     {
         var threads = new List<Thread>();
