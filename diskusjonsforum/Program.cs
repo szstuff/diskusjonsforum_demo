@@ -1,4 +1,4 @@
-﻿using diskusjonsforum.Models;
+﻿using Diskusjonsforum.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,9 +17,22 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+    DBInit.Seed(app);
 }
 
 app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "Save",
+        pattern: "Comment/Save",
+        defaults: new { controller = "Comment", action = "Save" }
+    );
+
+});
 
 app.MapDefaultControllerRoute();
 
