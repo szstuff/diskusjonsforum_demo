@@ -60,7 +60,7 @@ public class CommentController : Controller
     {
         Comment commentToEdit = _threadDbContext.Comments.FirstOrDefault(c=>c.CommentId == commentId) ?? throw new InvalidOperationException("Requested comment not found. commentId:" + commentId);
         Comment parentComment =
-            _threadDbContext.Comments.FirstOrDefault(c => c.CommentId == commentToEdit.ParentCommentId) ?? throw new InvalidOperationException("Requested comment not found. commentToEdit.ParentCommentId:" + commentToEdit.ParentCommentId);
+            _threadDbContext.Comments.FirstOrDefault(c => c.CommentId == commentToEdit.ParentCommentId); //Throws no exception because parentComment should be null when the user replies to the thread 
         Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId) ?? throw new InvalidOperationException("Requested thread not found. ThreadId: " + threadId);
         // Retrieve query parameters
         // Create a CommentViewModel and populate it with data
