@@ -2,9 +2,11 @@ using Diskusjonsforum.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using diskusjonsforum.Areas.Identity.Data;
+using Microsoft.EntityFrameworkCore.Sqlite.Diagnostics.Internal;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("diskusjonsforumIdentityDbContextConnection") ?? throw new InvalidOperationException("Connection string 'diskusjonsforumIdentityDbContextConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("diskusjonsforumIdentityDbContextConnection") ?? throw new 
+    InvalidOperationException("Connection string 'diskusjonsforumIdentityDbContextConnection' not found.");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -15,11 +17,13 @@ builder.Services.AddDbContext<ThreadDbContext>(options => {
 });
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<diskusjonsforumIdentityDbContext>();
-
+   .AddEntityFrameworkStores<diskusjonsforumIdentityDbContext>();
 
 /*builder.Services.AddDefaultIdentity<IdentityUser>()
     .AddEntityFrameworkStores<ThreadDbContext>();*/
+
+builder.Services.AddRazorPages(); //order of adding services does not matter
+builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -46,6 +50,10 @@ app.UseEndpoints(endpoints =>
 
 app.MapDefaultControllerRoute();
 
+app.UseSession();
 app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapRazorPages();
 
 app.Run();
