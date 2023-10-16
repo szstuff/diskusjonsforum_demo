@@ -2,4 +2,25 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    ViewData["Title"] = "Register";
 }
+
+<form>
+    <div id="registerBox">
+        <label for="firstName">First name:</label>
+        <input type="text" class="fullName">
+        <br><br>
+        <label for="lastname">Lastname:</label>
+        <input type="text" class="fullNAame">
+        <br><br>
+        <label onbeforeinput="email">Email:</label>
+        <br><br>
+        <label for="mobileNumber">Mobile number</label>
+        <input type="number" id="mobileNumber">
+        <br><br>
+        <label for="password">Password</label>
+        <input type="password" id="pwd">
+        <br><br>
+        <button class="btn-primary">Register</button>
+    </div>
+</form>

@@ -1,5 +1,5 @@
 ﻿using System;
-using diskusjonsforum.Models;
+using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Thread = System.Threading.Thread;
