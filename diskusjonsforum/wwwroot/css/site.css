@@ -15,11 +15,13 @@ html {
 
 body {
   margin-bottom: 60px;
-  background-color: rgba(171, 32, 75, 0.97);
+  /* background-color: #d70759 */
+  background-color: white ;  
 }
 
 .custom-font {
     font-family: Impact, sans-serif;
     font-weight: bold;
-    color: #ef7018
+    /* color: #bb5b17 */
+    color: black;
 }
