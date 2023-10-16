@@ -15,12 +15,15 @@ html {
 
 body {
   margin-bottom: 60px;
-  background-color: #6c112e
+  /* background-color: #d70759 */
+  background-color: white ;  
 }
 
-.heading {
+.custom-font {
     font-family: Impact, sans-serif;
     font-weight: bold;
+    /* color: #bb5b17 */
+    color: black;
     font-size: 150%;
     /*color: #bb5b17*/
     color: #fdfdfe;
