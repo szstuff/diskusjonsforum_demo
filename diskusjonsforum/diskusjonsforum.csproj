@@ -37,4 +37,7 @@
     <Compile Remove="Models\UserDbContext.cs" />
     <Compile Remove="Models\PostDbContext.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Authorization\Error.cshtml" />
+  </ItemGroup>
 </Project>
