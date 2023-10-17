@@ -17,7 +17,7 @@ builder.Services.AddDbContext<ThreadDbContext>(options => {
 });
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-   .AddEntityFrameworkStores<diskusjonsforumIdentityDbContext>();
+   .AddEntityFrameworkStores<ThreadDbContext>();
 
 /*builder.Services.AddDefaultIdentity<IdentityUser>()
     .AddEntityFrameworkStores<ThreadDbContext>();*/
