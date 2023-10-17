@@ -2,19 +2,34 @@
     ViewData["Title"] = "Login";
 }
 
-<form>
-    <div id="loginBox">
-        <h1>Login</h1>
-        <label for="username">Username:</label>
-        <input type="text" id="username">
-        <br><br>
-        <label for="pwd">Password:</label>
-        <input type="password" id="password">
-        <br><br>
-        <button class="btn-primary"> logg inn (gjør ingenting) </button>
-        <p>Don't have an account? <a asp-area="" asp-controller="Authorization" asp-action=""skal linkes til register>Register</a></p>
-        
-    </div>
-
-</form>
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="~/css/site.css"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Zanabazar+Square&family=Roboto&family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class="login-container">
+            <h2>Welcome Back!</h2>
+            <form>
+                <div class="input-container">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" class="rounded-input" required>
+                </div>
+                <div class="input-container">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" class="rounded-input" required>
+                </div>
+                <div class="login-button">
+                    <button type="submit">Logg inn</button>
+                </div>
+            </form>
+            <div class="register-here">
+                <p>Don't have an account?<a asp-area="" asp-controller="Authorization" asp-action="Register"> Register here</a></p>
+            </div>
+        </div>
+    </body>
+</html>
 
