@@ -21,7 +21,9 @@ body {
 
 header, .container, foooter {
     flex: 0 0 auto;
+    font-family: 'Ubuntu', sans-serif;
 }
+
 
 .container {
     flex: 1;
