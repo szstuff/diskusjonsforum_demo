@@ -13,5 +13,5 @@
 //	}
 //}
 
-//// Må skrives om til å passe til User.
+//// MÃ¥ skrives om til Ã¥ passe til User.
 //// Alle entities skal ha egen dbcontext

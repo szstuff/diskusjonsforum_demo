@@ -1,0 +1,28 @@
+@model Thread
+
+<h2> Create a thread </h2>
+
+<form asp-controller="Thread" asp-action="Create">
+    <div class="form-group">
+            <label asp-for="UserId"></label><span class="text-danger"></span>
+            <input asp-for="UserId" class="form-control"/>
+            <span asp-validation-for="UserId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ThreadCategory"></label><span class="text-danger"></span>
+        <input asp-for="ThreadCategory" class="form-control"/>
+        <span asp-validation-for="ThreadCategory" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ThreadTitle"></label><span class="text-danger"></span>
+        <input asp-for="ThreadTitle" class="form-control"/>
+        <span asp-validation-for="ThreadTitle" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ThreadBody"></label><span class="text-danger"></span>
+        <input asp-for="ThreadBody" class="form-control"/>
+        <span asp-validation-for="ThreadBody" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-action="Table" class="btn btn-secondary"> Return </a>
+</form>

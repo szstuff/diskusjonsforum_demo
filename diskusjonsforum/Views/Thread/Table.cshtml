@@ -7,14 +7,20 @@
     <table class="table table-striped">
         <tr><th>User</th><th>Title</th><th>Comments</th></tr>
         @foreach (var thread in Model.Threads)
-{
-                <tr>
-                    <td>@thread.CreatedBy</td>
-                    <td><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.Id">@thread.Title</a></td>
-                    <td>@thread.Comments</td>
-                    <td>@thread.Id</td>
-                    <td></td>
-                </tr>
-}
+        {
+            <tr>
+                <td>@thread.User.Name</td>
+                <td><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a></td>
+                <td>@thread.ThreadComments</td>
+                <td>@thread.ThreadId</td>
+                <td></td>
+            </tr>
+        }
     </table>
+    
+    <p>
+        <a class="btn btn-secondary"
+           asp-controller="Thread"
+           asp-action="Create"> Start a new thread </a>
+    </p>
 </div>

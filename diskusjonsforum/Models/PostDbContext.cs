@@ -13,5 +13,5 @@
 //	}
 //}
 
-//// Må skrives om til å passe til Post.
+//// MÃ¥ skrives om til Ã¥ passe til Post.
 //// Alle entities skal ha egen dbcontext

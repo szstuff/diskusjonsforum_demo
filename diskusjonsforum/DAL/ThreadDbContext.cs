@@ -1,7 +1,9 @@
 using System;
+using Diskusjonsforum.Models;
 using Microsoft.EntityFrameworkCore;
+using Thread = System.Threading.Thread;
 
-namespace Diskusjonsforum.Models;
+namespace Diskusjonsforum.DAL;
 
 public class ThreadDbContext : DbContext
 {
