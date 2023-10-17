@@ -17,13 +17,14 @@ builder.Services.AddDbContext<ThreadDbContext>(options => {
 });
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-   .AddEntityFrameworkStores<ThreadDbContext>();
+    .AddEntityFrameworkStores<ThreadDbContext>();
 
-/*builder.Services.AddDefaultIdentity<IdentityUser>()
+    /*builder.Services.AddDefaultIdentity<IdentityUser>()
     .AddEntityFrameworkStores<ThreadDbContext>();*/
 
 builder.Services.AddRazorPages(); //order of adding services does not matter
 builder.Services.AddSession();
+
 
 var app = builder.Build();
 

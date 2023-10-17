@@ -37,7 +37,4 @@
     <Compile Remove="Models\UserDbContext.cs" />
     <Compile Remove="Models\PostDbContext.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DAL\" />
-  </ItemGroup>
 </Project>

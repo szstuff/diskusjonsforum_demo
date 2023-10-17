@@ -1,9 +1,10 @@
 using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Diskusjonsforum.Models;
 
-public class ThreadDbContext : DbContext
+public class ThreadDbContext : IdentityDbContext
 {
 	public ThreadDbContext(DbContextOptions<ThreadDbContext> options) : base(options)
 	{
