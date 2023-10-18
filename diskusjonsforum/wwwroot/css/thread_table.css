@@ -1,4 +1,4 @@
-﻿.threadbody {
+﻿/*.threadbody {
     border: 1px darkgray;
     border-radius: 10px;
     background-color: lightgray;
@@ -8,13 +8,13 @@
     border: 1px darkgray;
     border-radius: 10px;
     background-color: lightgray;
-}
+}*/
 
 
 /* Target the container element holding the buttons */
-.vertical-button-container {
-    padding: 5px; /* Optional padding for spacing */
-    float: right;
+/*.vertical-button-container {
+    padding: 5px;*/ /* Optional padding for spacing */
+    /*float: right;
     height: 15%;
     width: 10%;
     margin-top: 2px;
@@ -22,52 +22,52 @@
 }
 
     .vertical-button-container a {
-        background-color: lightblue; /* Optional background color for the inner div */
-        border: 1px solid green; /* Green border */
-        border-radius: 10%;
-        color: black; /* White text */
-        padding: 3px; /* Some padding */
-        cursor: pointer; /* Pointer/hand icon */
-        width: 100%; /* Set the width to 100% to make buttons appear below each other */
-        margin: 2px; /* Add margin to create spacing between buttons */
-        display: block;
-    }
+        background-color: lightblue;*/ /* Optional background color for the inner div */
+        /*border: 1px solid green;*/ /* Green border */
+        /*border-radius: 10%;
+        color: black;*/ /* White text */
+        /*padding: 3px;*/ /* Some padding */
+        /*cursor: pointer;*/ /* Pointer/hand icon */
+        /*width: 100%;*/ /* Set the width to 100% to make buttons appear below each other */
+        /*margin: 2px;*/ /* Add margin to create spacing between buttons */
+        /*display: block;
+    }*/
 
     /* Add a background color on hover */
-    .vertical-button-container button:hover {
+    /*.vertical-button-container button:hover {
         background-color: #3e8e41;
-    }
+    }*/
 /* Style for the outer div */
-.commentDiv {
-    border: 2px solid black; /* Optional border for visualization */
-    display: block;
+/*.commentDiv {
+    border: 2px solid black;*/ /* Optional border for visualization */
+    /*display: block;
     height: 20%;
-}
+}*/
 
 /* Style for the outermost container */
-.outermost-container {
-    border: 1px solid #ccc; /* Border to define the outermost container */
-    padding: 10px; /* Padding for spacing */
-    margin-bottom: 20px; /* Margin to separate containers */
-}
+/*.outermost-container {
+    border: 1px solid #ccc;*/ /* Border to define the outermost container */
+    /*padding: 10px;*/ /* Padding for spacing */
+    /*margin-bottom: 20px;*/ /* Margin to separate containers */
+/*}*/
 
 /* Style for nested containers */
-.nested-container {
+/*.nested-container {
     border-left: 2px solid black;
     padding: 10px;
     margin-top: 10px;
-    position: relative; /* Set position to relative */
-    overflow: hidden;
+    position: relative;*/ /* Set position to relative */
+    /*overflow: hidden;
     height: 40%;
     width: 98%;
-}
+}*/
 
     /* Additional styles for clarity (optional) */
-    .nested-container .nested-container {
-        margin-top: 5px; /* Reduce margin for deeper nesting */
-    }
+    /*.nested-container .nested-container {
+        margin-top: 5px;*/ /* Reduce margin for deeper nesting */
+    /*}
 
 .commentBody {
     display: inline-block;
     width: 60%;
-}
+}*/

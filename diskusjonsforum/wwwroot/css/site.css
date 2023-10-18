@@ -1,4 +1,4 @@
-﻿@media (min-width: 768px) {
+﻿/*@media (min-width: 768px) {
   html {
     font-size: 16px;
   }
@@ -17,22 +17,22 @@ body {
     background-color: white;
     display: flex;
     flex-direction: column;
-}
+}*/
 
-header, .container, foooter {
+/*header, .container, footer {
     flex: 0 0 auto;
     font-family: 'Ubuntu', sans-serif;
-}
+}*/
 
 
-.container {
+/*.container {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: center;*/
     /*height: 100%;*/
-    background-color: white;
+    /*background-color: white;
 }
 
 .footer {
@@ -41,14 +41,85 @@ header, .container, foooter {
     padding-left: 13%;
 }
 
-.custom-font {
+.navbar {
+    padding-left: 4%;
+    padding-right: 4%;
+    align-items: center;
+}
+
+.nav-link {
+    position: relative;
+}
+
+    .nav-link::after {
+        content: '';
+        opacity: 0;
+        transition: all 0.2s;
+        height: 2px;
+        width: 100%;
+        background-color: #198754;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+
+    .nav-link:hover::after {
+        opacity: 1;
+    }
+
+.nav-brand {
+    font-weight: 700;
+    font-size: 150%;
+    color: #6e0f8a;
+}
+
+.nav-item {
+    font-weight: 400;
+}
+
+border-top {
+    justify-content: center;
+}*/
+
+/*.custom-font {
     font-weight: 700;
     color: black;
     font-size: 150%;
+}*/
+
+/*.subheading {
+    font-weight: 300;*/
+    /*color: #bb5b17*/
+    /*color: white;
+}*/
+
+/*.custom-button {
+    background-color: #9f1fbf;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 5px 7px 2px 1px rgba(0, 0, 0, 0.1);
 }
 
-.subheading {
-    font-weight: 300;
-    /*color: #bb5b17*/
-    color: white;
+    .custom-button {
+        background-color: #007BFF;
+    }*/
+
+body {
+    background: url(../images/pexels-pixabay-355770.jpg) rgba(0,0,0,0.3);
+    background-blend-mode: multiply;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+@media (min-width: 991px) {
+    .sidebar {
+        background-color: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+    }
 }
