@@ -82,12 +82,14 @@ public class ThreadController : Controller
     // Slutt på ren chat-gpt
 
     [HttpGet]
+    [Authorize]
     public IActionResult Create()
     {
         return View();
     }
 
     [HttpPost]
+    [Authorize]
     public IActionResult Create(Thread thread)
     {
         

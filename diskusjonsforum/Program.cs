@@ -39,6 +39,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthorization();
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
@@ -53,7 +55,6 @@ app.MapDefaultControllerRoute();
 
 app.UseSession();
 app.UseAuthentication();
-app.UseAuthorization();
 
 app.MapRazorPages();
 
