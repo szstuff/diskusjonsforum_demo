@@ -5,9 +5,11 @@
 }
 
 .commentBody {
-    border: 1px darkgray;
-    border-radius: 10px;
-    background-color: lightgray;
+    border: 5px darkgray;
+    border-radius: 14px;
+    background-color: white;
+    padding-left: 5px;
+    
 }
 
 
@@ -39,7 +41,7 @@
     }
 /* Style for the outer div */
 .commentDiv {
-    border: 2px solid black; /* Optional border for visualization */
+    border: 1px solid black; /* Optional border for visualization */
     display: block;
     height: 20%;
 }
@@ -70,4 +72,8 @@
 .commentBody {
     display: inline-block;
     width: 60%;
+}
+
+.date {
+    color: darkgray;
 }
