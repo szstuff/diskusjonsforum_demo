@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Thread = Diskusjonsforum.Models.Thread;
 
 
@@ -25,6 +26,7 @@ public class CommentController : Controller
     }
     
     [HttpGet("create/{{commentId}}/{{threadId}}")]
+    [Authorize]
     public IActionResult Create(int parentCommentId, int threadId)
     {
         Comment parentComment = _threadDbContext.Comments.FirstOrDefault(c => c.CommentId == parentCommentId); //Throws no exception because parentComment should be null when the user replies to the thread 
@@ -43,6 +45,7 @@ public class CommentController : Controller
         return View(viewModel);
     }
     [HttpPost("comment/save")]
+    [Authorize]
     public async Task<IActionResult> Save(Comment comment)
     {
         if (ModelState.IsValid)
@@ -56,6 +59,7 @@ public class CommentController : Controller
     }
     
     [HttpGet("edit/{{commentId}}/{{threadId}}")]
+    [Authorize]
     public IActionResult Edit(int commentId, int threadId)
     {
         Comment commentToEdit = _threadDbContext.Comments.FirstOrDefault(c=>c.CommentId == commentId) ?? throw new InvalidOperationException("Requested comment not found. commentId:" + commentId);
@@ -77,6 +81,7 @@ public class CommentController : Controller
         return View(viewModel);
     }
     [HttpPost("comment/saveEdit")]
+    [Authorize]
     public async Task<IActionResult> SaveEdit(Comment comment)
     {
         if (ModelState.IsValid)

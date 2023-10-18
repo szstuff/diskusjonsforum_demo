@@ -14,16 +14,43 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ThreadDbContext>(options => {
     options.UseSqlite(
         builder.Configuration["ConnectionStrings:ThreadDbContextConnection"]);
-    
 });
 
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ThreadDbContext>().AddDefaultTokenProviders().AddDefaultUI();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+    {
+        // Password settings
+        options.Password.RequireDigit = true;
+        options.Password.RequiredLength = 8;
+        options.Password.RequireNonAlphanumeric = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequiredUniqueChars = 1;
+
+        // Lockout settings
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(60);
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.AllowedForNewUsers = true;
+
+        // User settings
+        options.User.RequireUniqueEmail = true;
+    })
+    .AddEntityFrameworkStores<ThreadDbContext>()
+    .AddDefaultTokenProviders();
 
 
 builder.Services.AddRazorPages(); //order of adding services does not matter
-builder.Services.AddSession();
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = ".AdventureWorks.Session";
+    options.IdleTimeout = TimeSpan.FromSeconds(3600); //1 hour
+    options.Cookie.IsEssential = true;
+});
 
 
 var app = builder.Build();
