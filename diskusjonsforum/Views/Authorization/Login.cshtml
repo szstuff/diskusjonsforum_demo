@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <!--<link rel="stylesheet" type="text/css" href="~/css/site.css"/> -->
+        
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="~/css/authentication.css">
@@ -15,26 +15,28 @@
 
     </head>
     <body>
-        <div class="login-container">
-            <h2>Welcome Back!</h2>
-            <form>
-                <div class="input-container">
-                    <input type="text" placeholder="Username" id="username" class="rounded-input" required>
-                    <i class='bx bxs-user logo' ></i>
-                    
-                </div>
-                <div class="input-container">
-                    
-                    <input type="password" placeholder="Password" id="password" class="rounded-input" required place>
-                    <i class='bx bxs-lock-alt logo'></i>
+        <div class="container">
+            <div class="login-container">
+                <h2>Welcome Back!</h2>
+                <form>
+                    <div class="input-container">
+                        <input type="text" placeholder="Username" id="username" class="rounded-input" required>
+                        <i class='bx bxs-user logo'></i>
 
+                    </div>
+                    <div class="input-container">
+
+                        <input type="password" placeholder="Password" id="password" class="rounded-input" required place>
+                        <i class='bx bxs-lock-alt logo'></i>
+
+                    </div>
+                    <div class="login-button">
+                        <button type="submit">Logg inn</button>
+                    </div>
+                </form>
+                <div class="register-here">
+                    <p>Don't have an account?<a asp-area="" asp-controller="Authorization" asp-action="Register"> Register here</a></p>
                 </div>
-                <div class="login-button">
-                    <button type="submit">Logg inn</button>
-                </div>
-            </form>
-            <div class="register-here">
-                <p>Don't have an account?<a asp-area="" asp-controller="Authorization" asp-action="Register"> Register here</a></p>
             </div>
         </div>
     </body>
