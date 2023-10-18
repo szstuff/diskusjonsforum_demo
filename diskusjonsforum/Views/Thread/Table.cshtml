@@ -2,13 +2,14 @@
 
 <h1>List of discussion threads (@Model.CurrentViewName Name)</h1>
 <!-- <a href="/ThreadThread/Grid">Grid View</a> -->
+<link rel="stylesheet" href="~/css/table.css">
 
 <div class="container">
     <table class="table table-striped">
         <tr><th>User</th><th>Title</th><th>Comments</th></tr>
         @foreach (var thread in Model.Threads)
         {
-            <tr>
+            <tr class="thread">
                 <td>@thread.User.Name</td>
                 <td><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a></td>
                 <td>@thread.ThreadComments</td>
