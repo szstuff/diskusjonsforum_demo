@@ -1,13 +1,12 @@
-﻿.threadbody {
+﻿/*.threadbody {
     border: 1px darkgray;
     border-radius: 10px;
     background-color: lightgray;
-}
+} */
 
 .commentBody {
     border: 5px darkgray;
     border-radius: 14px;
-    background-color: white;
     padding-left: 5px;
     
 }
@@ -15,47 +14,60 @@
 
 /* Target the container element holding the buttons */
 .vertical-button-container {
-    padding: 5px; /* Optional padding for spacing */
+    display: flex;
+    flex-direction: row;
     float: right;
+   /*padding: 5px; /* Optional padding for spacing */
+    /*float: right;
     height: 15%;
     width: 10%;
     margin-top: 2px;
-    display: inline-block;
+    display: inline-block;*/
 }
 
     .vertical-button-container a {
-        background-color: lightblue; /* Optional background color for the inner div */
-        border: 1px solid green; /* Green border */
-        border-radius: 10%;
+        /*background-color: lightgray; /* Optional background color for the inner div */
+        /*border: 1px solid green; /* Green border */
+        /*border-radius: 10%;
         color: black; /* White text */
         padding: 3px; /* Some padding */
         cursor: pointer; /* Pointer/hand icon */
         width: 100%; /* Set the width to 100% to make buttons appear below each other */
         margin: 2px; /* Add margin to create spacing between buttons */
         display: block;
+        border: transparent;
+        color: darkgrey;
+        
     }
 
     /* Add a background color on hover */
     .vertical-button-container button:hover {
-        background-color: #3e8e41;
+        background-color: lightgray;
     }
 /* Style for the outer div */
-.commentDiv {
+.commentDiv::before {
     border: 1px solid black; /* Optional border for visualization */
+    border-radius: 9px;
     display: block;
     height: 20%;
 }
 
+.commentDiv:hover{
+    background: lightgray;
+    border-radius: 9px;
+}
+
 /* Style for the outermost container */
 .outermost-container {
-    border: 1px solid #ccc; /* Border to define the outermost container */
+    /*border: 1px solid #ccc; /* Border to define the outermost container */
     padding: 10px; /* Padding for spacing */
     margin-bottom: 20px; /* Margin to separate containers */
+    
 }
 
 /* Style for nested containers */
 .nested-container {
-    border-left: 2px solid black;
+    border-left: 1.5px solid black;
     padding: 10px;
     margin-top: 10px;
     position: relative; /* Set position to relative */
@@ -76,4 +88,11 @@
 
 .date {
     color: darkgray;
+}
+
+.btn-primary{
+    border-radius: 20px;
+    background-color: transparent;
+    color: black;
+    border: 1px solid black;
 }

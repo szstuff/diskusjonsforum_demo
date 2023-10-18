@@ -11,7 +11,7 @@
     @if (@Model.ThreadCreatedAt != @Model.ThreadLastEditedAt)
     { <b> Last edited at @Model.ThreadLastEditedAt </b> } </small></p>
 <p class="threadbody"> @Model.ThreadBody </p>
-<a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-threadId="@Model.ThreadId"> Reply to Thread @Model.ThreadId </a>
+<a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-threadId="@Model.ThreadId"> Add comment @Model.ThreadId </a>
 
 <h2 class="heading"> Comments </h2>
 <ul>
@@ -50,10 +50,10 @@
                     <!-- også ren chatgpt. vi bør kanskje finne kilde på nett -->
                     @* <a class="btn btn-primary" href="/Comment/Create?thread=@Model.ThreadId&comment=@comment.CommentId"> Reply to comment @comment.CommentId </a> *@
                     @* <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-commentId="@comment.CommentId" asp-route-threadId="@Model.ThreadId"> Reply to comment @comment.CommentId </a> *@
-                    <div class="vertical-button-container" style="float: right">
-                        <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-parentCommentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Reply @comment.CommentId </a>
-                        <a class="btn btn-primary" asp-controller="Comment" asp-action="Edit" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Edit @comment.CommentId </a>
-                        <a class="btn btn-primary" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> Delete @comment.CommentId </a>
+                    <div class="vertical-button-container">
+                        <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-parentCommentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> <small>Reply</small> @comment.CommentId </a>
+                        <a class="btn btn-primary" asp-controller="Comment" asp-action="Edit" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> <small>Edit</small> @comment.CommentId </a>
+                        <a class="btn btn-primary" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> <small>Delete</small> @comment.CommentId </a>
                     </div>
 
                 </div>
