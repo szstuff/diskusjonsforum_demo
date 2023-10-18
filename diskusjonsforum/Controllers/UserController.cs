@@ -15,22 +15,14 @@ public class UserController : Controller
 
 	public IActionResult Table()
 	{
-		List<User> users = _threadDbContext.Users.ToList();
+		List<Diskusjonsforum.Models.ApplicationUser> users = _threadDbContext.Users.ToList();
 		var userListViewModel = new UserListViewModel(users, "Table");
 		return View(userListViewModel);
 	}
 	
-	public List<User> GetUsers()
+	public List<ApplicationUser> GetUsers()
 	{
-		var users = new List<User>();
-		var user1 = new User
-		{
-			Name = "Stilian",
-			Email="stilian@test.com",
-			Administrator = true,
-			PasswordHash = "password"
-		};
-		users.Add(user1);
+		var users = new List<ApplicationUser>();
 		return users;
 	}
 }

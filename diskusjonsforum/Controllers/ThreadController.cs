@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Thread = Diskusjonsforum.Models.Thread;
 
 //using diskusjonsforum.ViewModels; //Kan slettes hvis vi ikke lager ViewModels
@@ -13,16 +13,18 @@ namespace diskusjonsforum.Controllers;
 public class ThreadController : Controller
 {
     private readonly ThreadDbContext _threadDbContext;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public ThreadController(ThreadDbContext threadDbContext)
+    public ThreadController(ThreadDbContext threadDbContext, UserManager<ApplicationUser> userManager)
     {
         _threadDbContext = threadDbContext;
+        _userManager = userManager;
         //Creates dummy data for testing
         //_threadDbContext.Database.ExecuteSqlRaw("insert INTO Users (Name, PasswordHash, Email, Administrator) VALUES (\"stilian\", \"pass\", \"email@email.com\", True)\n");
         // _threadDbContext.Database.ExecuteSqlRaw("insert into Threads (ThreadTitle, ThreadBody, ThreadCategory, ThreadCreatedAt, UserId) VALUES (\"Hei\", \"Heihiehiehue\", \"Hei\", \"2020-09-10\", 1)\n");
-        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, User, ParentCommentId) values (\"Hei1\", \"2020-09-10\", 1, 1, null) ");
-        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, User, ParentCommentId) values (\"HeiHei2\", \"2020-09-10\", 1, 1, 1) ");
-        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, User, ParentCommentId) values (\"HeiHeiHei3\", \"2020-09-10\", 1, 1, 2) ");
+        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, ApplicationUser, ParentCommentId) values (\"Hei1\", \"2020-09-10\", 1, 1, null) ");
+        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, ApplicationUser, ParentCommentId) values (\"HeiHei2\", \"2020-09-10\", 1, 1, 1) ");
+        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, ApplicationUser, ParentCommentId) values (\"HeiHeiHei3\", \"2020-09-10\", 1, 1, 2) ");
     }
 
     public IActionResult Table()
@@ -42,15 +44,18 @@ public class ThreadController : Controller
 
     public IActionResult Thread(int threadId)
     {
-        var thread = _threadDbContext.Threads.Include(t => t.ThreadComments).ThenInclude(t => t.User)
+        var thread = _threadDbContext.Threads.Include(t => t.ThreadComments)!.ThenInclude(t => t.User)
             .FirstOrDefault(t => t.ThreadId == threadId);
+        _threadDbContext.Entry(thread)
+            .Reference(t => t!.User)
+            .Load();
 
         if (thread == null)
         {
             return NotFound();
         }
 
-        thread.ThreadComments = SortComments(thread.ThreadComments);
+        thread.ThreadComments = SortComments(thread.ThreadComments!);
 
         return View(thread);
 
@@ -88,18 +93,30 @@ public class ThreadController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(Thread thread)
+    public async Task<IActionResult> Create(Thread thread)
     {
-        
-        if (ModelState.IsValid)
+        if (HttpContext.User.Identity!.IsAuthenticated)
         {
-            _threadDbContext.Threads.Add(thread);
-            _threadDbContext.SaveChanges();
-            return RedirectToAction(nameof(Table));
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+        
+            if (user != null)
+            {
+                thread.UserId = user.Id;
+                thread.User = user;
+
+                if (ModelState.IsValid)
+                {
+                    _threadDbContext.Threads.Add(thread);
+                    _threadDbContext.SaveChanges(); // or await _threadDbContext.SaveChangesAsync(); for async
+
+                    return RedirectToAction(nameof(Table));
+                }
+            }
         }
 
         return View(thread);
     }
+
 
 }
 

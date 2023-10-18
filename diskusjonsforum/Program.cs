@@ -14,13 +14,13 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ThreadDbContext>(options => {
     options.UseSqlite(
         builder.Configuration["ConnectionStrings:ThreadDbContextConnection"]);
+    
 });
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ThreadDbContext>();
+builder.Services
+    .AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<ThreadDbContext>().AddDefaultTokenProviders().AddDefaultUI();
 
-    /*builder.Services.AddDefaultIdentity<IdentityUser>()
-    .AddEntityFrameworkStores<ThreadDbContext>();*/
 
 builder.Services.AddRazorPages(); //order of adding services does not matter
 builder.Services.AddSession();
@@ -32,12 +32,19 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    DBInit.Seed(app);
+    //DBInit.Seed(app);
 }
 
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseSession();
+
+app.MapDefaultControllerRoute();
 
 app.UseEndpoints(endpoints =>
 {
@@ -48,12 +55,6 @@ app.UseEndpoints(endpoints =>
     );
 
 });
-
-app.MapDefaultControllerRoute();
-
-app.UseSession();
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.MapRazorPages();
 

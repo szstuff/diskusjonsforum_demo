@@ -5,11 +5,11 @@
 
 <div class="container">
     <table class="table table-striped">
-        <tr><th>User</th><th>Title</th><th>Comments</th></tr>
+        <tr><th>ApplicationUser</th><th>Title</th><th>Comments</th></tr>
         @foreach (var thread in Model.Threads)
         {
             <tr>
-                <td>@thread.User.Name</td>
+                <td>@thread.User.UserName</td>
                 <td><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a></td>
                 <td>@thread.ThreadComments</td>
                 <td>@thread.ThreadId</td>

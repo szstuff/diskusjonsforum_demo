@@ -1,10 +1,11 @@
+using Diskusjonsforum.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace diskusjonsforum.Areas.Identity.Data;
 
-public class diskusjonsforumIdentityDbContext : IdentityDbContext<IdentityUser>
+public class diskusjonsforumIdentityDbContext : IdentityDbContext<ApplicationUser>
 {
     public diskusjonsforumIdentityDbContext(DbContextOptions<diskusjonsforumIdentityDbContext> options)
         : base(options)
