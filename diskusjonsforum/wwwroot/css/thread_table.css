@@ -45,16 +45,11 @@
         background-color: lightgray;
     }
 /* Style for the outer div */
-.commentDiv::before {
+.commentDiv{
     border: 1px solid black; /* Optional border for visualization */
     border-radius: 9px;
     display: block;
     height: 20%;
-}
-
-.commentDiv:hover{
-    background: lightgray;
-    border-radius: 9px;
 }
 
 /* Style for the outermost container */
@@ -62,6 +57,7 @@
     /*border: 1px solid #ccc; /* Border to define the outermost container */
     padding: 10px; /* Padding for spacing */
     margin-bottom: 20px; /* Margin to separate containers */
+    background: transparent;
     
 }
 
@@ -95,4 +91,13 @@
     background-color: transparent;
     color: black;
     border: 1px solid black;
+}
+
+
+.container{
+    display: flex;
+    margin-top: 50px;
+    border: 1px solid;
+    border-radius: 10px;
+    background: transparent;
 }
