@@ -1,1 +1,18 @@
-t
+.comment{
+    color: lightgray;
+}
+.idTr{
+    border: transparent;
+}
+
+tr:hover{
+    background: lightgray;
+}
+
+td{
+    border-radius: 10px;
+}
+
+small{
+    float: right;
+}

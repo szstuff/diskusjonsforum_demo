@@ -5,16 +5,19 @@
 <link rel="stylesheet" href="~/css/table.css">
 
 <div class="container">
-    <table class="table table-striped">
-        <tr><th>User</th><th>Title</th><th>Comments</th></tr>
+    <table class="table">
+        <!-- <tr><th>User</th><th>Title</th><th>Comments</th></tr> -->
         @foreach (var thread in Model.Threads)
         {
-            <tr class="thread">
-                <td>@thread.User.Name</td>
-                <td><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a></td>
+            
+            <tr>
+                <td><b>Id:</b>@thread.User.Name
+                    <small class="comment">@thread.ThreadId comments</small>
+                    <br>
+                    <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a></td>
                 <td>@thread.ThreadComments</td>
-                <td>@thread.ThreadId</td>
-                <td></td>
+                <!--<td><small class="comment">@thread.ThreadId comments</small></td> -->
+                
             </tr>
         }
     </table>
