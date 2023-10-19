@@ -4,10 +4,11 @@
 <!-- <a href="/ThreadThread/Grid">Grid View</a> -->
 <link rel="stylesheet" href="~/css/table.css">
 
-<div class="container">
+<div class="outermost-container">
     <table class="table">
         <!-- <tr><th>User</th><th>Title</th><th>Comments</th></tr> -->
         @foreach (var thread in Model.Threads)
+        
         {
             
             <tr>
@@ -17,7 +18,6 @@
                     <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a></td>
                 <td>@thread.ThreadComments</td>
                 <!--<td><small class="comment">@thread.ThreadId comments</small></td> -->
-                
             </tr>
         }
     </table>
