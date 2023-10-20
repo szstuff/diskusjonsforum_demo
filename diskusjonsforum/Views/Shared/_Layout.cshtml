@@ -119,7 +119,7 @@
                     <div class="offcanvas d-flex flex-column justify-content-center align-items-center flex-lg-row p-4 p-lg-0 gap-3">
                         <ul class="navbar-nav justify-content-center align-items-center fs-5 flex-grow-1 pe-3">
                             <li class="nav-item mx-2">
-                                <a class="nav-link active text-light" aria-current="page" href="#">Home</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Thread" asp-action="Table">Home</a>
                             </li>
                             <li class="nav-item mx-2">
                                 <a class="nav-link text-light" href="#">About</a>
@@ -139,7 +139,7 @@
         </nav>
     </header>
     <div class="container mx-auto">
-        <main role="main" class="d-flex flex-column flex-lg-row justify-content-center align-items-center pb-3">
+        <main role="main" class="d-flex flex-column justify-content-center align-items-center pb-3">
             @RenderBody()
         </main>
     </div>

@@ -71,3 +71,64 @@
     display: inline-block;
     width: 60%;
 }*/
+
+/* Custom CSS for the thread cards */
+/*.thread-card {
+    background-color: #fff;*/ /* White background color */
+    /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/ /* Add a subtle shadow */
+/*}*/
+
+.todays-discussion {
+    justify-content: start;
+    color: #feeeef;
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding-left: 25px;
+    padding-bottom: 20px;
+}
+
+/* Customize thread title */
+.title-thread {
+    text-decoration: none;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+/* Style user ID */
+.user-id {
+    font-weight: 400;
+    color: #002c45;
+}
+
+/* Style thread text */
+.thread-text {
+    color: #002c45;
+    margin-bottom: 10px;
+}
+
+/* Style comment count */
+.comment-count {
+    color: #002c45;
+}
+
+.thread-container {
+    background: #feeeef;
+    border: 1px solid;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.mt-5 {
+    max-width: 750px;
+}
+
+.custom-container {
+    color: white;
+}
+
+.start-new-thread {
+    color: #feeeef;
+}
+
