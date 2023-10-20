@@ -6,6 +6,12 @@
     <head>
         <link rel="stylesheet" href="~/css/thread_table.css">
         <link rel="stylesheet" href="~/css/site.css">
+        @* <link rel="stylesheet" href="~/css/thread_view.css"> *@
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="~/css/authentication.css">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Zanabazar+Square&family=Roboto&family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     </head>
     <body>
         <div class="container mt-5">
@@ -63,9 +69,9 @@
                                                     {
                                                         <b> Last edited: @comment.CommentLastEditedAt.</b>
                                                     }
-                                                </small>
                                             </small>
-                                        </p>
+                                        </small>
+                                    </p>
                                     <p class="commentbody"> @comment.CommentBody</p>
                                 </div>
 
