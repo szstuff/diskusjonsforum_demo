@@ -1,4 +1,8 @@
 ﻿
+.scrollable-container {
+    overflow-y: auto;
+}
+
 body {
     background: url("../images/16328440_v962-aum-05.jpg");
     background-size: cover;
@@ -12,6 +16,10 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+/*.navbar {
+    padding-bottom: 5px;
+}*/
 
 /*.custom-font {
     position: relative;
@@ -142,18 +150,3 @@ header {
 /*color: #bb5b17*/
 /*color: white;
 }*/
-
-.offcanvas, .offcanvas-lg, .offcanvas-md, .offcanvas-sm, .offcanvas-xl, .offcanvas-xxl {
-    --bs-offcanvas-zindex: 1045;
-    --bs-offcanvas-width: 400px;
-    --bs-offcanvas-height: 30vh;
-    --bs-offcanvas-padding-x: 1rem;
-    --bs-offcanvas-padding-y: 1rem;
-    --bs-offcanvas-color: var(--bs-body-color);
-    --bs-offcanvas-bg: var(--bs-body-bg);
-    --bs-offcanvas-border-width: var(--bs-border-width);
-    --bs-offcanvas-border-color: var(--bs-border-color-translucent);
-    --bs-offcanvas-box-shadow: var(--bs-box-shadow-sm);
-    --bs-offcanvas-transition: transform 0.3s ease-in-out;
-    --bs-offcanvas-title-line-height: 1.5;
-}

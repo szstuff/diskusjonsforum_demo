@@ -49,6 +49,7 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="~/css/thread_table.css" />
+        <link rel="stylesheet" type="text/css" href="~/css/site.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="~/css/authentication.css">
@@ -58,33 +59,35 @@
 </head>
 
     <body>
-    <div class="container mt-5">
-        <h1 class="todays-discussion">Here are the latest discussions!</h1>
+        <div class="scrollable-container">
+            <div class="container mt-5">
+                <h1 class="todays-discussion">Here are the latest discussions!</h1>
 
-        <div class="row mt-4">
-            @foreach (var thread in Model.Threads)
-            {
-                <div class="col-12 mb-4">
-                    <div class="thread-container p-4 border border-bottom rounded-3 d-flex justify-content-start align-items-stretch flex-fill">
-                        <div class="custom-container">
-                            <p class="title-thread"><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a></p>
-                            <p class="user-id">Posted by: @thread.User.Name</p>
-                            @* <p class="thread-text">@thread.ThreadText</p> *@
-                            <p class="comment-count">Comments: @thread.ThreadComments</p>
+                <div class="row mt-4">
+                    @foreach (var thread in Model.Threads)
+                    {
+                        <div class="col-12 mb-4">
+                            <div class="thread-container p-4 border border-bottom rounded-3 d-flex justify-content-start align-items-stretch flex-fill">
+                                <div class="custom-container">
+                                    <p class="title-thread"><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a></p>
+                                    <p class="user-id">Posted by: @thread.User.Name</p>
+                                    @* <p class="thread-text">@thread.ThreadText</p> *@
+                                    <p class="comment-count">Comments: @thread.ThreadComments</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
-            }
-        </div>
 
-        <div class="d-flex justify-content-center">
-            <p class="start-new-thread">
-                Not what you're looking for?
-                <a class="btn btn-secondary new-thread-button"
-                   asp-controller="Thread"
-                   asp-action="Create">Start a new thread</a>
-            </p>
+                <div class="d-flex justify-content-center">
+                    <p class="start-new-thread">
+                        Not what you're looking for?
+                        <a class="btn btn-secondary new-thread-button"
+                        asp-controller="Thread"
+                        asp-action="Create">Start a new thread</a>
+                    </p>
+                </div>
+            </div>
         </div>
-    </div>
     </body>
 </html>
