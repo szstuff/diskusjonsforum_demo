@@ -2,7 +2,7 @@
     font-size: 17px;
     padding: 10px 10px 10px 15px;
     border: 3px outset #ff6a52;
-    border-radius: 30px;
+    border-radius: 20px;
     color: #feeeef;
     background-color: #ff6a52;
 }
@@ -92,7 +92,7 @@
 
 /* Style for nested containers */
 .nested-container {
-    border-left: 4px solid #ff6a52;
+    border-left: 2px solid #ff6a52;
     padding: 10px;
     margin-top: 10px;
     position: relative; /* Set position to relative */
