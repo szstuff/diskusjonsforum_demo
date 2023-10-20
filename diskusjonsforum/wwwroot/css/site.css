@@ -1,54 +1,159 @@
-﻿@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-
-html, body {
-    height: 100%;
-}
-
-
+﻿
 body {
+    background: url("../images/16328440_v962-aum-05.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    overflow: hidden;
+    font-family: 'Noto Sans Zanabazar Square', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-family: 'Ubuntu', sans-serif;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+/*.custom-font {
+    position: relative;
+}
+
+    .custom-font:hover {
+        font-weight: 700;
+    }*/
+
+.mx-2 {
+    position: relative;
+}
+
+    .mx-2::after {
+        content: '';
+        opacity: 0;
+        transition: all 0.2s;
+        height: 2px;
+        width: 100%;
+        background-color: #feeeef;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+
+    .mx-2:hover::after {
+        opacity: 1;
+    }
+
+.login-text {
+    position: relative;
+}
+
+    .login-text::after {
+        content: '';
+        opacity: 0;
+        transition: all 0.2s;
+        height: 2px;
+        width: 100%;
+        background-color: #feeeef;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+
+    .login-text:hover::after {
+        opacity: 1;
+    }
+
+.register-text {
+    border: none;
+    background: #ffc942;
+    color: #feeeef;
+    border-radius: 30px;
+    outline: none;
+    cursor: pointer;
+    transition: .3s ease-in-out;
+}
+
+    .register-text:hover {
+        box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.2);
+    }
+
+header {
+    font-family: 'Noto Sans Zanabazar Square', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    padding-top: 1%;
+    padding-left: 4%;
+    padding-right: 4%;
+    color: #feeeef;
+}
+
+.navbar-brand {
+    padding-left: 5%;
+    font-size: 50px;
+    letter-spacing: 0.1em;
+}
+
+.custom-toggler {
+    border-color: #feeeef;
+}
+
+.offcanvas-header {
+    color: #feeeef;
+    font-style: italic;
+}
+
+@media (max-width: 991px) {
+    #offcanvasNavbar {
+        background-color: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+    }
+}
+
+/*.register-text {
+    color: #feeeef;
+}
+
+    .register-text:hover {
+        color: #002c45;
+    }*/
+
+/*.nav-brand {
+    font-weight: 700;
+    font-size: 150%;
+    color: #6e0f8a;
+}*/
+
+/*.nav-item {
     font-weight: 400;
-    color: #333;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-}
+}*/
 
-header, .container, foooter {
-    flex: 0 0 auto;
-    font-family: 'Ubuntu', sans-serif;
-}
-
-
-.container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+/*.border-top {
     justify-content: center;
-    align-items: center;
-    /*height: 100%;*/
-    background-color: white;
-}
+}*/
 
-.footer {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 13%;
-}
-
-.custom-font {
+/*.custom-font {
     font-weight: 700;
     color: black;
     font-size: 150%;
-}
+}*/
 
-.subheading {
-    font-weight: 300;
-    /*color: #bb5b17*/
-    color: white;
+/*.subheading {
+    font-weight: 300;*/
+/*color: #bb5b17*/
+/*color: white;
+}*/
+
+.offcanvas, .offcanvas-lg, .offcanvas-md, .offcanvas-sm, .offcanvas-xl, .offcanvas-xxl {
+    --bs-offcanvas-zindex: 1045;
+    --bs-offcanvas-width: 400px;
+    --bs-offcanvas-height: 30vh;
+    --bs-offcanvas-padding-x: 1rem;
+    --bs-offcanvas-padding-y: 1rem;
+    --bs-offcanvas-color: var(--bs-body-color);
+    --bs-offcanvas-bg: var(--bs-body-bg);
+    --bs-offcanvas-border-width: var(--bs-border-width);
+    --bs-offcanvas-border-color: var(--bs-border-color-translucent);
+    --bs-offcanvas-box-shadow: var(--bs-box-shadow-sm);
+    --bs-offcanvas-transition: transform 0.3s ease-in-out;
+    --bs-offcanvas-title-line-height: 1.5;
 }

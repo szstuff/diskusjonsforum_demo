@@ -5,32 +5,62 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <!-- Links to external CSS stylesheets, fonts and boxicons -->
         <link rel="stylesheet" type="text/css" href="~/css/site.css"/>
+        <link rel="stylesheet" type="text/css" href="~/css/authentication.css" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="~/css/authentication.css">
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Zanabazar+Square&family=Roboto&family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet">
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        
 
     </head>
     <body>
+        <!-- Old login container -->
+        @* <div class="container-fluid">
         <div class="login-container">
-            <h2>Welcome Back!</h2>
+            <h2 class="text-light">Welcome Back!</h2>
             <form>
                 <div class="input-container">
-                    <input type="text" placeholder="Username" id="username" class="rounded-input" required>
-                    <i class='bx bxs-user' ></i>
+                <input type="text" placeholder="Username" id="username" class="rounded-input" required>
+                    <i class='bx bxs-user' ></i> 
                 </div>
                 <div class="input-container">
                     <input type="password" placeholder="Password" id="password" class="rounded-input" required place>
-                    <i class='bx bxs-lock-alt'></i>
+                    <i class='bx bxs-lock-alt'></i> 
                 </div>
                 <div class="login-button">
-                    <button type="submit">Logg inn</button>
+                    <button class="btn-outline-success" type="submit">Logg inn</button>
                 </div>
             </form>
             <div class="register-here">
-                <p>Don't have an account?<a asp-area="" asp-controller="Authorization" asp-action="Register"> Register here</a></p>
+                <p class="text-dark">Don't have an account?<a asp-area="" asp-controller="Authorization" asp-action="Register"> Register here</a></p>
+            </div>
+        </div>
+        </div> *@
+        <!-- New login structure -->
+    <div class="form-box align-middle">
+            <div class="login-container" id="login">
+                <div class="top">
+                    <!-- Link to register page -->
+                    <span>Don't have an account? <a asp-area="" asp-controller="Authorization" asp-action="Register"> Register here</a></span>
+                    <p class="login-header">Login</p>
+                </div>
+                <div class="input-box">
+                    <!-- Input field for username -->
+                    <input type="text" placeholder="Username" id="username" class="input-field" required />
+                    <i class="bx bx-user"></i>
+                </div>
+                <div class="input-box">
+                    <!-- Input field for password -->
+                    <input type="password" placeholder="Password" id="password" class="input-field" required place>
+                    <i class="bx bx-lock-alt"></i>
+                </div>
+                <div class="input-box">
+                    <!-- Submit login info -->
+                    <input type="submit" class="submit" value="Sign In" />
+                </div>
             </div>
         </div>
     </body>

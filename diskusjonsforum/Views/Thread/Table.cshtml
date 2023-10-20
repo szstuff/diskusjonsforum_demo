@@ -1,26 +1,90 @@
-﻿@model ThreadListViewModel
+﻿@* @model ThreadListViewModel
 
-<h1>List of discussion threads (@Model.CurrentViewName Name)</h1>
 <!-- <a href="/ThreadThread/Grid">Grid View</a> -->
 
 <div class="container">
-    <table class="table table-striped">
-        <tr><th>User</th><th>Title</th><th>Comments</th></tr>
-        @foreach (var thread in Model.Threads)
-        {
-            <tr>
-                <td>@thread.User.Name</td>
-                <td><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a></td>
-                <td>@thread.ThreadComments</td>
-                <td>@thread.ThreadId</td>
-                <td></td>
-            </tr>
-        }
-    </table>
+    <h1 class="text-center">List of discussion threads (@Model.CurrentViewName Name)</h1>
+    <!-- Center table using mx-auto and making the table responsive -->
+    <div class="table-responsive mx-auto">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Title</th>
+                    <th>Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var thread in Model.Threads)
+                {
+                    <tr>
+                        <td>@thread.User.Name</td>
+                        <td>
+                            <div class="thread-title">
+                                <a 
+                                asp-controller="Thread" 
+                                asp-action="Thread" 
+                                asp-route-threadID="@thread.ThreadId">
+                                @thread.ThreadTitle
+                                </a>
+                            </div>
+                        </td>
+                        <td>@thread.ThreadComments</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
     
-    <p>
+    <p class="text-center">
         <a class="btn btn-secondary"
            asp-controller="Thread"
            asp-action="Create"> Start a new thread </a>
     </p>
-</div>
+</div> *@
+
+@model ThreadListViewModel
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="~/css/thread_table.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="~/css/authentication.css">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Zanabazar+Square&family=Roboto&family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+
+    <body>
+    <div class="container mt-5">
+        <h1 class="todays-discussion">Here are the latest discussions!</h1>
+
+        <div class="row mt-4">
+            @foreach (var thread in Model.Threads)
+            {
+                <div class="col-12 mb-4">
+                    <div class="thread-container p-4 border border-bottom rounded-3 d-flex justify-content-start align-items-stretch flex-fill">
+                        <div class="custom-container">
+                            <p class="title-thread"><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a></p>
+                            <p class="user-id">Posted by: @thread.User.Name</p>
+                            @* <p class="thread-text">@thread.ThreadText</p> *@
+                            <p class="comment-count">Comments: @thread.ThreadComments</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <p class="start-new-thread">
+                Not what you're looking for?
+                <a class="btn btn-secondary new-thread-button"
+                   asp-controller="Thread"
+                   asp-action="Create">Start a new thread</a>
+            </p>
+        </div>
+    </div>
+    </body>
+</html>
