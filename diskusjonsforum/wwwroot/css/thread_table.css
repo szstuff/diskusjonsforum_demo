@@ -1,12 +1,19 @@
 ﻿
+/*CSS Styles for Thread table and Thread single view*/
+
+
+/*THREAD SINGLE VIEW STYLING BELOW*/
+
+
 /* Custom CSS for the thread cards */
 /*.thread-card {
     background-color: #fff;*/ /* White background color */
     /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/ /* Add a subtle shadow */
 /*}*/
 
-
+/*Styles for thread body*/
 .threadbody {
+    /*Font and background styles for thread body*/
     font-size: 17px;
     padding: 10px 10px 10px 15px;
     border: 3px outset #ff6a52;
@@ -15,16 +22,21 @@
     background-color: #ff6a52;
 }
 
+/*Styles for comments heading*/
 .comments-heading {
+    /*Font size and weight*/
     font-size: 25px;
     font-weight: 400;
 }
 
+/*Syles for thread information, category and date*/
 .thread-information {
+    /*Font weight and size*/
     font-weight: 300;
     font-size: 13px;
 }
 
+/*Make new comment button styling*/
 .comment-button {
     font-size: 14px;
     font-weight: 700;
@@ -39,13 +51,16 @@
     transition: .3s ease-in-out;
 }
 
+    /*Hover function for new comment button*/
     .comment-button:hover {
+        /*Change color when hovering over*/
         background: rgba(40, 129, 85, 0.8);
         box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.5);
     }
 
 
-/* Target the container element holding the buttons */
+/*Buttons reply, edit, delete styling*/
+/*Might want to make these horizontal rather than vertical for better spacing, also need styling, have tried some different styles below*/
 .vertical-button-container {
     /*padding: 5px;*/ /* Optional padding for spacing */
     /*float: right;
@@ -64,10 +79,11 @@
     background: #288155;
     cursor: pointer;
     transition: .3s ease-in-out;
-    box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.5);
+    box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.5);*/
 }
 
-    .vertical-button-container a {
+    /*Hover styles for reply, edit, delete button*/
+    .vertical-button-container:hover {
         /*background-color: lightblue;*/ /* Optional background color for the inner div */
     /*border: 1px solid green;*/ /* Green border */
     /*border-radius: 10%;
@@ -86,21 +102,23 @@
         background-color: #3e8e41;
     }
 
-/* Style for the outer div */
-.commentDiv {
-    border: 2px solid black; /* Optional border for visualization */
-    height: 20%;
-}
+/* Style for the outer div, biggest container for comments */
+/*.commentDiv {
+    border: 2px solid black;*/ /* Optional border for visualization */
+    /*height: 20%;
+}*/
 
 /* Style for the outermost container */
+/* Only padding for spacing within threadbody */
 .outermost-container {
     padding: 10px; /* Padding for spacing */
     margin-bottom: 20px; /* Margin to separate containers */
 }
 
-/* Style for nested containers */
+/* Style for nested containers for comments */
 .nested-container {
-    border-left: 4px solid white;
+    /* Contains the orange border to left */
+    border-left: 4px solid #ff6a52;
     padding: 10px;
     margin-top: 10px;
     position: relative; /* Set position to relative */
@@ -114,22 +132,63 @@
         margin-top: 5px; /* Reduce margin for deeper nesting */
     }
 
+/* The inner container for the comment text, made it longer so "Last edited..." is on one line */
 .commentBody {
     display: inline-block;
     width: 90%;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* THREAD TABLE VIEW STYLING BELOW*/
+
 .todays-discussion {
     justify-content: start;
     color: #feeeef;
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
     padding-left: 25px;
     padding-bottom: 20px;
 }
 
+.title-categories {
+    color: #feeeef;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.col-md-3 {
+    justify-content: flex-start;
+}
+
+.list-group {
+    border-radius: 30px;
+}
+
+.list-group-item {
+    text-align: center;
+    background: #feeeef;
+    border: none;
+    height: 46px;
+    width: 200px;
+    color: #feeeef;
+    font-weight: 500;
+}
+
 /* Customize thread title */
 .title-thread {
+    color: #002c45;
     text-decoration: none;
     font-style: italic;
     font-weight: 400;
@@ -155,24 +214,46 @@
 }
 
 .thread-container {
+    flex: auto;
     color: #002c45;
     background: #feeeef;
     border: 3px #feeeef;
     border-radius: 30px;
-    padding: 20px;
+    max-width: 1000px;
+    padding-left: 20px;
     margin-bottom: 20px;
     /*box-shadow: 0px 3px 4px 0px rgba(0, 44, 69, 0.5);*/
 }
 
-.mt-5 {
-    max-width: 750px;
+.col-md-6 {
+    width: 600px;
 }
 
 .custom-container {
     color: white;
 }
 
-.start-new-thread {
-    color: #feeeef;
+.fixed-top {
+    top: 13rem;
+    right: 15rem;
 }
 
+#myBtn {
+    /*display: none;*/ /* Hidden by default */
+    position: fixed; /* Fixed/sticky position */
+    bottom: 20px; /* Place the button at the bottom of the page */
+    right: 30px; /* Place the button 30px from the right */
+    z-index: 99; /* Make sure it does not overlap */
+    border: none; /* Remove borders */
+    outline: none; /* Remove outline */
+    background-color: red; /* Set a background color */
+    color: white; /* Text color */
+    cursor: pointer; /* Add a mouse pointer on hover */
+    padding: 15px; /* Some padding */
+    border-radius: 10px; /* Rounded corners */
+    font-size: 18px; /* Increase font size */
+}
+
+    #myBtn:hover {
+        background-color: #555; /* Add a dark-grey background on hover */
+    }

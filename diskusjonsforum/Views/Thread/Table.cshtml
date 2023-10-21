@@ -43,22 +43,7 @@
     </p>
 </div> *@
 
-@model ThreadListViewModel
-
-<!DOCTYPE html>
-<html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="~/css/thread_table.css" />
-        <link rel="stylesheet" type="text/css" href="~/css/site.css" />
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="~/css/authentication.css">
-        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Zanabazar+Square&family=Roboto&family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet">
-        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
-</head>
-
-    <body>
+@* <body>
         <div class="scrollable-container">
             <div class="container mt-5">
                 <h1 class="todays-discussion">Here are the latest discussions!</h1>
@@ -70,24 +55,99 @@
                             <div class="thread-container p-4 border border-bottom rounded-3 d-flex justify-content-start align-items-stretch flex-fill">
                                 <div class="custom-container">
                                     <p class="title-thread"><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a></p>
-                                    <p class="user-id">Posted by: @thread.User.Name</p>
+                                    <p class="user-id">Posted by @thread.User.Name in @thread.ThreadCategory </p>
                                     @* <p class="thread-text">@thread.ThreadText</p> *@
-                                    <p class="comment-count">Comments: @thread.ThreadComments</p>
+@*<p class="comment-count">Comments: @thread.ThreadComments</p>
                                 </div>
                             </div>
                         </div>
                     }
                 </div>
+            </div>
+        </div>
+    <footer class="fixed-bottom table-footer">
+        <div class="d-flex justify-content-center">
+            <p class="start-new-thread">
+                Not what you're looking for?
+                <a class="btn btn-secondary new-thread-button"
+                   asp-controller="Thread"
+                   asp-action="Create">Start a new thread</a>
+            </p>
+        </div>
+    </footer>
+    </body> *@
 
-                <div class="d-flex justify-content-center">
+@model ThreadListViewModel
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- External css files for styling -->
+        <link rel="stylesheet" type="text/css" href="~/css/thread_table.css" />
+        <link rel="stylesheet" type="text/css" href="~/css/site.css" />
+        <link rel="stylesheet" type="text/css" href="~/css/site.js" />
+        <!-- External fonts and icons -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="~/css/authentication.css">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Zanabazar+Square&family=Roboto&family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+    <body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Left Column: Categories -->
+            <div class="col-md-3 d-flex">
+                <div class=category-container">
+                    <h1 class="title-categories">Categories</h1>
+                        <ul class="d-flex list-group">
+                        <!-- List of Categories -->
+                        <li class="list-group-item"><a href="/forum/category/1">Category 1</a></li>
+                        <li class="list-group-item"><a href="/forum/category/2">Category 2</a></li>
+                        <li class="list-group-item"><a href="/forum/category/3">Category 3</a></li>
+                        <li class="list-group-item"><a href="/forum/category/4">Category 4</a></li>
+                        <!-- Add more categories as needed -->
+                        </ul>
+                </div>
+            </div>
+
+            <!-- Middle Column: Latest Discussions -->
+            <div class="col-md-6">
+                <h1 class="todays-discussion">Here are the latest discussions!</h1>
+
+                @foreach (var thread in Model.Threads)
+                {
+                    <div class="col-12 mb-4">
+                        <div class="thread-container p-4 border border-bottom d-flex justify-content-start align-items-stretch flex-fill">
+                            <div class="custom-container">
+                                <p class="title-thread">
+                                    <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a>
+                                </p>
+                                <p class="user-id">Posted by @thread.User.Name in @thread.ThreadCategory</p>
+                                @* <p class="thread-text">@thread.ThreadText</p> *@
+                                <p class="comment-count">Comments: @thread.ThreadComments</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <!-- Right Column: Sticky "Start a new thread" button -->
+            <div class="col-md-3">
+                <div class="fixed-top d-flex justify-content-end">
                     <p class="start-new-thread">
                         Not what you're looking for?
                         <a class="btn btn-secondary new-thread-button"
-                        asp-controller="Thread"
-                        asp-action="Create">Start a new thread</a>
+                           asp-controller="Thread"
+                           asp-action="Create">Start a new thread</a>
                     </p>
                 </div>
             </div>
         </div>
+    </div>
+    <!-- Footer: Back to top button -->
+    <footer class="fixed-bottom">
+        <button onclick="topFunction()" id="myBtn" title="Go to Top">Top</button>
+    </footer>
     </body>
 </html>
