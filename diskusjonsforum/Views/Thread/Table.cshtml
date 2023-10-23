@@ -99,7 +99,7 @@
         <div class="row">
             <!-- Left Column: Categories -->
             <div class="col-md-3 d-flex">
-                <div class="category-container">
+                <div class="fixed-top justify-content-start category-container">
                     <h1 class="title-categories">Categories</h1>
                     <ul class="d-flex list-group">
                         <!-- List of Categories -->
@@ -109,14 +109,14 @@
                         <li class="list-group-item"><a href="/forum/category/4">Category 4</a></li>
                         <!-- Add more categories as needed -->
                     </ul>
-                        <div class="fixed-top">
-                            <p class="start-new-thread">
-                                Not what you're looking for?
-                                <a class="btn btn-secondary new-thread-button"
-                                   asp-controller="Thread"
-                                   asp-action="Create">Start a new thread</a>
-                            </p>
-                        </div>
+                    <div class="fixed-top">
+                        <p class="start-new-thread">
+                            Not what you're looking for?
+                            <a class="btn btn-secondary new-thread-button"
+                               asp-controller="Thread"
+                               asp-action="Create">Start a new thread</a>
+                        </p>
+                    </div>
                 </div>
 
             </div>
@@ -143,7 +143,7 @@
             </div>
             <!-- Right Column: Sticky "Start a new thread" button -->
             <div class="col-md-3">
-               <!--<div class="fixed-top d-flex justify-content-end">
+                <!--<div class="fixed-top d-flex justify-content-end">
                     <p class="start-new-thread">
                         Not what you're looking for?
                         <a class="btn btn-secondary new-thread-button"
@@ -154,9 +154,11 @@
             </div>
         </div>
     </div>
+    
+    
     <!-- Footer: Back to top button -->
-    <footer class="fixed-bottom">
-        <button onclick="topFunction()" id="myBtn" title="Go to Top">Top</button>
+    <footer>
+        <a style="text-decoration: none" class="d-flex justify-content-start container-fluid top_btn fixed-bottom" href="#">TOP</a>
     </footer>
     </body>
 </html>
