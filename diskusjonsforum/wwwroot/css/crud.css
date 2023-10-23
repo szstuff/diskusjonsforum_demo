@@ -1,0 +1,74 @@
+﻿
+
+/* CREATE NEW THREAD STYLING BELOW */
+
+.create-thread {
+    /*padding: 10px 10px 10px 15px;
+    border: 3px outset #feeeef;
+    border-radius: 30px;
+    background-color: #002c45;*/
+    color: #feeeef;
+}
+
+.new-thread {
+    font-size: 30px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.form {
+    padding: 4%;
+}
+
+.form-group {
+    padding-bottom: 15px;
+}
+
+.form-control {
+    background-color: #feeeef;
+    border: 2px outset #feeeef;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.new-thread-button-primary {
+    font-size: 14px;
+    font-weight: 700;
+    color: #feeeef;
+    height: 37px;
+    width: 30%;
+    margin-left: 15%;
+    margin-top: 10px;
+    border: 2px outset #288155;
+    border-radius: 30px;
+    outline: none;
+    background: #288155;
+    cursor: pointer;
+    transition: .3s ease-in-out;
+}
+
+    .new-thread-button-primary:hover {
+        background: rgba(40, 129, 85, 0.9);
+        box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.5);
+    }
+
+.new-thread-button-secondary {
+    font-size: 14px;
+    font-weight: 700;
+    color: #feeeef;
+    height: 37px;
+    width: 30%;
+    margin-right: 15%;
+    margin-top: 10px;
+    border: 2px outset #ff6a52;
+    border-radius: 30px;
+    outline: none;
+    background: #ff6a52;
+    cursor: pointer;
+    transition: .3s ease-in-out;
+}
+
+    .new-thread-button-secondary:hover {
+        background: rgba(255, 106, 82, 0.9);
+        box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.5);
+    }
