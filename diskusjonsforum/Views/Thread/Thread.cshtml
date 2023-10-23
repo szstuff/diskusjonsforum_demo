@@ -89,9 +89,9 @@
                                 @* <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-commentId="@comment.CommentId" asp-route-threadId="@Model.ThreadId"> Reply to comment @comment.CommentId </a> *@
                                 <div class="d-flex justify-content-end">
                                     <div class="vertical-button-container">
-                                        <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-parentCommentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> <small>Reply</small> @comment.CommentId </a>
-                                        <a class="btn btn-primary" asp-controller="Comment" asp-action="Edit" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> <small>Edit</small> @comment.CommentId </a>
-                                        <a class="btn btn-primary" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> <small>Delete</small> @comment.CommentId </a>
+                                        <a class="btn btncost" style="font-size: small" asp-controller="Comment" asp-action="Create" asp-route-parentCommentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> <small>Reply</small> @comment.CommentId </a>
+                                        <a class="btn btncost" style="font-size: small" asp-controller="Comment" asp-action="Edit" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> <small>Edit</small> @comment.CommentId </a>
+                                        <a class="btn btncost" style="font-size: small" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> <small>Delete</small> @comment.CommentId </a>
                                     </div>
                                 </div>
                             </div>
