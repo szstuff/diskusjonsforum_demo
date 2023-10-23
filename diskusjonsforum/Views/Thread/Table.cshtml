@@ -101,15 +101,24 @@
             <div class="col-md-3 d-flex">
                 <div class="category-container">
                     <h1 class="title-categories">Categories</h1>
-                        <ul class="d-flex list-group">
+                    <ul class="d-flex list-group">
                         <!-- List of Categories -->
                         <li class="list-group-item"><a href="/forum/category/1">Category 1</a></li>
                         <li class="list-group-item"><a href="/forum/category/2">Category 2</a></li>
                         <li class="list-group-item"><a href="/forum/category/3">Category 3</a></li>
                         <li class="list-group-item"><a href="/forum/category/4">Category 4</a></li>
                         <!-- Add more categories as needed -->
-                        </ul>
+                    </ul>
+                        <div class="fixed-top">
+                            <p class="start-new-thread">
+                                Not what you're looking for?
+                                <a class="btn btn-secondary new-thread-button"
+                                   asp-controller="Thread"
+                                   asp-action="Create">Start a new thread</a>
+                            </p>
+                        </div>
                 </div>
+
             </div>
 
             <!-- Middle Column: Latest Discussions -->
@@ -134,14 +143,14 @@
             </div>
             <!-- Right Column: Sticky "Start a new thread" button -->
             <div class="col-md-3">
-                <div class="fixed-top d-flex justify-content-end">
+               <!--<div class="fixed-top d-flex justify-content-end">
                     <p class="start-new-thread">
                         Not what you're looking for?
                         <a class="btn btn-secondary new-thread-button"
                            asp-controller="Thread"
                            asp-action="Create">Start a new thread</a>
                     </p>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>

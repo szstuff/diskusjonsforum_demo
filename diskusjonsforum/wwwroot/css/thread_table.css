@@ -148,6 +148,7 @@
 
 .list-group {
     border-radius: 30px;
+    margin-top:28px;
 }
 
 .list-group-item {
@@ -208,8 +209,9 @@
 }
 
 .fixed-top {
-    top: 13rem;
+    position:relative;
     right: 15rem;
+    color: white;
 }
 
 
@@ -233,3 +235,18 @@
     #myBtn:hover {
         background-color: #555; /* Add a dark-grey background on hover */
     }
+    
+.btn-secondary{
+    color: white;
+    background-color: #ffc942;
+    border: transparent;
+}
+
+.btn-secondary:hover{
+    color: white;
+    background-color:#ff9fc5;
+}
+
+.start-new-thread{
+    float: right;
+}
