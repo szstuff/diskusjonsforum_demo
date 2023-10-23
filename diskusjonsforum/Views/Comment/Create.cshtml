@@ -20,21 +20,7 @@
         <input asp-for="Comment.CommentBody" class="form-control"/>
         <span asp-validation-for="Comment.CommentBody" class="text-danger"></span>
     </div>
-    @*<div class="form-group">
-        <label asp-for="ThreadId"></label><span class="text-danger"></span>
-        <input asp-for="ThreadId" class="form-control"/>
-        <span asp-validation-for="ThreadId" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ParentCommentId"></label><span class="text-danger"></span>
-        <input asp-for="ParentCommentId" class="form-control"/>
-        <span asp-validation-for="ParentCommentId" class="text-danger"></span>
-    </div>*@
-    <div class="form-group">
-        <label asp-for="Comment.UserId"></label><span class="text-danger"></span>
-        <input asp-for="Comment.UserId" class="form-control"/>
-        <span asp-validation-for="Comment.UserId" class="text-danger"></span>
-    </div>
+
     <input type="submit" value="Post reply" class="btn btn-primary" onclick="location.href='@Url.Action("Save", "Comment")'" />
     <a asp-controller="Thread" asp-action="Thread" asp-route-threadId="@Model.ThreadId" class="btn btn-secondary"> Return </a>
 </form>}

@@ -15,12 +15,12 @@ public static class DBInit
         {
             var users = new List<ApplicationUser>
             {
-                new ApplicationUser {Administrator = true, PasswordHash = "Stilian", Email = "hei@gmail.com", UserName = "Stilian"},
-                new ApplicationUser {Administrator = true, PasswordHash = "Saloni", Email = "hei2@gmail.com", UserName = "Saloni"},
-                new ApplicationUser {Administrator = true, PasswordHash = "Jovia", Email = "hei3@gmail.com", UserName = "Jovia"},
-                new ApplicationUser {Administrator = true, PasswordHash = "Jenny", Email = "hei4@gmail.com", UserName = "Jenny"},
-                new ApplicationUser {Administrator = true, PasswordHash = "Linn", Email = "hei5@gmail.com", UserName = "Linn"},
-                new ApplicationUser {Administrator = false, PasswordHash = "Huub", Email = "hei6@gmail.com", UserName = "Huub"},
+                new ApplicationUser {PasswordHash = "Stilian", Email = "hei@gmail.com", UserName = "Stilian"},
+                new ApplicationUser {PasswordHash = "Saloni", Email = "hei2@gmail.com", UserName = "Saloni"},
+                new ApplicationUser {PasswordHash = "Jovia", Email = "hei3@gmail.com", UserName = "Jovia"},
+                new ApplicationUser {PasswordHash = "Jenny", Email = "hei4@gmail.com", UserName = "Jenny"},
+                new ApplicationUser {PasswordHash = "Linn", Email = "hei5@gmail.com", UserName = "Linn"},
+                new ApplicationUser {PasswordHash = "Huub", Email = "hei6@gmail.com", UserName = "Huub"},
 
             };
             context.AddRange(users);

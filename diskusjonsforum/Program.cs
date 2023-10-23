@@ -16,10 +16,7 @@ builder.Services.AddDbContext<ThreadDbContext>(options => {
         builder.Configuration["ConnectionStrings:ThreadDbContextConnection"]);
 });
 
-builder.Services
-    .AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ThreadDbContext>().AddDefaultTokenProviders().AddDefaultUI();
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     {
         // Password settings
         options.Password.RequireDigit = true;
@@ -38,8 +35,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
         options.User.RequireUniqueEmail = true;
     })
     .AddEntityFrameworkStores<ThreadDbContext>()
-    .AddDefaultTokenProviders();
-
+    .AddDefaultTokenProviders()
+    .AddDefaultUI();
 
 builder.Services.AddRazorPages(); //order of adding services does not matter
 

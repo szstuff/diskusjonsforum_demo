@@ -1,21 +1,24 @@
-﻿using System;
+﻿using System.Security.Claims;
 using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Thread = System.Threading.Thread;
+
+namespace diskusjonsforum.Controllers;
 
 public class UserController : Controller
 {
 	private readonly ThreadDbContext _threadDbContext;
-
-	public UserController(ThreadDbContext threadDbContext)
+	private UserManager<ApplicationUser> _userManager;
+	public UserController(ThreadDbContext threadDbContext, UserManager<ApplicationUser> userManager)
 	{
 		_threadDbContext = threadDbContext;
+		_userManager = userManager;
 	}
 
 	public IActionResult Table()
 	{
-		List<Diskusjonsforum.Models.ApplicationUser> users = _threadDbContext.Users.ToList();
+		var users = _threadDbContext.Users.ToList();
 		var userListViewModel = new UserListViewModel(users, "Table");
 		return View(userListViewModel);
 	}
@@ -24,5 +27,12 @@ public class UserController : Controller
 	{
 		var users = new List<ApplicationUser>();
 		return users;
+	}
+	
+	public async void MakeAdmin()
+	{
+		var user = await _userManager.GetUserAsync(HttpContext.User);
+		await _userManager.AddToRoleAsync(user, "Admin");
+		
 	}
 }

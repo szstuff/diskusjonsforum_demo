@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Net;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.Differencing;
 using Thread = Diskusjonsforum.Models.Thread;
 
 //using diskusjonsforum.ViewModels; //Kan slettes hvis vi ikke lager ViewModels
@@ -103,6 +105,7 @@ public class ThreadController : Controller
             {
                 thread.UserId = user.Id;
                 thread.User = user;
+                ModelState.Remove("thread.User");
 
                 if (ModelState.IsValid)
                 {
@@ -116,6 +119,25 @@ public class ThreadController : Controller
 
         return View(thread);
     }
+    
+    [HttpGet("edit/{threadId}")]
+    public async Task<IActionResult> Edit(int threadId)
+    {
+        if (HttpContext.User.Identity!.IsAuthenticated)
+        {
+            Thread threadToEdit = _threadDbContext.Threads.FirstOrDefault(t=>t.ThreadId == threadId)??
+                                  throw new InvalidOperationException("Requested thread not found. commentId:" +
+                                                                      threadId);
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var userIsAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            if (user.Id == threadToEdit.UserId || userIsAdmin)
+            return View();
+        }
+        return View("/Areas/Identity/Pages/Account/Login.cshtml");
+    }
+    
+    
+        
 
 
 }

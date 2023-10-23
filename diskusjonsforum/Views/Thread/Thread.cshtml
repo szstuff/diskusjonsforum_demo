@@ -1,4 +1,7 @@
-﻿@model Diskusjonsforum.Models.Thread
+﻿@using Microsoft.AspNetCore.Identity
+@model Diskusjonsforum.Models.Thread
+@inject UserManager<ApplicationUser> UserManager
+
 <link href="Stylesheet.css" rel="stylesheet" type="text/css" />
 
 <h1 class="heading"> @Model.ThreadTitle</h1>
@@ -9,12 +12,29 @@
 <p class="threadbody"> @Model.ThreadBody </p>
 <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-threadId="@Model.ThreadId"> Reply to Thread @Model.ThreadId </a>
 
+@*Get User ID and admin status on load to reduce the amount of times UserManager has to check these*@
+@{string userId = UserManager.GetUserId(User);
+    bool userIsAdmin = false;
+    if (userId != null)
+    {
+       userIsAdmin = await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin");}
+    } 
+
+@if (userId == @Model.UserId)
+{
+    <a class="btn btn-primary" asp-controller="Thread" asp-action="Edit" asp-route-threadId="@Model.ThreadId"> Edit @Model.ThreadId </a>
+    <a class="btn btn-warning" asp-controller="Thread" asp-action="Delete" asp-route-threadId="@Model.ThreadId"> Delete @Model.ThreadId </a>
+} else if  (userIsAdmin) {
+    <a class="btn btn-warning" asp-controller="Thread" asp-action="Edit" asp-route-threadId="@Model.ThreadId"> Edit as Admin @Model.ThreadId </a>
+    <a class="btn btn-warning" asp-controller="Thread" asp-action="Delete" asp-route-threadId="@Model.ThreadId"> Delete as Admin @Model.ThreadId </a>
+}
+
 <h2 class="heading"> Comments </h2>
 <ul>
     <div class="outermost-container">
-    @foreach (var comment in Model.ThreadComments.Where(c => c.ParentCommentId == null))
+    @foreach (var comment in Model.ThreadComments!.Where(c => c.ParentCommentId == null))
     {
-        DisplayComment(comment);
+        await DisplayComment(comment, userId, userIsAdmin); //Recursively load all comments
 
     }
     </div>
@@ -23,8 +43,7 @@
     
     
 @functions {
-
-        async Task DisplayComment(Comment comment)
+        async Task DisplayComment(Comment comment, string userId, bool userIsAdmin) //Gets parent comment and user information
         {
             <div class="nested-container">
                 <div class="commentDiv">
@@ -42,16 +61,23 @@
                     @* <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-commentId="@comment.CommentId" asp-route-threadId="@Model.ThreadId"> Reply to comment @comment.CommentId </a> *@
                     <div class="vertical-button-container" style="float: right">
                         <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-parentCommentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Reply @comment.CommentId </a>
-                        <a class="btn btn-primary" asp-controller="Comment" asp-action="Edit" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Edit @comment.CommentId </a>
-                        <a class="btn btn-primary" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> Delete @comment.CommentId </a>
+                        @if(userId == @comment.UserId){
+                            <a class="btn btn-primary" asp-controller="Comment" asp-action="Edit" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Edit @comment.CommentId </a>
+                            <a class="btn btn-warning" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> Delete @comment.CommentId </a>
+                        } else if (userIsAdmin) {
+                            <a class="btn btn-warning" asp-controller="Comment" asp-action="Edit" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Edit as Admin @comment.CommentId </a>
+                            <a class="btn btn-warning" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> Delete as Admin @comment.CommentId </a>
+                        }
                     </div>
 
                 </div>
 
-                @foreach (var child in Model.ThreadComments.Where(c => c.ParentCommentId == comment.CommentId))
+                @foreach (var child in Model.ThreadComments!.Where(c => c.ParentCommentId == comment.CommentId))
                 {
-                    DisplayComment(child);
+                    await DisplayComment(child, userId, userIsAdmin);
                 }
             </div>
         }
     }
+
+
