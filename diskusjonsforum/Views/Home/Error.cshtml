@@ -1,8 +1,10 @@
-@model ErrorViewModel
-
+﻿@model ErrorViewModel
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewData["Title"] = "Error";
 }
 
-<h2>title</h2>
+<h1 class="text-danger">Error.</h1>
+<h2 class="text-danger">An error occurred while processing your request.</h2>
+
+<p> @ViewBag.ErrorMsg </p>
+

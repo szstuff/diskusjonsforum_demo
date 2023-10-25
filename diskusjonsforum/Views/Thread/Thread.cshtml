@@ -4,7 +4,7 @@
 
 <link href="Stylesheet.css" rel="stylesheet" type="text/css" />
 
-<h1 class="heading"> @Model.ThreadTitle</h1>
+<h1 class="heading"> @Model.ThreadTitle </h1>
 <p class="subheading"> Posted in @Model.ThreadCategory </p>
 <p class="subheading"> by @Model.User.UserName on  @Model.ThreadCreatedAt.  
     @if (@Model.ThreadCreatedAt != @Model.ThreadLastEditedAt)
@@ -23,10 +23,10 @@
 @if (userId == @Model.UserId)
 {
     <a class="btn btn-primary" asp-controller="Thread" asp-action="Edit" asp-route-threadId="@Model.ThreadId"> Edit @Model.ThreadId </a>
-    <a class="btn btn-warning" asp-controller="Thread" asp-action="Delete" asp-route-threadId="@Model.ThreadId"> Delete @Model.ThreadId </a>
+    <a class="btn btn-warning" asp-controller="Thread" asp-action="DeleteThread" asp-route-threadId="@Model.ThreadId"> DeleteThread @Model.ThreadId </a>
 } else if  (userIsAdmin) {
     <a class="btn btn-warning" asp-controller="Thread" asp-action="Edit" asp-route-threadId="@Model.ThreadId"> Edit as Admin @Model.ThreadId </a>
-    <a class="btn btn-warning" asp-controller="Thread" asp-action="Delete" asp-route-threadId="@Model.ThreadId"> Delete as Admin @Model.ThreadId </a>
+    <a class="btn btn-warning" asp-controller="Thread" asp-action="DeleteThread" asp-route-threadId="@Model.ThreadId"> DeleteThread as Admin @Model.ThreadId </a>
 }
 
 <h2 class="heading"> Comments </h2>
@@ -63,10 +63,10 @@
                         <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-parentCommentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Reply @comment.CommentId </a>
                         @if(userId == @comment.UserId){
                             <a class="btn btn-primary" asp-controller="Comment" asp-action="Edit" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Edit @comment.CommentId </a>
-                            <a class="btn btn-warning" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> Delete @comment.CommentId </a>
+                            <a class="btn btn-warning" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> DeleteThread @comment.CommentId </a>
                         } else if (userIsAdmin) {
                             <a class="btn btn-warning" asp-controller="Comment" asp-action="Edit" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Edit as Admin @comment.CommentId </a>
-                            <a class="btn btn-warning" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> Delete as Admin @comment.CommentId </a>
+                            <a class="btn btn-warning" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> DeleteThread as Admin @comment.CommentId </a>
                         }
                     </div>
 

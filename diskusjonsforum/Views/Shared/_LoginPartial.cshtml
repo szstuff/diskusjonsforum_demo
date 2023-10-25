@@ -6,6 +6,20 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
+    <li>
+        <li>
+                                    <a class="nav-link text-dark" asp-controller="Role" asp-action="Create"> Fix Admin Role</a>
+                                </li>
+        @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin"))
+        {
+            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="MakeAdmin"> Exit Admin </a>
+        }
+        else
+        {
+            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="MakeAdmin"> Enter Admin view </a>
+        }
+
+    </li>
     <li class="nav-item">
         <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
     </li>

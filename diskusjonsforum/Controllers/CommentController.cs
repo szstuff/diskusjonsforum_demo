@@ -25,10 +25,10 @@ public class CommentController : Controller
 
     }
 
-    public async Task<List<Comment>> GetComments()
+    public Task<List<Comment>> GetComments()
     {
         var comments = new List<Comment>();
-        return comments;
+        return Task.FromResult(comments);
     }
     
     [HttpGet("create/{{commentId}}/{{threadId}}")]
@@ -123,13 +123,20 @@ public class CommentController : Controller
     [Authorize]
     public async Task<IActionResult> SaveEdit(Comment comment)
     {
+        var errorMsg = "";
         var user = await _userManager.GetUserAsync(HttpContext.User);
         if (user != null)
         {
             comment.User = user;
             comment.UserId = user.Id;
             ModelState.Remove("comment.User"); //Workaround for invalid modelstate. The model isnt really invalid, but it was evaluated BEFORE the controller added User and UserId. Therefore the validty of the "User" key can be removed 
-
+            //Checks if user is owner or admin before editing
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (user.Id != comment.UserId || !userRoles.Contains("Admin"))
+            {
+                errorMsg = "Could not verify that you are the owner of the Thread";
+                return RedirectToAction("Error", "Home", new { errorMsg });
+            }
             if (ModelState.IsValid)
             {
                 _threadDbContext.Comments.Update(comment);
@@ -138,12 +145,22 @@ public class CommentController : Controller
             }
         }
 
-        return RedirectToAction("Thread", "Thread", new {comment.ThreadId});
+        errorMsg = "Error occured when saving the changes you made to the comment";
+        return RedirectToAction("Error", "Home", new {errorMsg});
     }
 
     public async Task<IActionResult> DeleteComment(int commentId)
     {
         Comment comment = _threadDbContext.Comments.FirstOrDefault(c => c.CommentId == commentId) ?? throw new InvalidOperationException("Requested comment not found. CommentId: " + commentId);
+        
+        //Checks if user is owner or admin before editing
+        var user = await _userManager.GetUserAsync(HttpContext.User);
+        var userRoles = await _userManager.GetRolesAsync(user);
+        if (comment.UserId != user.Id || !userRoles.Contains("Admin"))
+        {
+            var errorMsg = "Could not verify that you are the owner of the Thread";
+            return RedirectToAction("Error", "Home", new { errorMsg });
+        }
         List<Comment> childcomments = AddChildren(comment);
 
         foreach (var child in childcomments)

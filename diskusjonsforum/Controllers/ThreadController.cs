@@ -1,10 +1,8 @@
-﻿using System.Net;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.CodeAnalysis.Differencing;
 using Thread = Diskusjonsforum.Models.Thread;
 
 //using diskusjonsforum.ViewModels; //Kan slettes hvis vi ikke lager ViewModels
@@ -100,12 +98,12 @@ public class ThreadController : Controller
         if (HttpContext.User.Identity!.IsAuthenticated)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
-        
+
             if (user != null)
             {
                 thread.UserId = user.Id;
                 thread.User = user;
-                ModelState.Remove("thread.User");
+                ModelState.Remove("User");
 
                 if (ModelState.IsValid)
                 {
@@ -119,33 +117,80 @@ public class ThreadController : Controller
 
         return View(thread);
     }
-    
+
     [HttpGet("edit/{threadId}")]
     public async Task<IActionResult> Edit(int threadId)
     {
         if (HttpContext.User.Identity!.IsAuthenticated)
         {
-            Thread threadToEdit = _threadDbContext.Threads.FirstOrDefault(t=>t.ThreadId == threadId)??
+            Thread threadToEdit = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId) ??
                                   throw new InvalidOperationException("Requested thread not found. commentId:" +
                                                                       threadId);
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var userIsAdmin = await _userManager.IsInRoleAsync(user, "Admin");
             if (user.Id == threadToEdit.UserId || userIsAdmin)
-            return View();
+            {
+                return View(threadToEdit);
+
+            }
+            else
+            {
+                return View("/Areas/Identity/Pages/Account/Login.cshtml");
+            }
         }
-        return View("/Areas/Identity/Pages/Account/Login.cshtml");
+
+        var errorMsg = "Error when trying to load Edit Thread view";
+        return RedirectToAction("Error", "Home", new { errorMsg });
     }
-    
-    
-        
+
+    public async Task<IActionResult> SaveEdit(Thread thread)
+    {
+        var errorMsg = "";
+        var user = await _userManager.GetUserAsync(HttpContext.User);
+        if (user != null)
+        {
+            ModelState.Remove(
+                "User"); //Workaround for invalid modelstate. The model isnt really invalid, but it was evaluated BEFORE the controller added User and UserId. Therefore the validty of the "User" key can be removed 
+
+            //Checks if user is owner or admin before editing
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (user.Id != thread.UserId || !userRoles.Contains("Admin"))
+            {
+                errorMsg = "Could not verify that you are the owner of the Thread";
+                return RedirectToAction("Error", "Home", new { errorMsg });
+            }
+
+            if (ModelState.IsValid)
+            {
+                _threadDbContext.Threads.Update(thread);
+                await _threadDbContext.SaveChangesAsync();
+                return RedirectToAction("Thread", "Thread", new { thread.ThreadId });
+            }
+        }
+
+        errorMsg = "Error occured when saving the changes you made to the thread";
+        return RedirectToAction("Error", "Home", new { errorMsg });
+
+    }
+
+    public async Task<IActionResult> DeleteThread(int threadId)
+    {
+
+        Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId)?? throw new InvalidOperationException("Requested Thread not found. ThreadId: " + threadId);
+        //Checks if user is owner or admin before editing
+        var user = await _userManager.GetUserAsync(HttpContext.User);
+        var userRoles = await _userManager.GetRolesAsync(user);
+        if (thread.UserId != user.Id || !userRoles.Contains("Admin"))
+        {
+            var userAdmin = userRoles.Contains("Admin");
+            var errorMsg = "Could not verify that you are the owner of the Thread";
+            return RedirectToAction("Error", "Home", new { errorMsg });
+        }
+
+        _threadDbContext.Threads.Remove(thread);
+        await _threadDbContext.SaveChangesAsync();
+        return RedirectToAction("Table", "Thread");
+    }
 
 
 }
-
-//public IActionResult ListView()
-    //{
-    //    //Henter "Threads" fra DB og legger til liste
-    //    List<Thread> threads = _threadDbContext.Threads.ToList();
-    //    var threadListViewModel = new ThreadListViewModel(threads, "List");
-    //    return View(threadListViewModel);
-    //}

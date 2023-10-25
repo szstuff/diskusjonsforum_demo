@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Net;
+using System.Security.Claims;
 using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -28,11 +29,28 @@ public class UserController : Controller
 		var users = new List<ApplicationUser>();
 		return users;
 	}
-	
-	public async void MakeAdmin()
+
+	public async Task<IActionResult> MakeAdmin()
 	{
-		var user = await _userManager.GetUserAsync(HttpContext.User);
-		await _userManager.AddToRoleAsync(user, "Admin");
-		
+		if (HttpContext.User.Identity!.IsAuthenticated)
+		{
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+        
+			if (user != null)
+			{
+				var userRoles = await _userManager.GetRolesAsync(user);
+
+				if (userRoles.Contains("Admin"))
+				{
+					await _userManager.RemoveFromRoleAsync(user, "Admin");
+				}
+				else
+				{
+					await _userManager.AddToRoleAsync(user, "Admin");
+				}
+			}
+		}
+
+		return RedirectToAction("Index", "Home");
 	}
 }

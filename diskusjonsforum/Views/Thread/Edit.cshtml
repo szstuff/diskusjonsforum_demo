@@ -1,26 +1,32 @@
 @model Thread
        
-       <h2> Edit thread </h2>
+       <h2> Edit thread @Model.ThreadId</h2>
        
-       <form asp-controller="Thread" asp-action="SaveEdit">
-           <div class="form-group">
-               <label asp-for="ThreadCategory"></label><span class="text-danger"></span>
-               <input asp-for="ThreadCategory" class="form-control"/> @Model.ThreadCategory <input/>
-               <span asp-validation-for="ThreadCategory" class="text-danger"></span>
-           </div>
-           <div class="form-group">
-               <label asp-for="ThreadTitle"></label><span class="text-danger"></span>
-               <input asp-for="ThreadTitle" class="form-control"/> 
-               <span asp-validation-for="ThreadTitle" class="text-danger"></span>
-           </div>
-           <div class="form-group">
-               <label asp-for="ThreadBody"></label><span class="text-danger"></span>
-               <input asp-for="ThreadBody" class="form-control"/>
-               <span asp-validation-for="ThreadBody" class="text-danger"></span>
-           </div>
-           <button type="submit" class="btn btn-primary">Create</button>
-           <a asp-action="Table" class="btn btn-secondary"> Return </a>
-       </form>
+<form asp-controller="Thread" asp-action="SaveEdit">
+    <input type="hidden" asp-for="ThreadId" value="@Model.ThreadId" />
+    <input type="hidden" asp-for="User" value="@Model.User" />
+    <input type="hidden" asp-for="UserId" value="@Model.UserId" />
+
+
+
+    <div class="form-group">
+        <label asp-for="ThreadCategory"></label><span class="text-danger"></span>
+        <input asp-for="ThreadCategory" class="form-control"/> @Model.ThreadCategory <input/>
+        <span asp-validation-for="ThreadCategory" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ThreadTitle"></label><span class="text-danger"></span>
+        <input asp-for="ThreadTitle" class="form-control"/>
+        <span asp-validation-for="ThreadTitle" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ThreadBody"></label><span class="text-danger"></span>
+        <input asp-for="ThreadBody" class="form-control"/>
+        <span asp-validation-for="ThreadBody" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save edit</button>
+    <a asp-action="Table" class="btn btn-secondary"> Return </a>
+</form>
 
 @{
     Layout = null;
