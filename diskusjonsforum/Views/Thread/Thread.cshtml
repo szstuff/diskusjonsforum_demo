@@ -1,57 +1,109 @@
 ﻿@model Diskusjonsforum.Models.Thread
-<link href="Stylesheet.css" rel="stylesheet" type="text/css" />
+<!-- <link href="Stylesheet.css" rel="stylesheet" type="text/css" /> -->
 
-<h1 class="heading"> @Model.ThreadTitle</h1>
-<p class="subheading"> Posted in @Model.ThreadCategory </p>
-<p class="subheading"> by @Model.User?.Name on  @Model.ThreadCreatedAt.  
-    @if (@Model.ThreadCreatedAt != @Model.ThreadLastEditedAt)
-    { <b> Last edited at @Model.ThreadLastEditedAt </b> } </p>
-<p class="threadbody"> @Model.ThreadBody </p>
-<a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-threadId="@Model.ThreadId"> Reply to Thread @Model.ThreadId </a>
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- External css files for styling -->
+        <link rel="stylesheet" href="~/css/thread_table.css">
+        <link rel="stylesheet" href="~/css/site.css">
+        @* <link rel="stylesheet" href="~/css/thread_view.css"> *@
+        <!-- External fonts and icons -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="~/css/authentication.css">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Zanabazar+Square&family=Roboto&family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    </head>
+    <body>
+        <div class="container mt-5">
+        <div class="row mt-4 col-12 mb-4 p-4 border border-bottom d-flex justify-content-start align-items-stretch flex-fill thread-container">
+            <!-- Thread title -->
+            <h1 class="thread-title-current"> @Model.ThreadTitle</h1>
+            
+            <div class="thread-information">
+                <!-- Thread information: user, category, post date, last edited date -->
+                <p>
+                    Posted in @Model.ThreadCategory by @Model.User?.Name <br />
+                    Posted: @Model.ThreadCreatedAt.
+                    <!-- Display last edited date if different -->
+                    @if (@Model.ThreadCreatedAt != @Model.ThreadLastEditedAt)
+                    {
+                        <b> Last edited: @Model.ThreadLastEditedAt </b>
+                    }
+                </p>
+            </div>
 
-<h2 class="heading"> Comments </h2>
-<ul>
-    <div class="outermost-container">
-    @foreach (var comment in Model.ThreadComments.Where(c => c.ParentCommentId == null))
-    {
-        DisplayComment(comment);
+            <!-- Thread body -->
+            <p class="threadbody"> @Model.ThreadBody </p>
 
-    }
-    </div>
-</ul>
-
-    
-    
-@functions {
-
-        async Task DisplayComment(Comment comment)
-        {
-            <div class="nested-container">
-                <div class="commentDiv">
-
-                    <div class="commentBody">
-                        <p class="subheading"> Posted by @comment.User.Name on @comment.CommentCreatedAt.
-                            @if (comment.CommentCreatedAt != comment.CommentLastEditedAt)
-                            {<b> Last edited at @comment.CommentLastEditedAt.</b>}
-                        </p>
-                        <p class="commentbody"> @comment.CommentBody</p>
+            <div class="container">
+                <div class="row">
+                    <!-- Section for displaying comments -->
+                    <div class="col-6">
+                        <p class="d-flex justify-content-start comments-heading">Comments:</p>
                     </div>
-
-                    <!-- også ren chatgpt. vi bør kanskje finne kilde på nett -->
-                    @* <a class="btn btn-primary" href="/Comment/Create?thread=@Model.ThreadId&comment=@comment.CommentId"> Reply to comment @comment.CommentId </a> *@
-                    @* <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-commentId="@comment.CommentId" asp-route-threadId="@Model.ThreadId"> Reply to comment @comment.CommentId </a> *@
-                    <div class="vertical-button-container" style="float: right">
-                        <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-parentCommentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Reply @comment.CommentId </a>
-                        <a class="btn btn-primary" asp-controller="Comment" asp-action="Edit" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Edit @comment.CommentId </a>
-                        <a class="btn btn-primary" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> Delete @comment.CommentId </a>
+                    <!-- Section for adding a new comment -->
+                    <div class="col-6 text-end">
+                        <a class="btn btn-primary comment-button"
+                           asp-controller="Comment"
+                           asp-action="Create"
+                           asp-route-threadId="@Model.ThreadId">
+                            Add comment
+                        </a>
                     </div>
-
                 </div>
+            </div>
 
-                @foreach (var child in Model.ThreadComments.Where(c => c.ParentCommentId == comment.CommentId))
-                {
-                    DisplayComment(child);
+            <div class="display-comments">
+                <ul class="outermost-container">
+                    @foreach (var comment in Model.ThreadComments.Where(c => c.ParentCommentId == null))
+                        {
+                            DisplayComment(comment);
+
+                        }                   
+                </ul>
+            </div>
+                @functions {
+                    async Task DisplayComment(Comment comment)
+                    {
+                        <div class="nested-container">
+                            <div class="row commentDiv">
+                                <div class="col-6 commentBody">
+                                    <p class="d-flex justify-content-start date">
+                                        <small>
+                                            <small>
+                                                Posted by @comment.User.Name on @comment.CommentCreatedAt.
+                                                @if (comment.CommentCreatedAt != comment.CommentLastEditedAt)
+                                                    {
+                                                        <b> Last edited: @comment.CommentLastEditedAt.</b>
+                                                    }
+                                            </small>
+                                        </small>
+                                    </p>
+                                    <p class="commentbody"> @comment.CommentBody</p>
+                                </div>
+
+                                <!-- også ren chatgpt. vi bør kanskje finne kilde på nett -->
+                                @* <a class="btn btn-primary" href="/Comment/Create?thread=@Model.ThreadId&comment=@comment.CommentId"> Reply to comment @comment.CommentId </a> *@
+                                @* <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-commentId="@comment.CommentId" asp-route-threadId="@Model.ThreadId"> Reply to comment @comment.CommentId </a> *@
+                                <div class="d-flex justify-content-end">
+                                    <div class="vertical-button-container">
+                                        <a class="btn btncost" style="font-size: small" asp-controller="Comment" asp-action="Create" asp-route-parentCommentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> <small>Reply</small> @comment.CommentId </a>
+                                        <a class="btn btncost" style="font-size: small" asp-controller="Comment" asp-action="Edit" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> <small>Edit</small> @comment.CommentId </a>
+                                        <a class="btn btncost" style="font-size: small" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> <small>Delete</small> @comment.CommentId </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @foreach (var child in Model.ThreadComments.Where(c => c.ParentCommentId == comment.CommentId))
+                            {
+                                DisplayComment(child);
+                            }
+                        </div>
+                    }
                 }
             </div>
-        }
-    }
+        </div>
+    </body>
+</html>
