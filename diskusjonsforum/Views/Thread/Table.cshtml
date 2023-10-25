@@ -9,7 +9,7 @@
         @foreach (var thread in Model.Threads)
         {
             <tr>
-                <td>@thread.User.UserName</td>
+                <td>@thread.User?.UserName</td>
                 <td><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a></td>
                 <td>@thread.ThreadComments</td>
                 <td>@thread.ThreadId</td>
