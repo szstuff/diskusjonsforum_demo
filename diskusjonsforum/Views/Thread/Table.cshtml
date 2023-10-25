@@ -94,13 +94,13 @@
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
 </head>
-    <body>
+<body>
     <div class="container-fluid">
         <div class="row">
             <!-- Left Column: Categories -->
-            <div class="col-md-3 cat">
-                <div class="category-container">
-                    <h1 class="title-categories">Categories</h1>
+            @* <div class="col-md-3 cat"> *@
+                <div class="fixed-top category-container">
+                    @* <h1 class="title-categories">Categories</h1> *@
                     <ul class="list-group">
                         <!-- List of Categories -->
                         <li class="list-group-item"><a href="/forum/category/1">Category 1</a></li>
@@ -109,20 +109,30 @@
                         <li class="list-group-item"><a href="/forum/category/4">Category 4</a></li>
                         <!-- Add more categories as needed -->
                     </ul>
-                    <div class="fixed-top">
-                        <p class="start-new-thread">
-                            Not what you're looking for?
-                            <a class="btn btn-secondary new-thread-button"
-                               asp-controller="Thread"
-                               asp-action="Create">Start a new thread</a>
-                        </p>
-                    </div>
                 </div>
 
+            <div class="fixed-top button-new-thread">
+                <p class="start-new-thread">
+                    <b>Can't find what you're looking for?</b> <br />
+                    <a class="btn btn-secondary new-thread-button"
+                       asp-controller="Thread"
+                       asp-action="Create"><b>Start a new thread</b></a>
+                </p>
             </div>
+            @* </div> *@
 
             <!-- Middle Column: Latest Discussions -->
-            <div class="col-md-6">
+            <div class="col-md-6 col-lg-8 justify-content-center">
+
+                <div class="button-container">
+                    <p class="start-new-thread">
+                        <b>Can't find what you're looking for?</b> <br />
+                        <a class="btn btn-secondary new-thread-button"
+                           asp-controller="Thread"
+                           asp-action="Create"><b>Start a new thread</b></a>
+                    </p>
+                </div>
+
                 <h1 class="todays-discussion">Here are the latest discussions!</h1>
 
                 @foreach (var thread in Model.Threads)
@@ -133,7 +143,7 @@
                                 <p class="title-thread">
                                     <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a>
                                 </p>
-                                <p class="user-id">Posted by @thread.User.Name in @thread.ThreadCategory</p>
+                                <p class="user-id">Posted by @thread.User?.Name in @thread.ThreadCategory</p>
                                 @* <p class="thread-text">@thread.ThreadText</p> *@
                                 <p class="comment-count">Comments: @thread.ThreadComments</p>
                             </div>
@@ -141,24 +151,11 @@
                     </div>
                 }
             </div>
-            <!-- Right Column: Sticky "Start a new thread" button -->
-            <div class="col-md-3">
-                <!--<div class="fixed-top d-flex justify-content-end">
-                    <p class="start-new-thread">
-                        Not what you're looking for?
-                        <a class="btn btn-secondary new-thread-button"
-                           asp-controller="Thread"
-                           asp-action="Create">Start a new thread</a>
-                    </p>
-                </div>-->
-            </div>
         </div>
     </div>
-    
-    
-    <!-- Footer: Back to top button -->
-    <footer>
-        <a style="text-decoration: none" class="d-flex justify-content-start container-fluid top_btn fixed-bottom" href="#">TOP</a>
-    </footer>
-    </body>
+
+
+    <a style="text-decoration: none" class="d-flex justify-content-start container-fluid top_btn" href="#"><i class='bx bx-up-arrow-alt' style="font-size: 2.5em"></i></a>
+
+</body>
 </html>
