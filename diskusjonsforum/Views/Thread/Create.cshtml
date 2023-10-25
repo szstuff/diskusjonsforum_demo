@@ -17,8 +17,8 @@
 
     <body>
     <div class="container mt-5">
-        <div class="row mt-4 col-12 mb-4 p-4 d-flex justify-content-start align-items-stretch flex-fill create-thread">
-            <h2 class="new-thread"> Create a thread </h2>
+        <div class="row mt-4 col-12 mb-4 p-4 d-flex justify-content-start align-items-stretch flex-fill crud-thread">
+            <h2 class="crud-title"> Create a thread </h2>
 
             <div class="form">
                 <form asp-controller="Thread" asp-action="Create">
@@ -44,8 +44,8 @@
                 </div>
 
                 <div class="d-flex justify-content-between thread-button">
-                    <button type="submit" class="btn btn-primary new-thread-button-primary">Create</button>
-                    <a asp-action="Table" class="btn btn-secondary new-thread-button-secondary"> Return </a>
+                    <button type="submit" class="btn btn-primary crud-button-primary">Create</button>
+                    <a asp-action="Table" class="btn btn-secondary crud-button-secondary"> Return </a>
                 </div>
                 </form>
             </div>
