@@ -1,108 +1,152 @@
-﻿html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+﻿
+.scrollable-container {
+    overflow-y: auto;
 }
 
 body {
-  margin-bottom: 60px;
-  background-color: #6c112e
-}
-
-.heading {
-    font-family: Impact, sans-serif;
-    font-weight: bold;
-    font-size: 150%;
-    /*color: #bb5b17*/
-    color: #fdfdfe;
-}
-
-.subheading {
-    font-family: Impact, sans-serif;
-    /*color: #bb5b17*/
-    color: #fdfdfe;
-}
-
-.threadbody {
-    border: 1px darkgray;
-    border-radius: 10px;
-    background-color: lightgray;
-    
-}
-
-.commentBody {
-    border: 1px darkgray;
-    border-radius: 10px;
-    background-color: lightgray;
-}
-
-
-/* Target the container element holding the buttons */
-.vertical-button-container {
-    padding: 5px; /* Optional padding for spacing */
-    float: right;
-    height: 15%;
-    width: 10%;
-    margin-top: 2px;
-display: inline-block;
-}
-
-.vertical-button-container a {
-    background-color: lightblue; /* Optional background color for the inner div */
-    border: 1px solid green; /* Green border */
-    border-radius: 10%;
-    color: black; /* White text */
-    padding: 3px; /* Some padding */
-    cursor: pointer; /* Pointer/hand icon */
-    width: 100%; /* Set the width to 100% to make buttons appear below each other */
-    margin: 2px; /* Add margin to create spacing between buttons */
-    display: block;
-}
-
-/* Add a background color on hover */
-.vertical-button-container button:hover {
-    background-color: #3e8e41;
-}
-/* Style for the outer div */
-.commentDiv {
-    border: 2px solid black; /* Optional border for visualization */
-    display: block;
-    height: 20%;
-}
-
-/* Style for the outermost container */
-.outermost-container {
-    border: 1px solid #ccc; /* Border to define the outermost container */
-    padding: 10px; /* Padding for spacing */
-    margin-bottom: 20px; /* Margin to separate containers */
-}
-
-/* Style for nested containers */
-.nested-container {
-    border-left: 2px solid black;
-    padding: 10px;
-    margin-top: 10px;
-    position: relative; /* Set position to relative */
+    background: url("../images/16328440_v962-aum-05.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     overflow: hidden;
-    height: 40%;
-    width: 98%;
+    font-family: 'Noto Sans Zanabazar Square', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    font-family: 'Ubuntu', sans-serif;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Additional styles for clarity (optional) */
-.nested-container .nested-container {
-    margin-top: 5px; /* Reduce margin for deeper nesting */
+/*.navbar {
+    padding-bottom: 5px;
+}*/
+
+/*.custom-font {
+    position: relative;
 }
 
-.commentBody{
-    display: inline-block;
-    width: 60%;
+    .custom-font:hover {
+        font-weight: 700;
+    }*/
+
+.mx-2 {
+    position: relative;
 }
+
+    .mx-2::after {
+        content: '';
+        opacity: 0;
+        transition: all 0.2s;
+        height: 2px;
+        width: 100%;
+        background-color: #feeeef;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+
+    .mx-2:hover::after {
+        opacity: 1;
+    }
+
+.login-text {
+    position: relative;
+}
+
+    .login-text::after {
+        content: '';
+        opacity: 0;
+        transition: all 0.2s;
+        height: 2px;
+        width: 100%;
+        background-color: #feeeef;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+    }
+
+    .login-text:hover::after {
+        opacity: 1;
+    }
+
+.register-text {
+    border: none;
+    background: #ffc942;
+    color: #feeeef;
+    border-radius: 30px;
+    outline: none;
+    cursor: pointer;
+    transition: .3s ease-in-out;
+}
+
+    .register-text:hover {
+        box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.2);
+    }
+
+header {
+    font-family: 'Noto Sans Zanabazar Square', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    padding-top: 1%;
+    padding-left: 4%;
+    padding-right: 4%;
+    color: #feeeef;
+}
+
+.navbar-brand {
+    padding-left: 5%;
+    font-size: 50px;
+    letter-spacing: 0.1em;
+}
+
+.custom-toggler {
+    border-color: #feeeef;
+}
+
+.offcanvas-header {
+    color: #feeeef;
+    font-style: italic;
+}
+
+@media (max-width: 991px) {
+    #offcanvasNavbar {
+        background-color: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+    }
+}
+
+/*.register-text {
+    color: #feeeef;
+}
+
+    .register-text:hover {
+        color: #002c45;
+    }*/
+
+/*.nav-brand {
+    font-weight: 700;
+    font-size: 150%;
+    color: #6e0f8a;
+}*/
+
+/*.nav-item {
+    font-weight: 400;
+}*/
+
+/*.border-top {
+    justify-content: center;
+}*/
+
+/*.custom-font {
+    font-weight: 700;
+    color: black;
+    font-size: 150%;
+}*/
+
+/*.subheading {
+    font-weight: 300;*/
+/*color: #bb5b17*/
+/*color: white;
+}*/
