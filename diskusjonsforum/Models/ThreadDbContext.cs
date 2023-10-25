@@ -1,9 +1,10 @@
 using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Diskusjonsforum.Models;
 
-public class ThreadDbContext : DbContext
+public class ThreadDbContext : IdentityDbContext
 {
 	public ThreadDbContext(DbContextOptions<ThreadDbContext> options) : base(options)
 	{
@@ -18,7 +19,21 @@ public class ThreadDbContext : DbContext
 
     public DbSet<Thread> Threads { get; set; }
     public DbSet<Comment> Comments { get; set; }
-    public DbSet<User> Users { get; set; }
-    
-    
+    public DbSet<ApplicationUser> Users { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+	    base.OnModelCreating(builder);
+
+	    builder.Entity<Thread>()
+		    .HasOne(t => t.User)
+		    .WithMany()
+		    .HasForeignKey(t => t.UserId);
+	    builder.Entity<Comment>()
+		    .HasOne(t => t.User)
+		    .WithMany()
+		    .HasForeignKey(t => t.UserId);
+    }
 }
+
+

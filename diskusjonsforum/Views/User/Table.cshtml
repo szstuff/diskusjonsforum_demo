@@ -4,12 +4,12 @@
 
 <div class="container">
     <table class="table table-striped">
-        <tr><th>User</th><th>ID</th><th>Email</th></tr>
+        <tr><th>ApplicationUser</th><th>ID</th><th>Email</th></tr>
         @foreach (var user in Model.Users)
         {
             <tr>
-                <td>@user.Name</td>
-                <td>@user.UserId</td>
+                <td>@user.UserName</td>
+                <td>@user.Id</td>
                 <td>@user.Email</td>
                 <td></td>
             </tr>

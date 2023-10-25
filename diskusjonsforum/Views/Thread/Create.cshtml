@@ -1,4 +1,4 @@
-@model Diskusjonsforum.Models.Thread
+@model Thread
 
 <!DOCTYPE html>
 <html>
@@ -15,42 +15,33 @@
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     </head>
 
-    <body>
+<body>
     <div class="container mt-5">
         <div class="row mt-4 col-12 mb-4 p-4 d-flex justify-content-start align-items-stretch flex-fill crud-thread">
             <h2 class="crud-title"> Create a thread </h2>
 
-            <div class="form">
-                <form asp-controller="Thread" asp-action="Create">
-                <div class="form-group">
-                    <label asp-for="UserId">Username</label><span class="text-danger"></span>
-                    <input asp-for="UserId" class="form-control" />
-                    <span asp-validation-for="UserId" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ThreadTitle">Title</label><span class="text-danger"></span>
-                    <input asp-for="ThreadTitle" class="form-control" />
-                    <span asp-validation-for="ThreadTitle" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ThreadCategory">Category</label><span class="text-danger"></span>
-                    <input asp-for="ThreadCategory" class="form-control" />
-                    <span asp-validation-for="ThreadCategory" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ThreadBody">Write your question here!</label><span class="text-danger"></span>
-                    <input asp-for="ThreadBody" class="form-control" />
-                    <span asp-validation-for="ThreadBody" class="text-danger"></span>
-                </div>
-
-                <div class="d-flex justify-content-between thread-button">
-                    <button type="submit" class="btn btn-primary crud-button-primary">Create</button>
-                    <a asp-action="Table" class="btn btn-secondary crud-button-secondary"> Return </a>
-                </div>
-                </form>
+        <form asp-controller="Thread" asp-action="Create">
+            <div class="form-group">
+                <label asp-for="ThreadCategory"></label><span class="text-danger"></span>
+                <input asp-for="ThreadCategory" class="form-control"/>
+                <span asp-validation-for="ThreadCategory" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label asp-for="ThreadTitle"></label><span class="text-danger"></span>
+                <input asp-for="ThreadTitle" class="form-control"/>
+                <span asp-validation-for="ThreadTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ThreadBody"></label><span class="text-danger"></span>
+                <input asp-for="ThreadBody" class="form-control"/>
+                <span asp-validation-for="ThreadBody" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+            <a asp-action="Table" class="btn btn-secondary"> Return </a>
+        </form>
+        
         </div>
     </div>
 
-    </body>
+</body>
 </html>

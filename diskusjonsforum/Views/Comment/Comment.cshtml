@@ -1,10 +1,10 @@
 @model Diskusjonsforum.Models.Comment
 
-<p> <b> @Model.Thread.User.Name posted on the @Model.Thread.ThreadCreatedAt </b></p>
+<p> <b> @Model.Thread.User.UserName posted on the @Model.Thread.ThreadCreatedAt </b></p>
 <h2> @Model.Thread.ThreadTitle </h2>
 <p> @Model.Thread.ThreadBody</p>
 <hr/>
-<p><b> @Model.User.Name replied on the @Model.CommentCreatedAt </b></p>
+<p><b> @Model.User.UserName replied on the @Model.CommentCreatedAt </b></p>
 <p> @Model.CommentBody </p>
 
 <a class="btn btn-primary"> Reply </a>

@@ -49,36 +49,12 @@
                         <input type="hidden" asp-for="Comment.ThreadId" value="@Model.Thread.ThreadId" />
                         <input type="hidden" asp-for="Comment.ParentCommentId" value="@Model.ParentComment?.CommentId" />
 
-                        <div class="form-group">
-                            <label asp-for="Comment.CommentBody">Write your reply here</label><span class="text-danger"></span>
-                            <input asp-for="Comment.CommentBody" class="form-control" />
-                            <span asp-validation-for="Comment.CommentBody" class="text-danger"></span>
-                        </div>
-                        @*<div class="form-group">
-                    <label asp-for="ThreadId"></label><span class="text-danger"></span>
-                    <input asp-for="ThreadId" class="form-control"/>
-                    <span asp-validation-for="ThreadId" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                    <label asp-for="ParentCommentId"></label><span class="text-danger"></span>
-                    <input asp-for="ParentCommentId" class="form-control"/>
-                    <span asp-validation-for="ParentCommentId" class="text-danger"></span>
-                    </div>*@
-                        <div class="form-group">
-                            <label asp-for="Comment.UserId">Username</label><span class="text-danger"></span>
-                            <input asp-for="Comment.UserId" class="form-control" />
-                            <span asp-validation-for="Comment.UserId" class="text-danger"></span>
-                        </div>
-
-                        <div class="d-flex justify-content-between">
-                            <input type="submit" value="Post reply" class="btn btn-primary crud-button-primary" onclick="location.href='@Url.Action("Save", "Comment")'" />
-                            <a asp-controller="Thread" asp-action="Thread" asp-route-threadId="@Model.ThreadId" class="btn btn-secondary crud-button-secondary"> Return </a>
-                        </div>
-
-                    </form>
-                }
-            </div>
-        </div>
+    <div class="form-group">
+        <label asp-for="Comment.CommentBody"></label><span class="text-danger"></span>
+        <input asp-for="Comment.CommentBody" class="form-control"/>
+        <span asp-validation-for="Comment.CommentBody" class="text-danger"></span>
     </div>
-    </body>
-</html>
+
+    <input type="submit" value="Post reply" class="btn btn-primary" onclick="location.href='@Url.Action("Save", "Comment")'" />
+    <a asp-controller="Thread" asp-action="Thread" asp-route-threadId="@Model.ThreadId" class="btn btn-secondary"> Return </a>
+</form>}

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Thread = Diskusjonsforum.Models.Thread;
 
 //using diskusjonsforum.ViewModels; //Kan slettes hvis vi ikke lager ViewModels
@@ -12,16 +13,18 @@ namespace diskusjonsforum.Controllers;
 public class ThreadController : Controller
 {
     private readonly ThreadDbContext _threadDbContext;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public ThreadController(ThreadDbContext threadDbContext)
+    public ThreadController(ThreadDbContext threadDbContext, UserManager<ApplicationUser> userManager)
     {
         _threadDbContext = threadDbContext;
+        _userManager = userManager;
         //Creates dummy data for testing
         //_threadDbContext.Database.ExecuteSqlRaw("insert INTO Users (Name, PasswordHash, Email, Administrator) VALUES (\"stilian\", \"pass\", \"email@email.com\", True)\n");
         // _threadDbContext.Database.ExecuteSqlRaw("insert into Threads (ThreadTitle, ThreadBody, ThreadCategory, ThreadCreatedAt, UserId) VALUES (\"Hei\", \"Heihiehiehue\", \"Hei\", \"2020-09-10\", 1)\n");
-        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, User, ParentCommentId) values (\"Hei1\", \"2020-09-10\", 1, 1, null) ");
-        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, User, ParentCommentId) values (\"HeiHei2\", \"2020-09-10\", 1, 1, 1) ");
-        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, User, ParentCommentId) values (\"HeiHeiHei3\", \"2020-09-10\", 1, 1, 2) ");
+        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, ApplicationUser, ParentCommentId) values (\"Hei1\", \"2020-09-10\", 1, 1, null) ");
+        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, ApplicationUser, ParentCommentId) values (\"HeiHei2\", \"2020-09-10\", 1, 1, 1) ");
+        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, ApplicationUser, ParentCommentId) values (\"HeiHeiHei3\", \"2020-09-10\", 1, 1, 2) ");
     }
 
     public IActionResult Table()
@@ -41,15 +44,18 @@ public class ThreadController : Controller
 
     public IActionResult Thread(int threadId)
     {
-        var thread = _threadDbContext.Threads.Include(t => t.ThreadComments).ThenInclude(t => t.User)
+        var thread = _threadDbContext.Threads.Include(t => t.ThreadComments)!.ThenInclude(t => t.User)
             .FirstOrDefault(t => t.ThreadId == threadId);
+        _threadDbContext.Entry(thread)
+            .Reference(t => t!.User)
+            .Load();
 
         if (thread == null)
         {
             return NotFound();
         }
 
-        thread.ThreadComments = SortComments(thread.ThreadComments);
+        thread.ThreadComments = SortComments(thread.ThreadComments!);
 
         return View(thread);
 
@@ -87,25 +93,104 @@ public class ThreadController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(Thread thread)
+    public async Task<IActionResult> Create(Thread thread)
     {
-        
-        if (ModelState.IsValid)
+        if (HttpContext.User.Identity!.IsAuthenticated)
         {
-            _threadDbContext.Threads.Add(thread);
-            _threadDbContext.SaveChanges();
-            return RedirectToAction(nameof(Table));
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            if (user != null)
+            {
+                thread.UserId = user.Id;
+                thread.User = user;
+                ModelState.Remove("User");
+
+                if (ModelState.IsValid)
+                {
+                    _threadDbContext.Threads.Add(thread);
+                    _threadDbContext.SaveChanges(); // or await _threadDbContext.SaveChangesAsync(); for async
+
+                    return RedirectToAction(nameof(Table));
+                }
+            }
         }
 
         return View(thread);
     }
 
-}
+    [HttpGet("edit/{threadId}")]
+    public async Task<IActionResult> Edit(int threadId)
+    {
+        if (HttpContext.User.Identity!.IsAuthenticated)
+        {
+            Thread threadToEdit = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId) ??
+                                  throw new InvalidOperationException("Requested thread not found. commentId:" +
+                                                                      threadId);
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var userIsAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            if (user.Id == threadToEdit.UserId || userIsAdmin)
+            {
+                return View(threadToEdit);
 
-//public IActionResult ListView()
-    //{
-    //    //Henter "Threads" fra DB og legger til liste
-    //    List<Thread> threads = _threadDbContext.Threads.ToList();
-    //    var threadListViewModel = new ThreadListViewModel(threads, "List");
-    //    return View(threadListViewModel);
-    //}
+            }
+            else
+            {
+                return View("/Areas/Identity/Pages/Account/Login.cshtml");
+            }
+        }
+
+        var errorMsg = "Error when trying to load Edit Thread view";
+        return RedirectToAction("Error", "Home", new { errorMsg });
+    }
+
+    public async Task<IActionResult> SaveEdit(Thread thread)
+    {
+        var errorMsg = "";
+        var user = await _userManager.GetUserAsync(HttpContext.User);
+        if (user != null)
+        {
+            ModelState.Remove(
+                "User"); //Workaround for invalid modelstate. The model isnt really invalid, but it was evaluated BEFORE the controller added User and UserId. Therefore the validty of the "User" key can be removed 
+
+            //Checks if user is owner or admin before editing
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (user.Id != thread.UserId || !userRoles.Contains("Admin"))
+            {
+                errorMsg = "Could not verify that you are the owner of the Thread";
+                return RedirectToAction("Error", "Home", new { errorMsg });
+            }
+
+            if (ModelState.IsValid)
+            {
+                _threadDbContext.Threads.Update(thread);
+                await _threadDbContext.SaveChangesAsync();
+                return RedirectToAction("Thread", "Thread", new { thread.ThreadId });
+            }
+        }
+
+        errorMsg = "Error occured when saving the changes you made to the thread";
+        return RedirectToAction("Error", "Home", new { errorMsg });
+
+    }
+
+    public async Task<IActionResult> DeleteThread(int threadId)
+    {
+
+        Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId)?? throw new InvalidOperationException("Requested Thread not found. ThreadId: " + threadId);
+        //Checks if user is owner or admin before editing
+        var user = await _userManager.GetUserAsync(HttpContext.User);
+        var userRoles = await _userManager.GetRolesAsync(user);
+        if (thread.UserId != user.Id || !userRoles.Contains("Admin"))
+        {
+            var userAdmin = userRoles.Contains("Admin");
+            var errorMsg = "Could not verify that you are the owner of the Thread";
+            return RedirectToAction("Error", "Home", new { errorMsg });
+        }
+
+        _threadDbContext.Threads.Remove(thread);
+        await _threadDbContext.SaveChangesAsync();
+        return RedirectToAction("Table", "Thread");
+    }
+
+
+}

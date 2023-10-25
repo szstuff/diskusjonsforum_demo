@@ -1,36 +1,56 @@
-﻿using System;
+﻿using System.Net;
+using System.Security.Claims;
 using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Thread = System.Threading.Thread;
+
+namespace diskusjonsforum.Controllers;
 
 public class UserController : Controller
 {
 	private readonly ThreadDbContext _threadDbContext;
-
-	public UserController(ThreadDbContext threadDbContext)
+	private UserManager<ApplicationUser> _userManager;
+	public UserController(ThreadDbContext threadDbContext, UserManager<ApplicationUser> userManager)
 	{
 		_threadDbContext = threadDbContext;
+		_userManager = userManager;
 	}
 
 	public IActionResult Table()
 	{
-		List<User> users = _threadDbContext.Users.ToList();
+		var users = _threadDbContext.Users.ToList();
 		var userListViewModel = new UserListViewModel(users, "Table");
 		return View(userListViewModel);
 	}
 	
-	public List<User> GetUsers()
+	public List<ApplicationUser> GetUsers()
 	{
-		var users = new List<User>();
-		var user1 = new User
-		{
-			Name = "Stilian",
-			Email="stilian@test.com",
-			Administrator = true,
-			PasswordHash = "password"
-		};
-		users.Add(user1);
+		var users = new List<ApplicationUser>();
 		return users;
+	}
+
+	public async Task<IActionResult> MakeAdmin()
+	{
+		if (HttpContext.User.Identity!.IsAuthenticated)
+		{
+			var user = await _userManager.GetUserAsync(HttpContext.User);
+        
+			if (user != null)
+			{
+				var userRoles = await _userManager.GetRolesAsync(user);
+
+				if (userRoles.Contains("Admin"))
+				{
+					await _userManager.RemoveFromRoleAsync(user, "Admin");
+				}
+				else
+				{
+					await _userManager.AddToRoleAsync(user, "Admin");
+				}
+			}
+		}
+
+		return RedirectToAction("Index", "Home");
 	}
 }
