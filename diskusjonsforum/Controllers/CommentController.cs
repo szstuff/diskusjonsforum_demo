@@ -59,7 +59,9 @@ public class CommentController : Controller
         }
         else
         {
-            return View("/Areas/Identity/Pages/Account/Login.cshtml");
+            //Redirects to login page if user not logged in
+            return RedirectToPage("/Account/Login", new { area = "Identity" });
+
         }
     }
     [HttpPost("comment/save")]
@@ -116,7 +118,9 @@ public class CommentController : Controller
         }
         else
         {
-            return View("/Areas/Identity/Pages/Account/Login.cshtml");
+            //Redirects to login page if user not logged in
+            return RedirectToPage("/Account/Login", new { area = "Identity" });
+
         }
     }
     [HttpPost("comment/saveEdit")]

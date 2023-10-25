@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using static Diskusjonsforum.Models.Category;
 using Thread = Diskusjonsforum.Models.Thread;
 
-//using diskusjonsforum.ViewModels; //Kan slettes hvis vi ikke lager ViewModels
 
 namespace diskusjonsforum.Controllers;
 
@@ -19,21 +20,24 @@ public class ThreadController : Controller
     {
         _threadDbContext = threadDbContext;
         _userManager = userManager;
-        //Creates dummy data for testing
-        //_threadDbContext.Database.ExecuteSqlRaw("insert INTO Users (Name, PasswordHash, Email, Administrator) VALUES (\"stilian\", \"pass\", \"email@email.com\", True)\n");
-        // _threadDbContext.Database.ExecuteSqlRaw("insert into Threads (ThreadTitle, ThreadBody, ThreadCategory, ThreadCreatedAt, UserId) VALUES (\"Hei\", \"Heihiehiehue\", \"Hei\", \"2020-09-10\", 1)\n");
-        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, ApplicationUser, ParentCommentId) values (\"Hei1\", \"2020-09-10\", 1, 1, null) ");
-        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, ApplicationUser, ParentCommentId) values (\"HeiHei2\", \"2020-09-10\", 1, 1, 1) ");
-        // _threadDbContext.Database.ExecuteSqlRaw("insert into Comments (CommentBody, CommentCreatedAt, Thread, ApplicationUser, ParentCommentId) values (\"HeiHeiHei3\", \"2020-09-10\", 1, 1, 2) ");
     }
 
     public IActionResult Table()
     {
         List<Thread>
-            threads = _threadDbContext.Threads.Include(t => t.User)
+            threads = _threadDbContext.Threads.Include(t => t.User).Include(thread => thread.ThreadComments).Include(thread => thread.ThreadCategory)
                 .ToList(); //.Include her gjør "Eager Loading". Laster inn Users tabellen for å kunne vise username
-        var threadListViewModel = new ThreadListViewModel(threads, "Table");
+        foreach (var thread in threads)
+        {
+            thread.ThreadComments.AddRange(GetComments(thread));
+        }
+        var threadListViewModel = new ThreadListViewModel(threads,  "Table");
         return View(threadListViewModel);
+    }
+
+    public IQueryable<Comment> GetComments(Thread thread)
+    {
+        return _threadDbContext.Comments.Where(comment => comment.ThreadId == thread.ThreadId);
     }
 
     public List<Thread> GetThreads()
@@ -89,12 +93,23 @@ public class ThreadController : Controller
     [HttpGet]
     public IActionResult Create()
     {
+        if (HttpContext.User.Identity!.IsAuthenticated)
+        {
+            //Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
+            var categories = _threadDbContext.Categories.ToList(); // Fetch all categories from the database.
+            ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
+        } else {
+            //Redirects to login page if user not logged in
+            return RedirectToPage("/Account/Login", new { area = "Identity" });
+        }
+
         return View();
     }
 
     [HttpPost]
     public async Task<IActionResult> Create(Thread thread)
     {
+        var errorMsg = "";
         if (HttpContext.User.Identity!.IsAuthenticated)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
@@ -109,9 +124,19 @@ public class ThreadController : Controller
                 {
                     _threadDbContext.Threads.Add(thread);
                     _threadDbContext.SaveChanges(); // or await _threadDbContext.SaveChangesAsync(); for async
-
+                    
                     return RedirectToAction(nameof(Table));
                 }
+                else
+                {
+                    errorMsg = "Could not create your thread because there was an issue validating it's content";
+                    return RedirectToAction("Error", "Home", new { errorMsg });
+                }
+            } else
+            {
+                errorMsg = "Could not create your thread because there was an issue authenticating you";
+                return RedirectToAction("Error", "Home", new { errorMsg });
+
             }
         }
 
@@ -132,10 +157,10 @@ public class ThreadController : Controller
             {
                 return View(threadToEdit);
 
-            }
-            else
-            {
-                return View("/Areas/Identity/Pages/Account/Login.cshtml");
+            } else {
+                //Redirects to login page if user not logged in
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+
             }
         }
 

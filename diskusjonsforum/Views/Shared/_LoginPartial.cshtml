@@ -3,39 +3,40 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-<ul class="navbar-nav">
+<ul class="navbar-nav justify-content-center align-items-center fs-5 flex-grow-1 pe-3">
+@{ var user = await UserManager.GetUserAsync(User); }
 @if (SignInManager.IsSignedIn(User))
 {
-    <li>
-        <li>
-                                    <a class="nav-link text-dark" asp-controller="Role" asp-action="Create"> Fix Admin Role</a>
-                                </li>
-        @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin"))
+    <li class="nav-item mx-2">
+        <a class="nav-link text-light" asp-controller="Role" asp-action="Create"> Fix Admin Role</a>
+    </li>
+    <li class="nav-item mx-2">
+        @if (user != null && await UserManager.IsInRoleAsync(user, "Admin"))
         {
-            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="MakeAdmin"> Exit Admin </a>
+            <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="MakeAdmin"> Exit Admin </a>
         }
         else
         {
-            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="MakeAdmin"> Enter Admin view </a>
+            <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="MakeAdmin"> Enter Admin view </a>
         }
-
     </li>
-    <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+    
+    <li class="nav-item mx-2">
+        <a id="manage" class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item mx-2">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            <button id="logout" type="submit" class="nav-link btn btn-link text-light">Logout</button>
         </form>
     </li>
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    <li class="nav-item mx-2">
+        <a class="nav-link text-light" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    <li class="nav-item mx-2">
+        <a class="nav-link text-light" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
     </li>
 }
 </ul>

@@ -1,0 +1,24 @@
+@model IEnumerable<Category>
+
+<h1>Browse by category</h1>
+
+<div class="container">
+    <table class="table table-striped">
+        <tr><th>Category</th><th>Posts</th><th>Admin only?</th></tr>
+        @foreach (var category in Model)
+        {
+            <tr>
+                <td><a asp-controller="Category" asp-action="Category" asp-route-threadID="@category.CategoryName">@category.CategoryName</a> <br/> @category.CategoryDescription </td>
+                <td>@category.ThreadsInCategory?.Count ?? 0 </td>
+                <td>@category.RestrictedToAdmins</td>
+                <td></td>
+            </tr>
+        }
+    </table>
+    
+    <p>
+        <a class="btn btn-secondary"
+           asp-controller="Thread"
+           asp-action="Create"> Start a new thread </a>
+    </p>
+</div>

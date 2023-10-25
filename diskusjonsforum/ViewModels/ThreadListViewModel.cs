@@ -8,6 +8,7 @@ namespace diskusjonsforum.ViewModels
 	{
 		public IEnumerable<Thread> Threads;
 		public string? CurrentViewName;
+		
 
 		public ThreadListViewModel(IEnumerable<Thread> threads, string? currentViewName)
 		{

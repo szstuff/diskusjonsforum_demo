@@ -1,12 +1,13 @@
-﻿@model ThreadListViewModel
+@model Category
 
-<h1>List of discussion threads (@Model.CurrentViewName Name)</h1>
-<!-- <a href="/ThreadThread/Grid">Grid View</a> -->
+
+<h1> Browse @Model.CategoryName </h1>
+<h2> @Model.CategoryDescription </h2>
 
 <div class="container">
     <table class="table table-striped">
         <tr><th>ApplicationUser</th><th>Title</th><th>Comments</th><th>ID</th></tr>
-        @foreach (var thread in Model.Threads)
+        @foreach (var thread in Model.ThreadsInCategory)
         {
             <tr>
                 <td>@thread.User.UserName</td>

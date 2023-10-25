@@ -12,7 +12,10 @@ namespace Diskusjonsforum.Models
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ThreadId { get; set; }
         public string? ThreadTitle { get; set; } 
-        public string? ThreadCategory { get; set; } 
+        [ForeignKey("Category")]
+        public string CategoryName { get; set; }
+
+        public Category ThreadCategory { get; set; } 
         public string? ThreadBody { get; set; }
         public DateTime ThreadCreatedAt { get; set; }  = DateTime.Now;
         public DateTime ThreadLastEditedAt { get; set; } = DateTime.Now;

@@ -1,3 +1,7 @@
+using System.ComponentModel;
+using System.Runtime.Serialization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Diskusjonsforum.Models;
@@ -11,41 +15,82 @@ public static class DBInit
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
 
-        if (!context.Users.Any())
-        {
-            var users = new List<ApplicationUser>
-            {
-                new ApplicationUser {PasswordHash = "Stilian", Email = "hei@gmail.com", UserName = "Stilian"},
-                new ApplicationUser {PasswordHash = "Saloni", Email = "hei2@gmail.com", UserName = "Saloni"},
-                new ApplicationUser {PasswordHash = "Jovia", Email = "hei3@gmail.com", UserName = "Jovia"},
-                new ApplicationUser {PasswordHash = "Jenny", Email = "hei4@gmail.com", UserName = "Jenny"},
-                new ApplicationUser {PasswordHash = "Linn", Email = "hei5@gmail.com", UserName = "Linn"},
-                new ApplicationUser {PasswordHash = "Huub", Email = "hei6@gmail.com", UserName = "Huub"},
+        // Set and create up Admin role
+        var roleStore = new RoleStore<IdentityRole>(context);
+        roleStore.CreateAsync(new IdentityRole("Admin"));
 
+        // Set up and create users
+        var user = new ApplicationUser //Creates a "deleted" user that can be used as a generic user for deleted content. 
+        {
+            Email = "xxxx@xxxx.com",
+            NormalizedEmail = "XXXX@XXXX.COM",
+            UserName = "deleted",
+            NormalizedUserName = "DELETED",
+            EmailConfirmed = false,
+            SecurityStamp = Guid.NewGuid().ToString("D"),
+            LockoutEnabled = true,
+            LockoutEnd = DateTime.Parse("01-01-2099") //Lockout until 2099 as an attempt to prevent unauthorised access 
+        };
+
+
+        if (!context.Users.Any(u => u.UserName == user.UserName))
+        {
+            var password = new PasswordHasher<ApplicationUser>();
+            var hashed = password.HashPassword(user,".tUAG(n&dZ(U1\\S'O#Xkgkp6:G4kL3?");
+            user.PasswordHash = hashed;
+
+            var userStore = new UserStore<ApplicationUser>(context);
+            var result = userStore.CreateAsync(user);
+
+        }
+
+        
+        //Set up categories
+        if (!context.Categories.Any())
+        {
+            var categories = new List<Category>
+            {
+                new Category
+                {
+                    CategoryName = "General",
+                    CategoryDescription = "For discussions that do not fit in any other category",
+                    RestrictedToAdmins = false
+                },
+                new Category
+                {
+                    CategoryName = "Help", CategoryDescription = "Post your help requests here!",
+                    RestrictedToAdmins = false
+                },
+                new Category
+                {
+                    CategoryName = "Moderation", CategoryDescription = "For anything related to admins and moderation",
+                    RestrictedToAdmins = true
+                },
             };
-            context.AddRange(users);
+            context.AddRange(categories);
             context.SaveChanges();
         }
         
-        if (!context.Threads.Any())
+        
+        /*if (!context.Threads.Any())
         {
             var threads = new List<Thread>
             {
                 new Thread {ThreadTitle = "Hei1", 
                     ThreadBody = "Heiiii jeg heter stilian wææææ vi lagde en nettside joooooo 🥹 bill gates is shivering. Denne tråden er redigert ", 
-                    ThreadCategory = "Introduksjon", 
+                    CategoryName = "General", 
                     ThreadCreatedAt = Convert.ToDateTime("09/10/2023 11:01:15"),
                     ThreadLastEditedAt = Convert.ToDateTime("09/10/2023 11:03:03"),
                     UserId = "1"},
                 new Thread {ThreadTitle = "Hjelp", 
                     ThreadBody = "jeg trenger hjelp med å lage ditt og datt.", 
-                    ThreadCategory = "Hjelp", 
+                    CategoryName = "General", 
                     ThreadCreatedAt = Convert.ToDateTime("09/10/2023 11:01:15"),
                     ThreadLastEditedAt = Convert.ToDateTime("09/10/2023 11:01:15"),
                     UserId = "1"},
                 new Thread {ThreadTitle = "stilian er min bestie", 
                     ThreadBody = "stilian er best han er min bestie bebebebe", 
-                    ThreadCategory = "Stilian Appreciation Kategori", 
+                    CategoryName = "General", 
                     ThreadCreatedAt = Convert.ToDateTime("09/04/2002 08:25:16"),
                     ThreadLastEditedAt = Convert.ToDateTime("10/04/2002 03:25:16"),
                     UserId = "2"}
@@ -212,10 +257,9 @@ public static class DBInit
             };
             context.AddRange(comments1);
             context.AddRange(comments2);
-            context.AddRange(comments3);
+            context.AddRange(comments3);*/
             context.SaveChanges();
         }
         
     }
     
-}
