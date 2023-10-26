@@ -3,26 +3,27 @@
     overflow-y: auto;
 }
 
+/*Designs the background body*/
 body {
-    background: url("../images/16328440_v962-aum-05.jpg");
+    background: url("../images/16328440_v962-aum-05.jpg"); /*links to the backgroung img used*/
     background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    overflow: hidden;
-    font-family: 'Noto Sans Zanabazar Square', sans-serif;
+    background-repeat: no-repeat; /*prevents background image from repeating*/
+    background-attachment: fixed; /*remains the same position when we scroll*/
+    overflow: hidden; /*prevents any any content from overflowint the viewport*/
+    font-family: 'Noto Sans Zanabazar Square', sans-serif; /*changes the font*/
     font-family: 'Roboto', sans-serif;
     font-family: 'Ubuntu', sans-serif;
     background-color: white;
-    display: flex;
-    flex-direction: column;
+    display: flex; /*used to create a flex container*/
+    flex-direction: column; /*sets flex container to arrange its children in a column, so they stack vertically whitin the container*/
 }
 
 .mx-2 {
-    position: relative;
+    position: relative; /* positioned relative to its normal position */
 }
-
+    /*pseudo-element used to create after content*/
     .mx-2::after {
-        content: '';
+        content: ''; /*insterts empty content*/
         opacity: 0;
         transition: all 0.2s;
         height: 2px;
@@ -33,14 +34,15 @@ body {
         left: 0;
     }
 
+/*Hover function for mx-2::after*/
     .mx-2:hover::after {
         opacity: 1;
     }
 
 .login-text {
-    position: relative;
+    position: relative;/* positioned relative to its normal position */
 }
-
+/*pseudo-element used to create after content*/
     .login-text::after {
         content: '';
         opacity: 0;
@@ -52,11 +54,13 @@ body {
         bottom: 0;
         left: 0;
     }
-
+/*Hover function*/
     .login-text:hover::after {
-        opacity: 1;
+        opacity: 1; /*when it's hovered over the opacity is changed to 1*/
     }
-
+    
+    
+    
 .register-text {
     border: none;
     background: #ffc942;
@@ -64,13 +68,14 @@ body {
     border-radius: 30px;
     outline: none;
     cursor: pointer;
-    transition: .3s ease-in-out;
+    transition: .3s ease-in-out /*transition effect for the element duration of 0.3 sec*/
 }
-
+/*Hover function*/
     .register-text:hover {
         box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.2);
     }
 
+/*design for the header, fonts sizes and placement*/
 header {
     font-family: 'Noto Sans Zanabazar Square', sans-serif;
     font-family: 'Roboto', sans-serif;
@@ -83,6 +88,7 @@ header {
     color: #feeeef;
 }
 
+/*positioning navbar*/
 .navbar-brand {
     padding-left: 5%;
     font-size: 50px;
@@ -98,6 +104,7 @@ header {
     font-style: italic;
 }
 
+/* media query that specifies conidion based on maximum screen width*/
 @media (max-width: 991px) {
     #offcanvasNavbar {
         background-color: rgba(255, 255, 255, 0.15);
