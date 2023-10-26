@@ -1,9 +1,5 @@
 ﻿@model CommentCreateViewModel
 
-<!DOCTYPE html>
-
-<html lang="en">
-
 <div class="container mt-5">
     <div class="row mt-4 col-12 mb-4 p-4 d-flex justify-content-center align-items-stretch flex-fill crud-thread">
         <div class="row mt-4 col-12 mb-4 p-4 crud-container">
@@ -30,7 +26,6 @@
 <div class="form">
     <h2 class="crud-title"> Create a reply </h2>
     @using (Html.BeginForm("Save", "Comment", FormMethod.Post))
-
     {
         <form asp-controller="Comment" asp-action="Create">
             <input type="hidden" asp-for="Comment.ThreadId" value="@Model.Thread.ThreadId" />
@@ -47,4 +42,3 @@
         </form>}
 </div>
 
-</html>

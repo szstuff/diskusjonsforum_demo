@@ -1,6 +1,6 @@
 @model Thread
        
-       <h2> Edit thread @Model.ThreadId</h2>
+<h2> Edit thread @Model.ThreadId</h2>
        
 <form asp-controller="Thread" asp-action="SaveEdit">
     <input type="hidden" asp-for="ThreadId" value="@Model.ThreadId" />
@@ -31,16 +31,3 @@
 @{
     Layout = null;
 }
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
-</div>
-</body>
-</html>
