@@ -25,7 +25,9 @@ public class HomeController : Controller
 
     public IActionResult Error(string errorMsg)
     {
-        Console.WriteLine("ErrorMsg: " + errorMsg);
+        //Log error message using logger
+        _logger.LogError("[HomeController] Error: {0}", errorMsg);
+        //View error message in view
         ViewBag.ErrorMsg = errorMsg;
         return View();
     }

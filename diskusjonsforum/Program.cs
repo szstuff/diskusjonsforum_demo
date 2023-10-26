@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using diskusjonsforum.Areas.Identity.Data;
 using Microsoft.EntityFrameworkCore.Sqlite.Diagnostics.Internal;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("diskusjonsforumIdentityDbContextConnection") ?? throw new 
@@ -15,6 +16,18 @@ builder.Services.AddDbContext<ThreadDbContext>(options => {
     options.UseSqlite(
         builder.Configuration["ConnectionStrings:ThreadDbContextConnection"]);
 });
+
+var loggerConfiguration = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.File($"Logs/app_{DateTime.Now:yyyyMMdd_HHmmss}.log");
+
+loggerConfiguration.Filter.ByExcluding(e => e.Properties.TryGetValue("SourceContext", out var value) &&
+                                       e.Level == LogEventLeven.Information &&
+                                       e.MessageTemplate.Text.Contains("Executed DbCommand"));
+
+var logger = loggerConfiguration.CreateLogger();
+builder.Logging.AddSerilog(logger);
+
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     {

@@ -2,6 +2,10 @@ using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Thread = Diskusjonsforum.Models.Thread;
 
 namespace diskusjonsforum.Controllers;
@@ -10,10 +14,12 @@ public class CategoryController : Controller
 {
     
     private readonly ThreadDbContext _threadDbContext;
+    private readonly ILogger<CategoryController> _logger; //Adds logger
 
-    public CategoryController(ThreadDbContext threadDbContext)
+    public CategoryController(ThreadDbContext threadDbContext, ILogger<CategoryController> logger)
     {
         _threadDbContext = threadDbContext;
+        _logger = logger;
     }
     
     // public IActionResult Table()
@@ -31,15 +37,28 @@ public class CategoryController : Controller
     
     public IActionResult Table()
     {
-        List<Category> categories = _threadDbContext.Categories.Include(category => category.ThreadsInCategory)
+        try
+        {
+            List<Category> categories = _threadDbContext.Categories.Include(category => category.ThreadsInCategory)
             .ToList();
 
         
-        foreach (var category in categories)
+            foreach (var category in categories)
         {
             category.ThreadsInCategory.AddRange(GetThreads(category));
         }
         return View();
+
+        }
+        catch (Exception ex)
+        {
+            //Log exception
+            _logger.LogError(ex, "An error occured in the Table action.");
+
+            //Handles error and returns error view/msg
+            return View("Error"); //Add Error.cshtml view?
+        }
+
     }
 
     public IEnumerable<Thread> GetThreads(Category category)
@@ -49,16 +68,28 @@ public class CategoryController : Controller
 
     public IActionResult Category(string name)
     {
-        var category = _threadDbContext.Categories.Include(c => c.ThreadsInCategory)!
-            .FirstOrDefault(c => c.CategoryName == name);
-       
-
-        if (category == null)
+        try
         {
-            return NotFound();
+            var category = _threadDbContext.Categories.Include(c => c.ThreadsInCategory)!
+                .FirstOrDefault(c => c.CategoryName == name);
+
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return View(category);
+        }
+        catch (Exception ex)
+        {
+            //Log exception
+            _logger.LogError(ex, "An error occurred in the Category action.");
+
+            //Handles the error and returns error view/msg
+            return View("Error"); //Add Error.cshtml view
         }
         
-        return View(category);
 
     }
 }

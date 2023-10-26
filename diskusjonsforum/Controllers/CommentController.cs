@@ -16,13 +16,14 @@ public class CommentController : Controller
 {
     private readonly ThreadDbContext _threadDbContext;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly Logger<CommentController> _logger;
 
 
-    public CommentController(ThreadDbContext threadDbContext, UserManager<ApplicationUser> userManager)
+    public CommentController(ThreadDbContext threadDbContext, UserManager<ApplicationUser> userManager, ILogger<CommentController> logger)
     {
         _threadDbContext = threadDbContext;
         _userManager = userManager;
-
+        _logger = logger;
     }
 
     public Task<List<Comment>> GetComments()
@@ -35,33 +36,39 @@ public class CommentController : Controller
     [Authorize]
     public IActionResult Create(int parentCommentId, int threadId)
     {
-
-        if (HttpContext.User.Identity!.IsAuthenticated)
+        try
         {
-            Comment parentComment =
-                _threadDbContext.Comments.FirstOrDefault(c =>
-                    c.CommentId ==
-                    parentCommentId)!; //Throws no exception because parentComment should be null when the user replies to the thread 
-            Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId) ??
-                            throw new InvalidOperationException("Requested thread not found. ThreadId: " + threadId);
-            // Retrieve query parameters
-            // Create a CommentViewModel and populate it with data
-            var viewModel = new CommentCreateViewModel()
+            if (HttpContext.User.Identity!.IsAuthenticated)
             {
-                ThreadId = threadId,
-                ParentCommentId = parentCommentId,
-                ParentComment = parentComment,
-                Thread = thread
-            };
+                Comment parentComment =
+                    _threadDbContext.Comments.FirstOrDefault(c =>
+                        c.CommentId == parentCommentId)!; //Throws no exception because parentComment should be null when the user replies to the thread 
+                Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId) ??
+                                throw new InvalidOperationException("Requested thread not found. ThreadId: " + threadId);
+                // Retrieve query parameters
+                // Create a CommentViewModel and populate it with data
+                var viewModel = new CommentCreateViewModel()
+                {
+                    ThreadId = threadId,
+                    ParentCommentId = parentCommentId,
+                    ParentComment = parentComment,
+                    Thread = thread
+                };
 
-            // Pass the CommentViewModel to the view
-            return View(viewModel);
+                // Pass the CommentViewModel to the view
+                return View(viewModel);
+            }
+            else
+            {
+                //Redirects to login page if user not logged in
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+
+            }
         }
-        else
+        catch (Exception ex)
         {
-            //Redirects to login page if user not logged in
-            return RedirectToPage("/Account/Login", new { area = "Identity" });
-
+            _logger.LogError(ex, "[CommentController] An error occurred in the Create action");
+            return View("Error");
         }
     }
     [HttpPost("comment/save")]
@@ -83,6 +90,7 @@ public class CommentController : Controller
             }
         } //Må legge til else her for feilmeldigner 
 
+        _logger.LogWarning("[CommentController] Comment creation failed {@comment}", comment);
         return RedirectToAction("Thread", "Thread", new {comment.ThreadId});
     }
     
@@ -90,37 +98,44 @@ public class CommentController : Controller
     [Authorize]
     public IActionResult Edit(int commentId, int threadId)
     {
-        if (HttpContext.User.Identity!.IsAuthenticated)
+        try
         {
-            Comment commentToEdit = _threadDbContext.Comments.FirstOrDefault(c => c.CommentId == commentId) ??
-                                    throw new InvalidOperationException("Requested comment not found. commentId:" +
-                                                                        commentId);
-            Comment parentComment =
-                _threadDbContext.Comments.FirstOrDefault(c =>
-                    c.CommentId ==
-                    commentToEdit
-                        .ParentCommentId); //Throws no exception because parentComment should be null when the user replies to the thread 
-            Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId) ??
-                            throw new InvalidOperationException("Requested thread not found. ThreadId: " + threadId);
-            // Retrieve query parameters
-            // Create a CommentViewModel and populate it with data
-            var viewModel = new CommentCreateViewModel()
+            if (HttpContext.User.Identity!.IsAuthenticated)
             {
-                ThreadId = threadId,
-                ParentCommentId = commentId,
-                ParentComment = parentComment,
-                CommentToEdit = commentToEdit,
-                Thread = thread
-            };
+                Comment commentToEdit = _threadDbContext.Comments.FirstOrDefault(c => c.CommentId == commentId) ??
+                                        throw new InvalidOperationException("Requested comment not found. commentId:" +
+                                                                            commentId);
+                Comment parentComment =
+                    _threadDbContext.Comments.FirstOrDefault(c =>
+                        c.CommentId ==
+                        commentToEdit
+                            .ParentCommentId); //Throws no exception because parentComment should be null when the user replies to the thread 
+                Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId) ??
+                                throw new InvalidOperationException("Requested thread not found. ThreadId: " + threadId);
+                // Retrieve query parameters
+                // Create a CommentViewModel and populate it with data
+                var viewModel = new CommentCreateViewModel()
+                {
+                    ThreadId = threadId,
+                    ParentCommentId = commentId,
+                    ParentComment = parentComment,
+                    CommentToEdit = commentToEdit,
+                    Thread = thread
+                };
 
-            // Pass the CommentViewModel to the view
-            return View(viewModel);
+                // Pass the CommentViewModel to the view
+                return View(viewModel);
+            }
+            else
+            {
+                //Redirects to login page if user not logged in
+                return RedirectToPage("/Account/Login", new { area = "Identity" });
+
+            }
         }
-        else
-        {
-            //Redirects to login page if user not logged in
-            return RedirectToPage("/Account/Login", new { area = "Identity" });
-
+        catch (Exception ex) {
+            _logger.LogError(ex, "[CommentController] An error occurred in the Edit action");
+            return View("Error");
         }
     }
     [HttpPost("comment/saveEdit")]
@@ -156,40 +171,48 @@ public class CommentController : Controller
     public async Task<IActionResult> DeleteComment(int commentId)
     {
         Comment comment = _threadDbContext.Comments.FirstOrDefault(c => c.CommentId == commentId) ?? throw new InvalidOperationException("Requested comment not found. CommentId: " + commentId);
-        
-        //Checks if user is owner or admin before editing
-        var user = await _userManager.GetUserAsync(HttpContext.User);
-        var userRoles = await _userManager.GetRolesAsync(user);
-        if (comment.UserId != user.Id || !userRoles.Contains("Admin"))
+
+        try
         {
-            var errorMsg = "Could not verify that you are the owner of the Thread";
-            return RedirectToAction("Error", "Home", new { errorMsg });
-        }
-        List<Comment> childcomments = AddChildren(comment);
-
-        foreach (var child in childcomments)
-        {
-            _threadDbContext.Comments.Remove(child);
-            await _threadDbContext.SaveChangesAsync();
-        }
-
-        _threadDbContext.Comments.Remove(comment);
-        await _threadDbContext.SaveChangesAsync();
-
-        return RedirectToAction("Thread", "Thread", new {comment.ThreadId});
-
-        List<Comment> AddChildren(Comment parentComment)
-        {
-            List<Comment> newChildren = _threadDbContext.Comments.Where(c => c.ParentCommentId == parentComment.CommentId).ToList();
-            List<Comment> newerChildren = new List<Comment>();
-            foreach (Comment child in newChildren)
+            //Checks if user is owner or admin before editing
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (comment.UserId != user.Id || !userRoles.Contains("Admin"))
             {
-                newerChildren.AddRange(AddChildren(child));
+                var errorMsg = "Could not verify that you are the owner of the Thread";
+                return RedirectToAction("Error", "Home", new { errorMsg });
             }
-            newChildren.AddRange(newerChildren);
-            return newChildren;
+            List<Comment> childcomments = AddChildren(comment);
+
+            foreach (var child in childcomments)
+            {
+                _threadDbContext.Comments.Remove(child);
+                await _threadDbContext.SaveChangesAsync();
+            }
+
+            _threadDbContext.Comments.Remove(comment);
+            await _threadDbContext.SaveChangesAsync();
+
+            return RedirectToAction("Thread", "Thread", new { comment.ThreadId });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "[CommentController] An error occurred in the DeleteComment action.");
+            return View("Error");
         }
     }
 
+    //Rekursiv metode for DeleteComment
+    private List<Comment> AddChildren(Comment parentComment)
+    {
+        List<Comment> newChildren = _threadDbContext.Comments.Where(c => c.ParentCommentId == parentComment.CommentId).ToList();
+        List<Comment> newerChildren = new List<Comment>();
+        foreach (Comment child in newChildren)
+        {
+            newerChildren.AddRange(AddChildren(child));
+        }
+        newChildren.AddRange(newerChildren);
+        return newChildren;
+    }
 }
 
