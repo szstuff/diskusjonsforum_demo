@@ -161,8 +161,9 @@ public class ThreadController : Controller
         }
         catch (Exception ex)
         {
+            var errormsg = "[ThreadController] An error occurred in the Create method.";
             _logger.LogError(ex, "[ThreadController] An error occurred in the Create method.");
-            return View("Error");
+            return RedirectToAction("Error", "Home", new { errormsg });
         }
     }
 
@@ -242,6 +243,7 @@ public class ThreadController : Controller
         }
         catch (Exception ex)
         {
+            var errorMsg = "[ThreadController] An error occurred in the Edit method.";
             _logger.LogError(ex, "[ThreadController] An error occurred in the Edit method.");
             return RedirectToAction("Error", "Home", new { errorMsg });
         }

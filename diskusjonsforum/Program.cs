@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using diskusjonsforum.Areas.Identity.Data;
 using Microsoft.EntityFrameworkCore.Sqlite.Diagnostics.Internal;
 using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("diskusjonsforumIdentityDbContextConnection") ?? throw new 
@@ -22,7 +23,7 @@ var loggerConfiguration = new LoggerConfiguration()
     .WriteTo.File($"Logs/app_{DateTime.Now:yyyyMMdd_HHmmss}.log");
 
 loggerConfiguration.Filter.ByExcluding(e => e.Properties.TryGetValue("SourceContext", out var value) &&
-                                       e.Level == LogEventLeven.Information &&
+                                       e.Level == LogEventLevel.Information &&
                                        e.MessageTemplate.Text.Contains("Executed DbCommand"));
 
 var logger = loggerConfiguration.CreateLogger();

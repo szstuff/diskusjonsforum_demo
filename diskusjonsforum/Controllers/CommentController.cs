@@ -5,6 +5,7 @@ using diskusjonsforum.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Thread = Diskusjonsforum.Models.Thread;
+using Serilog;
 
 
 //using diskusjonsforum.ViewModels; //Kan slettes hvis vi ikke lager ViewModels
@@ -16,7 +17,8 @@ public class CommentController : Controller
 {
     private readonly ThreadDbContext _threadDbContext;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly Logger<CommentController> _logger;
+    private readonly ILogger<CommentController> _logger;
+    
 
 
     public CommentController(ThreadDbContext threadDbContext, UserManager<ApplicationUser> userManager, ILogger<CommentController> logger)
@@ -67,8 +69,9 @@ public class CommentController : Controller
         }
         catch (Exception ex)
         {
+            var errormsg = "[CommentController] An error occurred in the Create action";
             _logger.LogError(ex, "[CommentController] An error occurred in the Create action");
-            return View("Error");
+            return RedirectToAction("Error", "Home", new { errormsg });
         }
     }
     [HttpPost("comment/save")]
@@ -134,8 +137,9 @@ public class CommentController : Controller
             }
         }
         catch (Exception ex) {
+            var errormsg = "[CommentController] An error occurred in the Create action";
             _logger.LogError(ex, "[CommentController] An error occurred in the Edit action");
-            return View("Error");
+            return RedirectToAction("Error", "Home", new { errormsg });
         }
     }
     [HttpPost("comment/saveEdit")]
@@ -197,9 +201,9 @@ public class CommentController : Controller
         }
         catch (Exception ex)
         {
+            var errormsg = "[CommentController] An error occurred in the Create action";
             _logger.LogError(ex, "[CommentController] An error occurred in the DeleteComment action.");
-            return View("Error");
-        }
+            return RedirectToAction("Error", "Home", new { errormsg });        }
     }
 
     //Rekursiv metode for DeleteComment

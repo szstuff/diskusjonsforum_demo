@@ -44,9 +44,17 @@ public class CategoryController : Controller
 
         
             foreach (var category in categories)
-        {
-            category.ThreadsInCategory.AddRange(GetThreads(category));
-        }
+            {
+                if (category.ThreadsInCategory != null)
+                {
+                    category.ThreadsInCategory.AddRange(GetThreads(category));
+                }else {
+                    var errormsg = "[CategoryController] An error occurred in the Table action: category threads are null";
+                    _logger.LogError("[CategoryController] An error occurred in the Table action: category threads are null");
+                    return RedirectToAction("Error", "Home", new { errormsg });
+                }
+            } 
+           
         return View();
 
         }
@@ -56,7 +64,9 @@ public class CategoryController : Controller
             _logger.LogError(ex, "An error occured in the Table action.");
 
             //Handles error and returns error view/msg
-            return View("Error"); //Add Error.cshtml view?
+            var errormsg = "[CategoryController] An error occurred in the Table action";
+            _logger.LogError(ex, "[CategoryController] An error occurred in the Table action");
+            return RedirectToAction("Error", "Home", new { errormsg });
         }
 
     }
@@ -87,9 +97,9 @@ public class CategoryController : Controller
             _logger.LogError(ex, "An error occurred in the Category action.");
 
             //Handles the error and returns error view/msg
-            return View("Error"); //Add Error.cshtml view
+            var errormsg = "[CategoryController] An error occurred in the Table action: category threads are null";
+            _logger.LogError("[CategoryController] An error occurred in the Table action: category threads are null");
+            return RedirectToAction("Error", "Home", new { errormsg });
         }
-        
-
     }
 }

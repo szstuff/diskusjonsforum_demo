@@ -5,11 +5,11 @@ using Microsoft.Extensions.Logging;
 
 namespace diskusjonsforum.Controllers;
 
-public class AuthenticationController : Controller
+public class AuthorizationController : Controller
 {
-    private readonly ILogger<AuthenticationController> _logger;
+    private readonly ILogger<AuthorizationController> _logger;
 
-    public AuthenticationController(ILogger<AuthenticationController> logger)
+    public AuthorizationController(ILogger<AuthorizationController> logger)
     {
         _logger = logger;
     }
@@ -19,7 +19,9 @@ public class AuthenticationController : Controller
     {
         _logger.LogError("An error occurred. RequestId: {RequestId}", HttpContext.TraceIdentifier);
 
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        var errormsg = "[CommentController] An error occurred in the Create action";
+        _logger.LogError("[CommentController] An error occurred. RequestId: {RequestId}");
+        return RedirectToAction("Error", "Home", new { errormsg });
     }
 
     public IActionResult Register()

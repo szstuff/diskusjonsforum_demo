@@ -32,7 +32,8 @@ public class UserController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "[UserController] An error occurred in the Table method.");
-            return View("Error");
+            var errormsg = "[UserController] An error occured in the Table method.";
+            return RedirectToAction("Error", "Home", new {errormsg});
         }
     }
 
