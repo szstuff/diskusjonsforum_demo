@@ -4,13 +4,6 @@
 
 /*THREAD SINGLE VIEW STYLING BELOW*/
 
-
-/* Custom CSS for the thread cards */
-/*.thread-card {
-    background-color: #fff;*/ /* White background color */
-    /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);*/ /* Add a subtle shadow */
-/*}*/
-
 /*Styles for thread body*/
 .threadbody {
     /*Font and background styles for thread body*/
@@ -58,29 +51,18 @@
         box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.5);
     }
 
-    /* changes the color */
-    
+/* changes the color */
 .btncost{
     
     background-color: mediumpurple;
     color: white;
 }
-
+/* Add a background color on hover */
 .btncost:hover{
     color: white;
     background-color: #ffc942 ;
 }
-    /* Add a background color on hover */
-    /*.vertical-button-container button:hover {
-        background-color: #3e8e41;
-    }*/
-    
-
-/* Style for the outer div, biggest container for comments */
-/*.commentDiv {
-    border: 2px solid black;*/ /* Optional border for visualization */
-    /*height: 20%;
-}*/
+   
 
 /* Style for the outermost container */
 /* Only padding for spacing within threadbody */
@@ -112,19 +94,6 @@
     width: 90%;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* THREAD TABLE VIEW STYLING BELOW*/
 
 .row {
@@ -151,6 +120,7 @@
     border-radius: 30px;
     margin-top: 28px;
 }
+
 
 .list-group-item {
     text-align: center;
@@ -189,6 +159,7 @@
     color: #002c45;
 }
 
+/* Designs border for the threads*/
 .thread-container {
     color: #002c45;
     background: #feeeef;
@@ -196,17 +167,17 @@
     border-radius: 30px;
     padding-left: 20px;
     margin-bottom: 20px;
-    /*box-shadow: 0px 3px 4px 0px rgba(0, 44, 69, 0.5);*/
 }
 
 .col-md-6 {
-    /* You can remove the width property if you want it to take the available width. */
     width: 600px; /* Adjust the width as needed */
 }
+
 
 .custom-container {
     color: white;
 }
+
 
 .btn-secondary {
     color: white;
@@ -245,6 +216,7 @@
         /*box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.2);*/
     }
 
+/*places the category container*/
 .category-container {
     left: 8%;
     margin-top: 9.3%;
@@ -256,10 +228,12 @@
     margin-top: 12%; /* Adjust the margin as needed to position the button */
 }
 
+/*customes button*/
 .start-new-thread {
     color: #feeeef;
     font-weight:400;
 }
+
 
 .button-container {
     display: none; /* Initially hide the button container */

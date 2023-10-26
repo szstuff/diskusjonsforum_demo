@@ -17,18 +17,6 @@ body {
     flex-direction: column;
 }
 
-/*.navbar {
-    padding-bottom: 5px;
-}*/
-
-/*.custom-font {
-    position: relative;
-}
-
-    .custom-font:hover {
-        font-weight: 700;
-    }*/
-
 .mx-2 {
     position: relative;
 }
@@ -117,36 +105,3 @@ header {
     }
 }
 
-/*.register-text {
-    color: #feeeef;
-}
-
-    .register-text:hover {
-        color: #002c45;
-    }*/
-
-/*.nav-brand {
-    font-weight: 700;
-    font-size: 150%;
-    color: #6e0f8a;
-}*/
-
-/*.nav-item {
-    font-weight: 400;
-}*/
-
-/*.border-top {
-    justify-content: center;
-}*/
-
-/*.custom-font {
-    font-weight: 700;
-    color: black;
-    font-size: 150%;
-}*/
-
-/*.subheading {
-    font-weight: 300;*/
-/*color: #bb5b17*/
-/*color: white;
-}*/
