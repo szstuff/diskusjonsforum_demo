@@ -1,10 +1,28 @@
-﻿@{
+﻿@model ThreadListViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
+                    
+<h2>Welcome to our forum</h2>
+<span>Feel free to choose topic you're interested in.</span>
 
-
-<div class="w-100 vh-100 d-flex flex-column justify-content-center align-items-center text-light fs-1">
-    <h1 style="font-size: 1.3em">Welcome</h1>
-    @* <p style="font-size: 1em">Tell us your stories. Don't be afraid to share everything on your mind!</p> *@
+<div class="col-md-9">
+    <table class="table table-striped">
+        <tr><th>Topic</th><th>Comments</th></tr>
+        @if (Model != null && Model.Threads != null)
+        {
+            @foreach (var thread in Model.Threads)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">
+                            @thread.ThreadTitle
+                        </a>
+                    </td>
+                    <td>@(thread.ThreadComments?.Count ?? 0)</td>
+                </tr>
+            }
+        }
+    </table>
 </div>

@@ -8,21 +8,21 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item mx-2">
-        <a class="nav-link text-light" asp-controller="Role" asp-action="Create"> Fix Admin Role</a>
+        <a class="nav-link text-light" asp-controller="Role" asp-action="Create" style="font-size: 12px;"> Fix Admin Role</a>
     </li>
     <li class="nav-item mx-2">
         @if (user != null && await UserManager.IsInRoleAsync(user, "Admin"))
         {
-            <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="MakeAdmin"> Exit Admin </a>
+            <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="MakeAdmin" style="font-size: 12px;"> Exit Admin </a>
         }
         else
         {
-            <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="MakeAdmin"> Enter Admin view </a>
+            <a class="nav-link text-light" asp-area="" asp-controller="User" asp-action="MakeAdmin" style="font-size: 12px;"> Enter Admin view </a>
         }
     </li>
     
     <li class="nav-item mx-2">
-        <a id="manage" class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        <a id="manage" class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" style="font-size: 14px;">Hello @UserManager.GetUserName(User)!</a>
     </li>
     <li class="nav-item mx-2">
         <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
