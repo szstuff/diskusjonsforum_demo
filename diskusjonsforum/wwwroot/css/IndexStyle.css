@@ -1,0 +1,16 @@
+﻿.post {
+    background-color: white;
+    border-radius: 5px; 
+    padding: 10px; /* Add margin inside the div */
+    margin: 5px; /* Add margin outside the div */
+}
+
+.category {
+    font-weight: bold;
+}
+
+a{
+    text-decoration: none;
+    color: black; /* Use the text color of the parent element */
+    cursor: pointer; /* Show a pointer cursor on hover to indicate clickability */
+}

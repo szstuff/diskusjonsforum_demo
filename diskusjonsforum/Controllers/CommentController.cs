@@ -177,37 +177,45 @@ public class CommentController : Controller
 
     public async Task<IActionResult> DeleteComment(int commentId)
     {
-        Comment comment = _threadDbContext.Comments.FirstOrDefault(c => c.CommentId == commentId) ?? throw new InvalidOperationException("Requested comment not found. CommentId: " + commentId);
+        Comment comment = _threadDbContext.Comments.FirstOrDefault(c => c.CommentId == commentId)
+                          ?? throw new InvalidOperationException("Requested comment not found. CommentId: " + commentId);
 
         try
         {
-            //Checks if user is owner or admin before editing
+            // Checks if the user is either the owner of the comment or an admin before deleting
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var userRoles = await _userManager.GetRolesAsync(user);
-            if (comment.UserId != user.Id || !userRoles.Contains("Admin"))
+
+            if (comment.UserId == user.Id || userRoles.Contains("Admin"))
             {
-                var errorMsg = "Could not verify that you are the owner of the Thread";
+                List<Comment> childcomments = AddChildren(comment);
+
+                foreach (var child in childcomments)
+                {
+                    _threadDbContext.Comments.Remove(child);
+                    await _threadDbContext.SaveChangesAsync();
+                }
+
+                _threadDbContext.Comments.Remove(comment);
+                await _threadDbContext.SaveChangesAsync();
+
+                return RedirectToAction("Thread", "Thread", new { comment.ThreadId });
+            }
+            else
+            {
+                var errorMsg = "You do not have permission to delete this comment.";
+                _logger.LogError(errorMsg);
                 return RedirectToAction("Error", "Home", new { errorMsg });
             }
-            List<Comment> childcomments = AddChildren(comment);
-
-            foreach (var child in childcomments)
-            {
-                _threadDbContext.Comments.Remove(child);
-                await _threadDbContext.SaveChangesAsync();
-            }
-
-            _threadDbContext.Comments.Remove(comment);
-            await _threadDbContext.SaveChangesAsync();
-
-            return RedirectToAction("Thread", "Thread", new { comment.ThreadId });
         }
         catch (Exception ex)
         {
-            var errormsg = "[CommentController] An error occurred in the Create action";
+            var errorMsg = "An error occurred while deleting the comment.";
             _logger.LogError(ex, "[CommentController] An error occurred in the DeleteComment action.");
-            return RedirectToAction("Error", "Home", new { errormsg });        }
+            return RedirectToAction("Error", "Home", new { errorMsg });
+        }
     }
+
 
     //Rekursiv metode for DeleteComment
     private List<Comment> AddChildren(Comment parentComment)

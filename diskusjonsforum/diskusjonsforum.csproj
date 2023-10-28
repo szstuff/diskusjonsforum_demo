@@ -38,5 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <_ContentIncludedByDefault Remove="Views\Authorization\Error.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Authorization\Login.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Authorization\Register.cshtml" />
   </ItemGroup>
 </Project>

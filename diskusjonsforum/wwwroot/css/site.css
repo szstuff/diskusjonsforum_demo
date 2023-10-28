@@ -5,7 +5,7 @@
 
 /*Designs the background body*/
 body {
-    background: url("../images/white.jpg"); /*links to the backgroung img used*/
+    background: url("../images/Farge.jpg"); /*links to the backgroung img used*/
     background-size: cover;
     background-repeat: no-repeat; /*prevents background image from repeating*/
     background-attachment: fixed; /*remains the same position when we scroll*/
@@ -14,6 +14,7 @@ body {
     background-color: white;
     display: flex; /*used to create a flex container*/
     flex-direction: column; /*sets flex container to arrange its children in a column, so they stack vertically whitin the container*/
+    overflow-y: auto;
 }
 
 .mx-2 {
@@ -86,7 +87,6 @@ header {
 
 /*positioning navbar*/
 .navbar-brand {
-    padding-left: 5%;
     font-size: 50px;
     letter-spacing: 0.1em;
 }

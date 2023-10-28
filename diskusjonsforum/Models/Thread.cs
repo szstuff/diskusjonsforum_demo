@@ -14,7 +14,6 @@ namespace Diskusjonsforum.Models
         public string? ThreadTitle { get; set; } 
         [ForeignKey("Category")] /* sets foreignkey*/
         public string CategoryName { get; set; } /*holds the name of the category to which the thread belongs to.*/
-
         public Category Category { get; set; } /*navigation property, creates a relationship to the Category entity. accesses the related category for this thread*/
         public string? ThreadBody { get; set; }
         public DateTime ThreadCreatedAt { get; set; }  = DateTime.Now; /*timestamp on when the thread was created*/

@@ -1,32 +1,34 @@
 ﻿@model ThreadListViewModel
-
-
-
-<h1>OBS: Følgende kriterier mangler: </h1>
-<p> - Input validation på alle Razor Views (eks. når du lager ny tråd. Du kan submitte selv hvis kategori er tom, som gir feilmelding. Se Canvas moduler eller https://learn.microsoft.com/en-us/aspnet/web-pages/overview/ui-layouts-and-themes/validating-user-input-in-aspnet-web-pages-sites</p>
-<p> - Dokumentasjon (som alle vet men dgb) </p>
-<p> - På mobil/smal skjerm: Meny-knappen åpner tom meny (skal vise navbar knapper) </p>
-<p> - Han nevner "repository pattern" </p>
-<h1>Discussions</h1>
 <!-- <a href="/ThreadThread/Grid">Grid View</a> -->
+<link rel="stylesheet" href="~/css/IndexStyle.css" asp-append-version="true"/>
 
+<h3> Explore discussions</h3>
 <div class="container">
-    <table class="table table-striped">
-        <tr><th>User</th><th>Title</th><th>Comments</th><th>ID</th></tr>
-        @foreach (var thread in Model.Threads)
-        {
-            <tr>
-                <td>@thread.User.UserName</td>
-                <td><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a></td>
-                <td>@thread.ThreadComments?.Count</td>
-                <td>@thread.ThreadId</td>
-            </tr>
-        }
-    </table>
-    
-    <p>
-        <a class="btn btn-secondary"
-           asp-controller="Thread"
-           asp-action="Create"> Start a new thread </a>
-    </p>
+    <input name="PostText" class="form-control" placeholder="Create Post" type="text" onclick="redirectToCreatePage()">
 </div>
+
+<script> // Redirect the user to the "create" page when the input is clicked
+    function redirectToCreatePage() {
+        window.location.href = "/Thread/Create";
+    }
+</script>
+<br/>
+    
+<div class="container">
+        <div class="row">
+            @foreach (var thread in Model.Threads.OrderByDescending(t => t.ThreadCreatedAt))
+            {
+                <div class="post">
+                    <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">
+                    <div class="category">@thread.CategoryName</div>
+                    <div class="user">@thread.User.UserName</div>
+                    <div class="title">
+                        <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a>
+                    </div>
+                    <div class="comments">Comments: @thread.ThreadComments?.Count</div>
+                    </a>
+                </div>
+                    <p></p>
+            }
+        </div>
+    </div>

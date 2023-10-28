@@ -97,8 +97,7 @@ public class ThreadController : Controller
         }
 
     }
-
-    //100% chatGPT, vi burde kanskje se om vi kan finne artikler på nett med samme struktur for kilde
+    
     public List<Comment> SortComments(List<Comment> comments)
     {
         try
@@ -138,7 +137,6 @@ public class ThreadController : Controller
             // Handle the error or return an error response if needed.
         }
     }
-    // Slutt på ren chat-gpt
 
     [HttpGet]
     public IActionResult Create()
@@ -166,9 +164,9 @@ public class ThreadController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(Thread thread)
-    {
+        public async Task<IActionResult> Create(Thread thread){
         var errorMsg = "";
+
         if (HttpContext.User.Identity!.IsAuthenticated)
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
@@ -177,9 +175,15 @@ public class ThreadController : Controller
             {
                 thread.UserId = user.Id;
                 thread.User = user;
-                ModelState.Remove("User"); //User is always null according to ModelBuilder. User is authenticated in Action so safe to ignore
-                ModelState.Remove("Category"); //CategoryName is still validated so Category can be ignored
+                ModelState.Remove("User");
+                ModelState.Remove("Category");
 
+                // Add custom validation for the thread content
+                if (string.IsNullOrWhiteSpace(thread.ThreadBody) || string.IsNullOrWhiteSpace(thread.ThreadTitle))
+                {
+                    // Content is empty, add a model error
+                    ModelState.AddModelError("ThreadContent", "Thread content is required.");
+                }
 
                 try
                 {
@@ -214,6 +218,7 @@ public class ThreadController : Controller
             _logger.LogWarning("[ThreadController] User is not authenticated in the Create action.");
             return View(thread);
         }
+    
     }
 
     [HttpGet("edit/{threadId}")]
@@ -303,9 +308,9 @@ public class ThreadController : Controller
 
         try
         {
-            if (thread.UserId != user.Id || !userRoles.Contains("Admin"))
+            if (thread.UserId != user.Id && !userRoles.Contains("Admin"))
             {
-                errorMsg = "Could not verify that you are the owner of the Thread";
+                errorMsg = "You do not have permission to delete this thread.";
                 return RedirectToAction("Error", "Home", new { errorMsg });
             }
 
@@ -320,6 +325,7 @@ public class ThreadController : Controller
             return RedirectToAction("Error", "Home", new { errorMsg });
         }
     }
+
 
 
 }

@@ -1,28 +1,42 @@
-﻿@model ThreadListViewModel
+﻿@model diskusjonsforum.ViewModels.ThreadListViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
 
-                    
-<h2>Welcome to our forum</h2>
-<span>Feel free to choose topic you're interested in.</span>
+<link rel="stylesheet" href="~/css/IndexStyle.css" asp-append-version="true"/>
 
-<div class="col-md-9">
-    <table class="table table-striped">
-        <tr><th>Topic</th><th>Comments</th></tr>
-        @if (Model != null && Model.Threads != null)
+<div class="container">
+    <input name="PostText" class="form-control" placeholder="Create Post" type="text" onclick="redirectToCreatePage()">
+</div>
+
+<script>
+    // Redirect the user to the "create" page when the input is clicked
+    function redirectToCreatePage() {
+        window.location.href = "/Thread/Create";
+    }
+</script>
+
+<br/>
+
+<div class="container">
+    <h4>Recent posts:</h4>
+</div>
+
+<div class="container">
+    <div class="row">
+        @foreach (var thread in Model.Threads.OrderByDescending(t => t.ThreadCreatedAt).Take(6))
         {
-            @foreach (var thread in Model.Threads)
-            {
-                <tr>
-                    <td>
-                        <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">
-                            @thread.ThreadTitle
-                        </a>
-                    </td>
-                    <td>@(thread.ThreadComments?.Count ?? 0)</td>
-                </tr>
-            }
+            <div class="col-md-6">
+                <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">
+                    <div class="post">
+                        <div class="user"> <p>posted by: @thread.User.UserName</p></div>
+                        <div class="title">@thread.ThreadTitle</div>
+                        <div class="content">@thread.ThreadBody</div>
+                        <div class="comments">Comments: @thread.ThreadComments?.Count</div>
+                    </div>
+                </a>
+                <p></p>
+            </div>
         }
-    </table>
+    </div>
 </div>

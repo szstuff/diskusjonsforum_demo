@@ -1,12 +1,15 @@
 @model Thread
-       
+
 <div class="container mt-5">
-    <div class="row mt-4 col-12 mb-4 p-4 d-flex justify-content-center align-items-stretch flex-fill crud-thread">
-        <div class="row mt-4 col-12 mb-4 p-4 crud-container">
-        
-            <div class="container crud-comment-info">
-                <h1> You're editing: </h1>
-                @await Html.PartialAsync("_ThreadView", @Model)
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
+            <div class="card p-4">
+                <div class="card-header">
+                    <h1 class="mb-0">You're editing:</h1>
+                </div>
+                <div class="card-body">
+                    @await Html.PartialAsync("_ThreadView", @Model)
+                </div>
             </div>
         </div>
     </div>
@@ -17,27 +20,32 @@
     <input type="hidden" asp-for="User" value="@Model.User" />
     <input type="hidden" asp-for="UserId" value="@Model.UserId" />
 
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12 col-md-8">
+                <div class="form-group">
+                    <label asp-for="CategoryName"></label><span class="text-danger"></span>
+                    <select asp-for="CategoryName" asp-items="@ViewBag.Categories" class="form-control">
+                        <option value="">Select a category</option>
+                    </select>
+                    <span asp-validation-for="CategoryName" class="text-danger"></span>
+                </div>
 
+                <div class="form-group">
+                    <label asp-for="ThreadTitle"></label><span class="text-danger"></span>
+                    <input asp-for="ThreadTitle" class="form-control" />
+                    <span asp-validation-for="ThreadTitle" class="text-danger"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="CategoryName"></label><span class="text-danger"></span>
-        <br/>
-        <select asp-for="CategoryName" asp-items="@ViewBag.Categories">
-            <option value="">Select a category</option>
-        </select>
-        <span asp-validation-for="CategoryName" class="text-danger"></span>
+                <div class="form-group">
+                    <label asp-for="ThreadBody"></label><span class="text-danger"></span>
+                    <textarea asp-for="ThreadBody" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="ThreadBody" class="text-danger"></span>
+                </div>
 
+                <button type="submit" class="btn btn-primary">Save edit</button>
+                <a asp-action="Table" class="btn btn-secondary">Return</a>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="ThreadTitle"></label><span class="text-danger"></span>
-        <input asp-for="ThreadTitle" class="form-control"/>
-        <span asp-validation-for="ThreadTitle" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ThreadBody"></label><span class="text-danger"></span>
-        <input asp-for="ThreadBody" class="form-control"/>
-        <span asp-validation-for="ThreadBody" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Save edit</button>
-    <a asp-action="Table" class="btn btn-secondary"> Return </a>
 </form>

@@ -4,30 +4,19 @@
     ViewData["Title"] = "Resend email confirmation";
 }
 
-<head>
-    <!-- Links to external CSS stylesheets, fonts, and boxicons -->
-    <link rel="stylesheet" type="text/css" href="~/css/site.css" />
-    <link rel="stylesheet" type="text/css" href="~/css/authentication.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="~/css/authentication.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Zanabazar+Square&family=Roboto&family=Ubuntu:wght@300;400;700&display=swap" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-</head>
-
 <h1>@ViewData["Title"]</h1>
 <h2>Enter your email.</h2>
-<hr/>
+<hr />
 <div class="row">
-    <div>
+    <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="input-box">
+            <div class="form-floating">
                 <input asp-for="Input.Email" class="form-control" aria-required="true" />
                 <label asp-for="Input.Email" class="form-label"></label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
             </div>
-            <button type="submit" class="submit">Resend</button>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Resend</button>
         </form>
     </div>
 </div>

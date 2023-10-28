@@ -1,6 +1,4 @@
-﻿using System;
-using Diskusjonsforum.Models;
-using Thread = Diskusjonsforum.Models.Thread;
+﻿using Thread = Diskusjonsforum.Models.Thread;
 
 namespace diskusjonsforum.ViewModels
 {
