@@ -53,6 +53,7 @@ public class UserController : Controller
 
     public async Task<IActionResult> MakeAdmin()
     {
+        var errorMsg = "An error occured when attempting to switch your roles";
         try
         {
             if (HttpContext.User.Identity!.IsAuthenticated)
@@ -72,14 +73,26 @@ public class UserController : Controller
                         await _userManager.AddToRoleAsync(user, "Admin");
                     }
                 }
+                else
+                {
+                    errorMsg = "An error occured when authenticating you"; 
+                    _logger.LogError("[UserController] An error occurred in the MakeAdmin method.");
+                    return RedirectToAction("Error", "Home", new {errorMsg});
+                }
+            } else
+            {
+                errorMsg = "An error occured when authenticating you"; 
+                _logger.LogError("[UserController] An error occurred in the MakeAdmin method.");
+                return RedirectToAction("Error", "Home", new {errorMsg});
             }
 
             return RedirectToAction("Index", "Home");
         }
         catch (Exception ex)
         {
+            errorMsg = "An error occured when attempting to switch your roles. Verify that the requested role exists."; 
             _logger.LogError(ex, "[UserController] An error occurred in the MakeAdmin method.");
-            return RedirectToAction("Error", "Home");
+            return RedirectToAction("Error", "Home", new {errorMsg});
         }
     }
 }

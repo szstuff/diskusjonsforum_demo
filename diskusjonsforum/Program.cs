@@ -70,7 +70,6 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    DBInit.Seed(app);
 }
 
 app.UseStaticFiles();
@@ -91,7 +90,6 @@ app.UseEndpoints(endpoints =>
         pattern: "Comment/Save",
         defaults: new { controller = "Comment", action = "Save" }
     );
-
 });
 
 app.MapRazorPages();

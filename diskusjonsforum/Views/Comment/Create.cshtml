@@ -3,19 +3,19 @@
 <div class="container mt-5">
     <div class="row mt-4 col-12 mb-4 p-4 d-flex justify-content-center align-items-stretch flex-fill crud-thread">
         <div class="row mt-4 col-12 mb-4 p-4 crud-container">
+        
             <div class="container crud-comment-info">
                 <h1> You're replying to: </h1>
-
-                @* <p> Thread: @(Model.Thread != null ? Model.Thread.ThreadTitle : "Thread not found")</p> *@
-                @* <p> Thread: @Model.ParentComment?.Thread?.ThreadTitle</p> *@
-                <p>
-                    Posted by <b>@Model.ParentComment?.User</b> on @Model.ParentComment?.CommentCreatedAt
+                @await Html.PartialAsync("_ThreadView", @Model.Thread)
+                @if(@Model.Comment != null){ <p>
+                    Posted by <b>@Model.ParentComment?.User.UserName</b> on @Model.ParentComment?.CommentCreatedAt
                     @if (@Model.ParentComment?.CommentCreatedAt != @Model.ParentComment?.CommentLastEditedAt)
                     {
                         <b> Last edited: @Model.ParentComment?.CommentLastEditedAt</b>
                     }
-                </p>
-                <p> Comment: @Model.ParentComment?.CommentBody </p>
+                    </p>
+                    <p> Comment: @Model.ParentComment?.CommentBody </p>
+                }
             </div>
         </div>
     </div>

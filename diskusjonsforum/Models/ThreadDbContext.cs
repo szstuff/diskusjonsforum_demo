@@ -33,7 +33,7 @@ public class ThreadDbContext : IdentityDbContext
 		    .WithMany()
 		    .HasForeignKey(t => t.UserId);
 	    builder.Entity<Thread>()
-		    .HasOne(t => t.ThreadCategory)
+		    .HasOne(t => t.Category)
 		    .WithMany(c => c.ThreadsInCategory)
 		    .HasForeignKey(t => t.CategoryName);
 	    builder.Entity<Comment>()

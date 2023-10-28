@@ -4,6 +4,7 @@ using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Thread = Diskusjonsforum.Models.Thread;
 using Serilog;
 
@@ -36,7 +37,7 @@ public class CommentController : Controller
     
     [HttpGet("create/{{commentId}}/{{threadId}}")]
     [Authorize]
-    public IActionResult Create(int parentCommentId, int threadId)
+    public async Task<IActionResult> Create(int parentCommentId, int threadId)
     {
         try
         {
@@ -45,8 +46,10 @@ public class CommentController : Controller
                 Comment parentComment =
                     _threadDbContext.Comments.FirstOrDefault(c =>
                         c.CommentId == parentCommentId)!; //Throws no exception because parentComment should be null when the user replies to the thread 
-                Thread thread = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId) ??
-                                throw new InvalidOperationException("Requested thread not found. ThreadId: " + threadId);
+                var thread = _threadDbContext.Threads.Include(t => t.ThreadComments)!.ThenInclude(t => t.User)
+                    .FirstOrDefault(t => t.ThreadId == threadId);
+
+                thread.User = await _userManager.FindByIdAsync(thread.UserId); //User needs to be set to load Thread and Comment in Comment/Create view 
                 // Retrieve query parameters
                 // Create a CommentViewModel and populate it with data
                 var viewModel = new CommentCreateViewModel()

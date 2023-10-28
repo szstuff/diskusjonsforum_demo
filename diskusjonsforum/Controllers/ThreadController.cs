@@ -34,7 +34,7 @@ public class ThreadController : Controller
         {
             List<Thread> threads = _threadDbContext.Threads.Include(t => t.User)
                 .Include(thread => thread.ThreadComments)
-                .Include(thread => thread.ThreadCategory)
+                .Include(thread => thread.Category)
                 .ToList();
             foreach (var thread in threads)
             {
@@ -150,14 +150,12 @@ public class ThreadController : Controller
                 // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
                 var categories = _threadDbContext.Categories.ToList(); // Fetch all categories from the database.
                 ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
-            }
-            else
-            {
-                // Redirects to the login page if the user is not logged in
-                return RedirectToPage("/Account/Login", new { area = "Identity" });
-            }
+                return View();
 
-            return View();
+            }
+            // Redirects to the login page if the user is not logged in
+            return RedirectToPage("/Account/Login", new { area = "Identity" });
+
         }
         catch (Exception ex)
         {
@@ -167,6 +165,7 @@ public class ThreadController : Controller
         }
     }
 
+    [HttpPost]
     public async Task<IActionResult> Create(Thread thread)
     {
         var errorMsg = "";
@@ -178,7 +177,9 @@ public class ThreadController : Controller
             {
                 thread.UserId = user.Id;
                 thread.User = user;
-                ModelState.Remove("User");
+                ModelState.Remove("User"); //User is always null according to ModelBuilder. User is authenticated in Action so safe to ignore
+                ModelState.Remove("Category"); //CategoryName is still validated so Category can be ignored
+
 
                 try
                 {
@@ -204,7 +205,7 @@ public class ThreadController : Controller
             else
             {
                 _logger.LogError("[ThreadController] Error authenticating the user in the Create action.");
-                errorMsg = "Could not create your thread because there was an issue authenticating you";
+                errorMsg = "Could not create your thread because there was an issue authenticating you. Please log out and in, and try again";
                 return RedirectToAction("Error", "Home", new { errorMsg });
             }
         }
@@ -222,6 +223,10 @@ public class ThreadController : Controller
         {
             if (HttpContext.User.Identity!.IsAuthenticated)
             {
+                // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
+                var categories = _threadDbContext.Categories.ToList(); // Fetch all categories from the database.
+                ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
+               
                 Thread threadToEdit = _threadDbContext.Threads.FirstOrDefault(t => t.ThreadId == threadId) ??
                                       throw new InvalidOperationException("Requested thread not found. commentId:" + threadId);
                 var user = await _userManager.GetUserAsync(HttpContext.User);

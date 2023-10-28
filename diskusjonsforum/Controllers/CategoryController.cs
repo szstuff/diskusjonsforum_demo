@@ -73,7 +73,7 @@ public class CategoryController : Controller
 
     public IEnumerable<Thread> GetThreads(Category category)
     {
-        return _threadDbContext.Threads.Where(thread => thread.ThreadCategory == category);
+        return _threadDbContext.Threads.Where(thread => thread.Category == category);
     }
 
     public IActionResult Category(string name)

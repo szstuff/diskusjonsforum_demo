@@ -3,37 +3,8 @@
 @inject UserManager<ApplicationUser> UserManager
 
 
+@await Html.PartialAsync("_ThreadView")
 
-<div class="container mt-5">
-    <div class="row mt-4 col-12 mb-4 p-4 border border-bottom d-flex justify-content-start align-items-stretch flex-fill thread-container">
-        <!-- Thread title -->
-        <h1 class="thread-title-current"> @Model.ThreadTitle</h1>
-            
-        <div class="thread-information">
-            <!-- Thread information: user, category, post date, last edited date -->
-            <p>
-                Posted in @Model.ThreadCategory by @Model.User.UserName <br />
-                Posted: @Model.ThreadCreatedAt.
-                <!-- Display last edited date if different -->
-                @if (@Model.ThreadCreatedAt != @Model.ThreadLastEditedAt)
-                {
-                    <b> Last edited: @Model.ThreadLastEditedAt </b>
-                }
-            </p>
-        </div>e
-    </div>
-</div>
-
-
-            <!-- Thread body -->
-            <p class="threadbody"> @Model.ThreadBody </p>
-<h1 class="heading"> @Model.ThreadTitle </h1>
-<p class="subheading"> Posted in @Model.ThreadCategory </p>
-<p class="subheading"> by @Model.User.UserName on  @Model.ThreadCreatedAt.  
-    @if (@Model.ThreadCreatedAt != @Model.ThreadLastEditedAt)
-    { <b> Last edited at @Model.ThreadLastEditedAt </b> } </p>
-<p class="threadbody"> @Model.ThreadBody </p>
-<a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-threadId="@Model.ThreadId"> Reply to Thread @Model.ThreadId </a>
 
 @*Get User ID and admin status on load to reduce the amount of times UserManager has to check these*@
 @{string userId = UserManager.GetUserId(User);
@@ -43,6 +14,8 @@
        userIsAdmin = await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin");}
     } 
 
+<div class="vertical-button-container">
+<a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-threadId="@Model.ThreadId"> Reply to Thread @Model.ThreadId </a>
 @if (userId == @Model.UserId)
 {
     <a class="btn btn-primary" asp-controller="Thread" asp-action="Edit" asp-route-threadId="@Model.ThreadId"> Edit @Model.ThreadId </a>
@@ -51,10 +24,12 @@
     <a class="btn btn-warning" asp-controller="Thread" asp-action="Edit" asp-route-threadId="@Model.ThreadId"> Edit as Admin @Model.ThreadId </a>
     <a class="btn btn-warning" asp-controller="Thread" asp-action="DeleteThread" asp-route-threadId="@Model.ThreadId"> DeleteThread as Admin @Model.ThreadId </a>
 }
+</div>
 
 <h2 class="heading"> Comments </h2>
+<hr/>
 <ul>
-    <div class="outermost-container">
+    <div class="outermost-container" style="float: right">
     @foreach (var comment in Model.ThreadComments!.Where(c => c.ParentCommentId == null))
     {
         await DisplayComment(comment, userId, userIsAdmin); //Recursively load all comments
@@ -69,7 +44,6 @@
         {
             <div class="nested-container">
                 <div class="commentDiv">
-
                     <div class="commentBody">
                         <p class="subheading"> Posted by @comment.User.UserName on @comment.CommentCreatedAt.
                             @if (comment.CommentCreatedAt != comment.CommentLastEditedAt)

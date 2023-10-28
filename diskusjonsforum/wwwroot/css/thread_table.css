@@ -161,8 +161,7 @@
 
 /* Designs border for the threads*/
 .thread-container {
-    color: #002c45;
-    background: #feeeef;
+    overflow: hidden;
     border: 3px #feeeef;
     border-radius: 30px;
     padding-left: 20px;

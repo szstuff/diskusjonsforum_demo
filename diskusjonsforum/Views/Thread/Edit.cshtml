@@ -1,7 +1,17 @@
 @model Thread
        
-<h2> Edit thread @Model.ThreadId</h2>
-       
+<div class="container mt-5">
+    <div class="row mt-4 col-12 mb-4 p-4 d-flex justify-content-center align-items-stretch flex-fill crud-thread">
+        <div class="row mt-4 col-12 mb-4 p-4 crud-container">
+        
+            <div class="container crud-comment-info">
+                <h1> You're editing: </h1>
+                @await Html.PartialAsync("_ThreadView", @Model)
+            </div>
+        </div>
+    </div>
+</div>
+
 <form asp-controller="Thread" asp-action="SaveEdit">
     <input type="hidden" asp-for="ThreadId" value="@Model.ThreadId" />
     <input type="hidden" asp-for="User" value="@Model.User" />
@@ -10,9 +20,13 @@
 
 
     <div class="form-group">
-        <label asp-for="ThreadCategory"></label><span class="text-danger"></span>
-        <input asp-for="ThreadCategory" class="form-control"/> @Model.ThreadCategory <input/>
-        <span asp-validation-for="ThreadCategory" class="text-danger"></span>
+        <label asp-for="CategoryName"></label><span class="text-danger"></span>
+        <br/>
+        <select asp-for="CategoryName" asp-items="@ViewBag.Categories">
+            <option value="">Select a category</option>
+        </select>
+        <span asp-validation-for="CategoryName" class="text-danger"></span>
+
     </div>
     <div class="form-group">
         <label asp-for="ThreadTitle"></label><span class="text-danger"></span>
@@ -27,7 +41,3 @@
     <button type="submit" class="btn btn-primary">Save edit</button>
     <a asp-action="Table" class="btn btn-secondary"> Return </a>
 </form>
-
-@{
-    Layout = null;
-}

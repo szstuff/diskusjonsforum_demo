@@ -9,7 +9,7 @@
 
 /* Styling for the background image, could remove this as it is already in site.css */
 body {
-    background: url("../images/16328440_v962-aum-05.jpg");
+    background: url("../images/white.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -117,7 +117,7 @@ body {
 
 /* Styles for the login container */
 .login-container {
-    position: center;
+    /*position: center;*/
     left: 4px;
     width: 500px;
     display: flex;

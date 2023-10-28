@@ -1,6 +1,13 @@
 ﻿@model ThreadListViewModel
 
-<h1>List of discussion threads (@Model.CurrentViewName Name)</h1>
+
+
+<h1>OBS: Følgende kriterier mangler: </h1>
+<p> - Input validation på alle Razor Views (eks. når du lager ny tråd. Du kan submitte selv hvis kategori er tom, som gir feilmelding. Se Canvas moduler eller https://learn.microsoft.com/en-us/aspnet/web-pages/overview/ui-layouts-and-themes/validating-user-input-in-aspnet-web-pages-sites</p>
+<p> - Dokumentasjon (som alle vet men dgb) </p>
+<p> - På mobil/smal skjerm: Meny-knappen åpner tom meny (skal vise navbar knapper) </p>
+<p> - Han nevner "repository pattern" </p>
+<h1>Discussions</h1>
 <!-- <a href="/ThreadThread/Grid">Grid View</a> -->
 
 <div class="container">
@@ -11,7 +18,7 @@
             <tr>
                 <td>@thread.User.UserName</td>
                 <td><a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a></td>
-                <td>@thread.ThreadComments?.Count ?? 0 </td>
+                <td>@thread.ThreadComments?.Count</td>
                 <td>@thread.ThreadId</td>
             </tr>
         }
