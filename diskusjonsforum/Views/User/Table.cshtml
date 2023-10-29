@@ -1,18 +1,31 @@
-@model UserListViewModel
-
-<h1>List of users (@Model.CurrentViewName Name)</h1>
-
-<div class="container">
-    <table class="table table-striped">
-        <tr><th>ApplicationUser</th><th>ID</th><th>Email</th></tr>
-        @foreach (var user in Model.Users)
-        {
-            <tr>
-                <td>@user.UserName</td>
-                <td>@user.Id</td>
-                <td>@user.Email</td>
-                <td></td>
-            </tr>
-        }
-    </table>
-</div>
+@* @model UserListViewModel *@
+@* *@
+@* <h1>List of users (@Model.CurrentViewName Name)</h1> *@
+@* *@
+@* <div class="container"> *@
+@*     <table class="table table-striped"> *@
+@*         <tr><th>UserName</th><th>ID</th><th>Email</th><th>EmailConfirmed</th></tr> *@
+@*         @foreach (var user in Model.Users) *@
+@*         { *@
+@*              *@
+@*             string userId = UserManager.GetUserId(User); *@
+@*             bool userIsAdmin = false; *@
+@* *@
+@*             if (userId != null) *@
+@*             { *@
+@*                 userIsAdmin = await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin"); *@
+@*             } *@
+@*              *@
+@*             <tr> *@
+@*                 <td>@user.UserName</td> *@
+@*                 <td>@user.Id</td> *@
+@*                 <td>@user.Email</td> *@
+@*                 <td>@user.EmailConfirmed</td> *@
+@*                 <td>@if()</td> *@
+@*                 <td<a class="btn btn-warning" asp-controller="User" asp-action="Delete" asp-route-userId="@user.Id">Delete</a> *@
+@*                 <td<a class="btn btn-warning" asp-controller="User" asp-action="Delete" asp-route-userId="@user.Id">Delete</a> *@
+@* </td> *@
+@*             </tr> *@
+@*         } *@
+@*     </table> *@
+@* </div> *@
