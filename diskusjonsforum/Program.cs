@@ -1,4 +1,4 @@
-using Diskusjonsforum.Models;
+﻿using Diskusjonsforum.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using diskusjonsforum.Areas.Identity.Data;
@@ -91,9 +91,9 @@ app.MapDefaultControllerRoute();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
-        name: "Save",
-        pattern: "Comment/Save",
-        defaults: new { controller = "Comment", action = "Save" }
+        name: "Create",
+        pattern: "Comment/Create",
+        defaults: new { controller = "Comment", action = "Create" }
     );
 });
 

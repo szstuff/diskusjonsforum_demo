@@ -27,7 +27,7 @@
 
 <div class="form">
     <h2 class="crud-title"> Create a reply </h2>
-    @using (Html.BeginForm("Save", "Comment", FormMethod.Post))
+    @using (Html.BeginForm("Create", "Comment", FormMethod.Post))
     {
         <form asp-controller="Comment" asp-action="Create">
             <input type="hidden" asp-for="Comment.ThreadId" value="@Model.Thread.ThreadId" />
@@ -39,7 +39,7 @@
                 <span asp-validation-for="Comment.CommentBody" class="text-danger"></span>
             </div>
 
-            <input type="submit" value="Post reply" class="btn btn-primary" onclick="location.href='@Url.Action("Save", "Comment")'" />
+            <input type="submit" value="Post reply" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Comment")'" />
             <a asp-controller="Thread" asp-action="Thread" asp-route-threadId="@Model.ThreadId" class="btn btn-secondary"> Return </a>
         </form>}
 </div>

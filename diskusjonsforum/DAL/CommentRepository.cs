@@ -1,5 +1,6 @@
 using Diskusjonsforum.Models;
 using Microsoft.EntityFrameworkCore;
+using ILogger = Castle.Core.Logging.ILogger;
 using Thread = Diskusjonsforum.Models.Thread;
 
 namespace diskusjonsforum.DAL;
@@ -8,8 +9,11 @@ public class CommentRepository : ICommentRepository
 {
     private readonly ThreadDbContext _threadDbContext; 
 
-    public CommentRepository(ThreadDbContext threadDbContext)
+    private readonly ILogger<CommentRepository> _logger;
+    
+    public CommentRepository(ThreadDbContext threadDbContext, ILogger<CommentRepository> logger)
     {
+        _logger = logger;
         _threadDbContext = threadDbContext;
     }
 
@@ -22,7 +26,7 @@ public class CommentRepository : ICommentRepository
     {
         return _threadDbContext.Comments
             .Include(c => c.User)
-            .FirstOrDefault(c => c.CommentId == commentId);
+            .FirstOrDefault(c => c.CommentId == commentId)!;
     }
 
     public IQueryable<Comment> GetThreadComments(Thread thread)
@@ -31,14 +35,34 @@ public class CommentRepository : ICommentRepository
     }
 
 
-    public void Add(Comment comment)
+    public async Task<bool> Add(Comment comment)
     {
-        _threadDbContext.Comments.Add(comment);
+        try
+        {
+            _threadDbContext.Comments.Add(comment);
+            await _threadDbContext.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[CommentRepository] comment creation failed for comment {@comment}, error message: {e}", comment, e.Message);
+            return false;
+        }
     }
 
-    public void Update(Comment comment)
+    public async Task<bool> Update(Comment comment)
     {
-        _threadDbContext.Comments.Update(comment);
+        try
+        {
+            _threadDbContext.Comments.Update(comment);
+            await _threadDbContext.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[CommentRepository] comment creation failed for comment {@comment}, error message: {e}", comment, e.Message);
+            return false;
+        }
     }
 
     public void Remove(Comment comment)

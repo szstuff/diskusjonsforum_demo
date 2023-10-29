@@ -10,7 +10,7 @@
         <li class="nav-item mx-2">
             @if (user != null && await UserManager.IsInRoleAsync(user, "Admin"))
             {
-                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Table" style="font-size: 12px;"> <b>Admin:</b>Manage users</a>
+                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Table" style="font-size: 12px;"> <b>Admin:</b>See users</a>
             }
         </li>
     

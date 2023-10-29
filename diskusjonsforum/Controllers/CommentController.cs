@@ -5,6 +5,7 @@ using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using Thread = Diskusjonsforum.Models.Thread;
 
 
@@ -17,7 +18,6 @@ public class CommentController : Controller
 {
     private readonly ICommentRepository _commentRepository;
     private readonly IThreadRepository _threadRepository;
-
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<CommentController> _logger;
     
@@ -60,6 +60,7 @@ public class CommentController : Controller
                 };
 
                 // Pass the CommentViewModel to the view
+                TempData["ViewModel"] = JsonConvert.SerializeObject(viewModel);
                 return View(viewModel);
             }
             else
@@ -76,29 +77,63 @@ public class CommentController : Controller
             return RedirectToAction("Error", "Home", new { errormsg });
         }
     }
-    [HttpPost("comment/save")]
+
+    [HttpPost("create")]
     [Authorize]
-    public async Task<IActionResult> Save(Comment comment)
+    public async Task<IActionResult> Create(Comment comment)
     {
-        var user = await _userManager.GetUserAsync(HttpContext.User);
-        if (user != null)
+        try
         {
-            comment.UserId = user.Id;
-            comment.User = user;
-            ModelState.Remove("comment.User"); //Workaround for invalid modelstate. The model isnt really invalid, but it was evaluated BEFORE the controller added User and UserId. Therefore the validty of the "User" key can be removed 
-            
+            var errorMsg = "";
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            if (user != null)
+            {
+                comment.UserId = user.Id;
+                comment.User = user;
+                ModelState.Remove(
+                    "comment.User"); //Workaround for invalid modelstate. The model isnt really invalid, but it was evaluated BEFORE the controller added User and UserId. Therefore the validty of the "User" key can be removed 
+
+                if (string.IsNullOrWhiteSpace(comment.CommentBody))
+                {
+                    //Content is empty. Return create view with error
+                    ModelState.AddModelError("CommentBody", "Comment can't be empty.");
+                    //Get ViewModel from ViewBag
+                    var viewModelString = TempData["ViewModel"] as string;
+                    //Recreate ViewModel
+                    var viewModel = new CommentCreateViewModel();
+                    if (viewModelString != null)
+                    {
+                        viewModel = JsonConvert.DeserializeObject<CommentCreateViewModel>(viewModelString);
+                    }
+
+                    // Pass the CommentViewModel to the view
+                    return View(viewModel);
+                }
+            }
+
             if (ModelState.IsValid)
             {
-                _commentRepository.Add(comment);
-                await _commentRepository.SaveChangesAsync();
-                return RedirectToAction("Thread", "Thread", new { comment.ThreadId });
+                bool returnOk = await _commentRepository.Add(comment);
+                if (returnOk)
+                    return RedirectToAction("Thread", "Thread", new { comment.ThreadId });
             }
-        } //Må legge til else her for feilmeldigner 
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "[CommentController] An error occurred in the Create action");
 
-        _logger.LogWarning("[CommentController] Comment creation failed {@comment}", comment);
-        return RedirectToAction("Thread", "Thread", new {comment.ThreadId});
+            // Log the specific exception and its message
+            _logger.LogError(ex, "[CommentController] Exception: {0}, Message: {1}", ex.GetType(), ex.Message);
+
+            var errorMsg = "Comment creation failed";
+            return RedirectToAction("Error", "Home", new { errorMsg });
+        }
+
+        // If no other return occurred, return a generic error page or redirect
+        var genericErrorMsg = "An error occurred while creating the comment.";
+        return RedirectToAction("Error", "Home", new { errorMsg = genericErrorMsg });
     }
-    
+
     [HttpGet("edit/{{commentId}}/{{threadId}}")]
     [Authorize]
     public IActionResult Edit(int commentId, int threadId)
@@ -129,7 +164,6 @@ public class CommentController : Controller
             {
                 //Redirects to login page if user not logged in
                 return RedirectToPage("/Account/Login", new { area = "Identity" });
-
             }
         }
         catch (Exception ex) {
@@ -158,13 +192,14 @@ public class CommentController : Controller
             }
             if (ModelState.IsValid)
             {
-                _commentRepository.Update(comment);
-                await _commentRepository.SaveChangesAsync();
-                return RedirectToAction("Thread", "Thread", new {comment.ThreadId});
+                bool returnOk = await _commentRepository.Update(comment);
+                if (returnOk)
+                    return RedirectToAction("Thread", "Thread", new {comment.ThreadId});
             }
         }
-
-        errorMsg = "Error occured when saving the changes you made to the comment";
+        
+        _logger.LogWarning("[CommentController] Comment edit failed {@comment}", comment);
+        errorMsg = "Comment edit failed";
         return RedirectToAction("Error", "Home", new {errorMsg});
     }
 

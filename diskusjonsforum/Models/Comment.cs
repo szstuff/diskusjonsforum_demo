@@ -7,7 +7,7 @@ using SQLite;namespace Diskusjonsforum.Models
 	{
 		public int CommentId { get; set; }
         [Required]
-        public String? CommentBody { get; set; }
+        public String CommentBody { get; set; }
 
         public DateTime CommentCreatedAt { get; set; } = DateTime.Now;
         public DateTime CommentLastEditedAt { get; set; } = DateTime.Now;
