@@ -50,9 +50,11 @@ public class ThreadRepository : IThreadRepository
         }
     }
 
-    public async Task Update(Thread thread)
+    public async Task<bool> Update(Thread thread)
     {
         _threadDbContext.Threads.Update(thread);
+        await _threadDbContext.SaveChangesAsync();
+        return true;
     }
 
     public async Task Remove(Thread thread)

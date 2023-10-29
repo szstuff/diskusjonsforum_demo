@@ -257,12 +257,13 @@ public class ThreadController : Controller
         }
     }
 
+    [HttpPost]
     public async Task<IActionResult> SaveEdit(Thread thread)
     {
         string errorMsg = "An error occured when trying to save your edit";
         try
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var user = await _userManager.GetUserAsync(HttpContext.User); //Gets the current user 
             if (user != null)
             {
                 ModelState.Remove("User");
@@ -278,9 +279,9 @@ public class ThreadController : Controller
                 ModelState.Remove("Category");
                 if (ModelState.IsValid)
                 {
-                    await _threadRepository.Update(thread);
-                    await _threadRepository.SaveChangesAsync();
-                    return RedirectToAction("Thread", "Thread", new { thread.ThreadId });
+                    bool returnOk = await _threadRepository.Update(thread);
+                    if (returnOk)
+                        return RedirectToAction("Thread", "Thread", new { thread.ThreadId });
                 }
             }
 

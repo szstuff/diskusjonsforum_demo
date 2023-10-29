@@ -9,8 +9,8 @@ public interface ICommentRepository
     IEnumerable<Comment> GetAll();
     Comment GetById(int? commentId);
     IQueryable<Comment> GetThreadComments(Thread thread);
-    void Add(Comment comment);
-    void Update(Comment comment);
+    Task<bool> Add(Comment comment);
+    Task<bool> Update(Comment comment);
     void Remove(Comment comment);
     Task SaveChangesAsync();
     List<Comment> GetChildren(Comment parentComment);
