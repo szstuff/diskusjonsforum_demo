@@ -301,7 +301,7 @@ public class ThreadController : Controller
 
         var user = await _userManager.GetUserAsync(HttpContext.User);
         var userRoles = await _userManager.GetRolesAsync(user);
-        string errorMsg;
+        string errorMsg = "";
 
         try
         {
