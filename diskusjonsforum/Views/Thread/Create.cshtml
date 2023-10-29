@@ -3,32 +3,44 @@
 <link rel="stylesheet" href="~/css/ThreadStyle.css" asp-append-version="true"/>
 
 <div class="container mt-5">
-        <h2 class="crud-title"> Post a thread </h2>
+    <h2 class="crud-title"> Post a thread </h2>
 
-        <form asp-controller="Thread" asp-action="Create">
+    <form asp-controller="Thread" asp-action="Create">
             
-            <div class="form-group">
-                <label asp-for="CategoryName"></label><span class="text-danger"></span>
-                <br/>
-                <select asp-for="CategoryName" asp-items="@ViewBag.Categories">
-                    <option value="">Select a category</option>
-                </select>
-                <span asp-validation-for="CategoryName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ThreadTitle"></label><span class="text-danger"></span>
-                <input asp-for="ThreadTitle" class="form-control"/>
-                <span asp-validation-for="ThreadTitle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ThreadBody"></label><span class="text-danger"></span>
-                <input asp-for="ThreadBody" class="form-control"/>
-                <span asp-validation-for="ThreadBody" class="text-danger"></span>
-            </div>
+        <div class="form-group">
+            <label asp-for="CategoryName"></label><span class="text-danger"></span>
             <br/>
-            <button type="submit" class="btn btn-primary">Create</button>
-            <a asp-action="Table" class="btn btn-secondary"> Return </a>
-        </form>
+            <select asp-for="CategoryName" asp-items="@ViewBag.Categories">
+                <option value="">Select a category</option>
+            </select>
+            <span asp-validation-for="CategoryName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ThreadTitle"></label><span class="text-danger"></span>
+            <input asp-for="ThreadTitle" class="form-control"/>
+            <span asp-validation-for="ThreadTitle" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ThreadBody"></label><span class="text-danger"></span>
+            <textarea asp-for="ThreadBody" id="txtBody" class="form-control"></textarea>
+            <span asp-validation-for="ThreadBody" class="text-danger"></span>
+        </div>
+        <br/>
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a asp-action="Table" class="btn btn-secondary"> Return </a>
+    </form>
     
-    </div>
+</div>
+
+<script>
+    const textarea = document.getElementById("txtBody");
+    const minRows = 3;
+
+    // Extends the input
+    textarea.addEventListener("input", function () {
+        const rows = Math.max(minRows, (this.value.split("\n").length || 1));
+        // Set the number of rows to the textBody
+        this.rows = rows;
+    });
+</script>
 

@@ -1,4 +1,25 @@
 ﻿.container{
     background-color: white;
-    border-radius: 5px; 
+    border-radius: 5px;
+}
+
+#displayPost{
+    background-color: white;
+    border-radius: 5px;
+}
+
+#txtBody{
+    min-height: 150px;
+}
+
+.form-group {
+    padding-bottom: 15px;
+}
+
+.form-group button, .form-group a {
+    margin: 0;
+}
+
+.form-group a {
+    margin-left: 10px;
 }

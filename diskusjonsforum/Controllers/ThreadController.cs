@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 // Add this namespace
 using diskusjonsforum.DAL;
+using Microsoft.EntityFrameworkCore;
 using Thread = Diskusjonsforum.Models.Thread;
 
 namespace diskusjonsforum.Controllers;
@@ -321,6 +322,17 @@ public class ThreadController : Controller
             errorMsg = "An error occurred while deleting the thread.";
             return RedirectToAction("Error", "Home", new { errorMsg });
         }
+    }
+
+    [Route("SearchPost")]
+    public IActionResult SearchPosts(string searchQuery)
+    {
+        // Perform a database search using the searchQuery parameter
+        // You should have a service or repository that handles database interactions
+        var searchResults = _threadRepository.SearchPosts(searchQuery);
+
+        // Return the search results as JSON
+        return Json(searchResults);
     }
 
 

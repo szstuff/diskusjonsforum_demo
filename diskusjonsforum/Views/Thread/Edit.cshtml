@@ -1,5 +1,7 @@
 @model Thread
 
+<link rel="stylesheet" href="~/css/ThreadStyle.css" asp-append-version="true" />
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8">
@@ -15,37 +17,40 @@
     </div>
 </div>
 
-<form asp-controller="Thread" asp-action="SaveEdit">
+<form asp-controller="Thread" asp-action="SaveEdit" class="container mt-4">
     <input type="hidden" asp-for="ThreadId" value="@Model.ThreadId" />
     <input type="hidden" asp-for="User" value="@Model.User" />
     <input type="hidden" asp-for="UserId" value="@Model.UserId" />
 
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-12 col-md-8">
-                <div class="form-group">
-                    <label asp-for="CategoryName"></label><span class="text-danger"></span>
-                    <select asp-for="CategoryName" asp-items="@ViewBag.Categories" class="form-control">
-                        <option value="">Select a category</option>
-                    </select>
-                    <span asp-validation-for="CategoryName" class="text-danger"></span>
-                </div>
+    <div class="row justify-content-center">
+        <div>
+            <div class="form-group">
+                <label asp-for="CategoryName"></label><span class="text-danger"></span>
+                <select asp-for="CategoryName" asp-items="@ViewBag.Categories" class="form-control">
+                    <option value="">Select a category</option>
+                </select>
+                <span asp-validation-for="CategoryName" class="text-danger"></span>
+            </div>
 
-                <div class="form-group">
-                    <label asp-for="ThreadTitle"></label><span class="text-danger"></span>
-                    <input asp-for="ThreadTitle" class="form-control" />
-                    <span asp-validation-for="ThreadTitle" class="text-danger"></span>
-                </div>
+            <div class="form-group">
+                <label asp-for="ThreadTitle"></label><span class="text-danger"></span>
+                <input asp-for="ThreadTitle" class="form-control" />
+                <span asp-validation-for="ThreadTitle" class="text-danger"></span>
+            </div>
 
-                <div class="form-group">
-                    <label asp-for="ThreadBody"></label><span class="text-danger"></span>
-                    <textarea asp-for="ThreadBody" class="form-control" rows="5"></textarea>
-                    <span asp-validation-for="ThreadBody" class="text-danger"></span>
-                </div>
+            <div class="form-group">
+                <label asp-for="ThreadBody"></label><span class="text-danger"></span>
+                <textarea asp-for="ThreadBody" class="form-control" id="txtBody"></textarea>
+                <span asp-validation-for="ThreadBody" class="text-danger"></span>
+            </div>
 
+            <div class="form-group d-flex justify-content-between">
                 <button type="submit" class="btn btn-primary">Save edit</button>
                 <a asp-action="Table" class="btn btn-secondary">Return</a>
             </div>
         </div>
     </div>
 </form>
+
+
+

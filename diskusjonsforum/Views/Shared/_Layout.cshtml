@@ -6,9 +6,22 @@
     <title>@ViewData["Title"] - ArcaNet</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 </head>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("searchInput");
+        const searchResultsDropdown = document.getElementById('searchResultsDropdown');
+    
+        searchInput.addEventListener("input", function () {
+            handleSearchInput();
+        });
+    });
+</script>
+
 <body>
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -21,12 +34,14 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Thread" asp-action="Table">Explore</a>
+                        <a id="explore" class="nav-link text-dark" asp-area="" asp-controller="Thread" asp-action="Table">Explore</a>
                     </li> 
                 </ul>
-                <div>
-                    <input name="searchBar" class="form-control" placeholder="Search" type="text" onclick="Thread">
+                <div class="position-relative">
+                    <input id="searchBar" class="form-control" placeholder="Search" type="text" id="searchInput">
+                    <div id="searchResultsDropdown" class="search-results"></div>
                 </div>
+                <div id="searchResultsDropdown" style="position: absolute; width: 100%;"></div>
                 <partial name="_LoginPartial"/>
             </div>
         </div>
@@ -43,9 +58,6 @@
         &copy; 2023 - forum 
     </div>
 </footer>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

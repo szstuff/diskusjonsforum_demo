@@ -79,9 +79,6 @@ header {
     font-family: 'Ubuntu', sans-serif;
     font-weight: 700;
     font-size: 1.5rem;
-    padding-top: 1%;
-    padding-left: 4%;
-    padding-right: 4%;
     color: #feeeef;
 }
 
@@ -106,6 +103,12 @@ header {
         background-color: rgba(255, 255, 255, 0.15);
         backdrop-filter: blur(10px);
     }
+    #searchBar {
+        width: 90%; /* Adjust the width for smaller screens as needed */
+        max-width: 37.5rem; /* You can set a max-width to control the maximum width */
+        margin: 0 auto;
+    }
+    
 }
 
 .thread-button{
@@ -140,6 +143,34 @@ header {
     width: 90%;
 }
 
-.searchBar{
-    border-radius: 20px;
+#searchBar{
+    border-radius: 50px;
+    display: flex;
+    width: 400px;
+}
+
+#explore {
+    display: inline-block; /* This makes the element inline and allows for the underline effect */
+    font-size: 18px;
+    position: relative; /* Position relative to its normal position */
+}
+
+#explore::before {
+    content: ''; /* Insert empty content before the text */
+    border-bottom: 2.5px solid transparent; /* Create an initially transparent underline */
+    width: 100%; /* Make the underline span the full width of the element */
+    position: absolute; /* Position the underline absolutely */
+    bottom: 0; /* Position it at the bottom of the element */
+    left: 0; /* Align it to the left */
+    transition: border-color 0.2s; /* Add a transition for smooth effect */
+}
+
+#explore:hover::before {
+    border-color: #feeeef; /* Change the underline color on hover */
+}
+
+.footer{
+    background-color: white;
+    padding-top: 10px;
+    padding-bottom: 40px;
 }
