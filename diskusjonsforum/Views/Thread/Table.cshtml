@@ -1,40 +1,64 @@
 ﻿@model ThreadListViewModel
-<!-- <a href="/ThreadThread/Grid">Grid View</a> -->
-<link rel="stylesheet" href="~/css/IndexStyle.css" asp-append-version="true"/>
 
-<h3> Explore discussions</h3>
-@*<div class="container">
+<link rel="stylesheet" href="~/css/IndexStyle.css" asp-append-version="true" />
+
+<h3>Explore discussions</h3>
+<div class="container">
     <input name="PostText" class="form-control" placeholder="Create Post" type="text" onclick="redirectToCreatePage()">
 </div>
 
-<script> // Redirect the user to the "create" page when the input is clicked
-    function redirectToCreatePage() {
-        window.location.href = "/Thread/Create";
-    }
-</script>
-Er dette feil (siden det en input-boks, men fungerer som en knapp)?
-*@
-
-<a class="btn btn-primary" asp-controller="Thread" asp-action="Create"> Create post </a>
-
-<br/>
-    
+<!-- Dropdown for category filtering -->
 <div class="container">
-        <div class="row">
+    <select id="categoryFilter" class="form-select">
+        <option value="all">Show All</option>
+        <option value="General">General</option>
+        <option value="Help">Help</option>
+        <option value="Moderation">Moderation</option>
+    </select>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div id="postContainer">
             @foreach (var thread in Model.Threads.OrderByDescending(t => t.ThreadCreatedAt))
             {
                 <div class="post">
                     <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">
-                    <div class="category">@thread.CategoryName</div>
-                    <div class="user">@thread.User.UserName</div>
-                    <div class="title">
-                        <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a>
-                    </div>
-                    <div class="comments">Comments: @thread.ThreadComments?.Count</div>
+                        <div class="category">@thread.CategoryName</div>
+                        <div class="user">@thread.User.UserName</div>
+                        <div class="title">
+                            <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a>
+                        </div>
+                        <div class="comments">Comments: @thread.ThreadComments?.Count</div>
                     </a>
                 </div>
-                    <p></p>
+                <p></p>
             }
-            
         </div>
     </div>
+</div>
+
+<script>
+    const categoryFilter = document.getElementById("categoryFilter");
+    const postContainer = document.getElementById("postContainer");
+
+    categoryFilter.addEventListener("change", filterPosts);
+
+    function filterPosts() {
+        const selectedCategory = categoryFilter.value;
+        const posts = postContainer.querySelectorAll(".post");
+
+        posts.forEach(post => {
+            const category = post.querySelector(".category").textContent;
+            if (selectedCategory === "all" || category === selectedCategory) {
+                post.style.display = "block";
+            } else {
+                post.style.display = "none";
+            }
+        });
+    }
+    
+    function redirectToCreatePage() {
+        window.location.href = "/Thread/Create";
+    }
+</script>
