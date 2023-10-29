@@ -7,10 +7,12 @@ namespace diskusjonsforum.DAL;
 public class ThreadRepository : IThreadRepository
 {
     private readonly ThreadDbContext _threadDbContext;
+    private readonly ILogger<ThreadRepository> _logger;
 
-    public ThreadRepository(ThreadDbContext threadDbContext)
+    public ThreadRepository(ThreadDbContext threadDbContext, ILogger<ThreadRepository> logger)
     {
         _threadDbContext = threadDbContext;
+        _logger = logger;
     }
 
     public IEnumerable<Thread> GetAll()
@@ -33,9 +35,19 @@ public class ThreadRepository : IThreadRepository
             return thread;
     }
 
-    public void Add(Thread thread)
+    public async Task<bool> Add(Thread thread)
     {
-        _threadDbContext.Threads.Add(thread);
+        try
+        {
+            _threadDbContext.Threads.Add(thread);
+            await _threadDbContext.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("[ItemRepository] item creation failed for thread {@thread}, error message: {e}", thread, e.Message);
+            return false;
+        }
     }
 
     public async Task Update(Thread thread)

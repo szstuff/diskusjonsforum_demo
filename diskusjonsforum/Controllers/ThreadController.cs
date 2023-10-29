@@ -175,15 +175,21 @@ public class ThreadController : Controller
                 {
                     // Content is empty, add a model error
                     ModelState.AddModelError("ThreadContent", "Thread content is required.");
+                    // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
+                    var categories = _categoryRepository.GetCategories();// Fetch all categories from the database.
+                    ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
+                    return View(thread);
                 }
 
                 try
                 {
                     if (ModelState.IsValid)
                     {
-                        _threadRepository.Add(thread);
-                        await _threadRepository.SaveChangesAsync();
-                        return RedirectToAction(nameof(Table));
+                        bool returnOk = await _threadRepository.Add(thread);
+                        if (returnOk)
+                        {
+                            return RedirectToAction(nameof(Table));
+                        }
                     }
                     else
                     {
@@ -210,8 +216,9 @@ public class ThreadController : Controller
             _logger.LogWarning("[ThreadController] User is not authenticated in the Create action.");
             return View(thread);
         }
-    
-    }
+
+        return null;
+        }
 
     [HttpGet("edit/{threadId}")]
     public async Task<IActionResult> Edit(int threadId)
