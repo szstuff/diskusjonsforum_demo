@@ -258,7 +258,7 @@ public class ThreadController : Controller
             var user = await _userManager.GetUserAsync(HttpContext.User);
             if (user != null)
             {
-                ModelState.Remove("User"); // Workaround for invalid model state. The model isn't really invalid, but it was evaluated BEFORE the controller added User and UserId. Therefore the validity of the "User" key can be removed.
+                ModelState.Remove("User");
 
                 // Checks if the user is the owner or admin before editing
                 var userRoles = await _userManager.GetRolesAsync(user);
@@ -268,7 +268,7 @@ public class ThreadController : Controller
                     _logger.LogError(errorMsg);
                     return RedirectToAction("Error", "Home", new { errorMsg });
                 }
-
+                ModelState.Remove("Category");
                 if (ModelState.IsValid)
                 {
                     await _threadRepository.Update(thread);

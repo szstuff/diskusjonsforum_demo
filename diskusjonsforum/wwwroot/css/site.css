@@ -139,3 +139,7 @@ header {
     display: inline-block;
     width: 90%;
 }
+
+.searchBar{
+    border-radius: 20px;
+}

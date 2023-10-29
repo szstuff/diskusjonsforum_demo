@@ -151,7 +151,7 @@ public class CommentController : Controller
             ModelState.Remove("comment.User"); //Workaround for invalid modelstate. The model isnt really invalid, but it was evaluated BEFORE the controller added User and UserId. Therefore the validty of the "User" key can be removed 
             //Checks if user is owner or admin before editing
             var userRoles = await _userManager.GetRolesAsync(user);
-            if (user.Id != comment.UserId || !userRoles.Contains("Admin"))
+            if (user.Id != comment.UserId && !userRoles.Contains("Admin"))
             {
                 errorMsg = "Could not verify that you are the owner of the Thread";
                 return RedirectToAction("Error", "Home", new { errorMsg });
