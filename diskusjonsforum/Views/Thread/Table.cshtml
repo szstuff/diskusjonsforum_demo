@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="~/css/IndexStyle.css" asp-append-version="true"/>
 
 <h3> Explore discussions</h3>
-<div class="container">
+@*<div class="container">
     <input name="PostText" class="form-control" placeholder="Create Post" type="text" onclick="redirectToCreatePage()">
 </div>
 
@@ -12,6 +12,11 @@
         window.location.href = "/Thread/Create";
     }
 </script>
+Er dette feil (siden det en input-boks, men fungerer som en knapp)?
+*@
+
+<a class="btn btn-primary" asp-controller="Thread" asp-action="Create"> Create post </a>
+
 <br/>
     
 <div class="container">
@@ -30,5 +35,6 @@
                 </div>
                     <p></p>
             }
+            
         </div>
     </div>

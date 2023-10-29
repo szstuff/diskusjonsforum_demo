@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using diskusjonsforum.DAL;
 using Microsoft.AspNetCore.Mvc;
-using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
 using Thread = Diskusjonsforum.Models.Thread;
 
@@ -9,12 +8,12 @@ namespace diskusjonsforum.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ThreadDbContext _threadDbContext;
+        private readonly IThreadRepository _threadRepository;
 
-        public HomeController(ILogger<HomeController> logger, ThreadDbContext threadDbContext)
+        public HomeController(ILogger<HomeController> logger, IThreadRepository threadRepository)
         {
             _logger = logger;
-            _threadDbContext = threadDbContext;
+            _threadRepository = threadRepository;
         }
 
         public IActionResult Index()
@@ -28,15 +27,11 @@ namespace diskusjonsforum.Controllers
             return View(threadListViewModel);
         }
 
-        public List<Thread> GetThreads()
+        public IEnumerable<Thread> GetThreads()
         {
             try
             {
-                var threads = _threadDbContext.Threads
-                    .Include(t => t.ThreadComments)
-                    .Include(t => t.User) // Include the User navigation property
-                    .ToList();
-
+                var threads = _threadRepository.GetAll();
                 return threads;
             }
             catch (Exception ex)

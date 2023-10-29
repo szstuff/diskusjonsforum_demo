@@ -1,22 +1,17 @@
-﻿using System.Net;
-using System.Security.Claims;
-using Diskusjonsforum.Models;
+﻿using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace diskusjonsforum.Controllers;
 
 public class UserController : Controller
 {
-	private readonly ThreadDbContext _threadDbContext;
 	private UserManager<ApplicationUser> _userManager;
 	private readonly ILogger<UserController> _logger;
 
-	public UserController(ThreadDbContext threadDbContext, UserManager<ApplicationUser> userManager, ILogger<UserController> logger)
+	public UserController(UserManager<ApplicationUser> userManager, ILogger<UserController> logger)
 	{
-		_threadDbContext = threadDbContext;
 		_userManager = userManager;
 		_logger = logger;
 	}
@@ -25,7 +20,7 @@ public class UserController : Controller
     {
         try
         {
-            var users = _threadDbContext.Users.ToList();
+            var users = _userManager.Users.ToList();
             var userListViewModel = new UserListViewModel(users, "Table");
             return View(userListViewModel);
         }

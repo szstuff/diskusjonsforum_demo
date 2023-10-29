@@ -60,7 +60,7 @@
                     @if (userId == comment.UserId)
                     {
                         <a class="btn btn-primary" asp-controller="Comment" asp-action="Edit" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Edit @comment.CommentId </a>
-                        <a class="btn btn-warning" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> DeleteThread @comment.CommentId></a>
+                        <a class="btn btn-warning" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> DeleteThread @comment.CommentId</a>
                     }
                     else if (userIsAdmin)
                     {

@@ -1,8 +1,9 @@
-using System;
+using Diskusjonsforum.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Thread = Diskusjonsforum.Models.Thread;
 
-namespace Diskusjonsforum.Models;
+namespace diskusjonsforum.DAL;
 
 public class ThreadDbContext : IdentityDbContext
 {

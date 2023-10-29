@@ -1,11 +1,6 @@
 using Diskusjonsforum.Models;
-using diskusjonsforum.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using diskusjonsforum.DAL;
 using Thread = Diskusjonsforum.Models.Thread;
 
 namespace diskusjonsforum.Controllers;
@@ -13,12 +8,12 @@ namespace diskusjonsforum.Controllers;
 public class CategoryController : Controller
 {
     
-    private readonly ThreadDbContext _threadDbContext;
+    private readonly ICategoryRepository _categoryRepository;
     private readonly ILogger<CategoryController> _logger; //Adds logger
 
-    public CategoryController(ThreadDbContext threadDbContext, ILogger<CategoryController> logger)
+    public CategoryController(ICategoryRepository categoryRepository, ILogger<CategoryController> logger)
     {
-        _threadDbContext = threadDbContext;
+        _categoryRepository = categoryRepository;
         _logger = logger;
     }
     
@@ -39,9 +34,7 @@ public class CategoryController : Controller
     {
         try
         {
-            List<Category> categories = _threadDbContext.Categories.Include(category => category.ThreadsInCategory)
-            .ToList();
-
+            var categories = _categoryRepository.GetCategories();
         
             foreach (var category in categories)
             {
@@ -73,15 +66,14 @@ public class CategoryController : Controller
 
     public IEnumerable<Thread> GetThreads(Category category)
     {
-        return _threadDbContext.Threads.Where(thread => thread.Category == category);
+        return _categoryRepository.GetThreadsByCategory(category);
     }
 
-    public IActionResult Category(string name)
+    public IActionResult Category(Category category)
     {
         try
         {
-            var category = _threadDbContext.Categories.Include(c => c.ThreadsInCategory)!
-                .FirstOrDefault(c => c.CategoryName == name);
+            category = _categoryRepository.GetCategoryByName(category.CategoryName);
 
 
             if (category == null)

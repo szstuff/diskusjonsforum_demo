@@ -2,6 +2,7 @@ using Diskusjonsforum.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using diskusjonsforum.Areas.Identity.Data;
+using diskusjonsforum.DAL;
 using Microsoft.EntityFrameworkCore.Sqlite.Diagnostics.Internal;
 using Serilog;
 using Serilog.Events;
@@ -17,6 +18,10 @@ builder.Services.AddDbContext<ThreadDbContext>(options => {
     options.UseSqlite(
         builder.Configuration["ConnectionStrings:ThreadDbContextConnection"]);
 });
+builder.Services.AddScoped<IThreadRepository, ThreadRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
 
 var loggerConfiguration = new LoggerConfiguration()
     .MinimumLevel.Information()
