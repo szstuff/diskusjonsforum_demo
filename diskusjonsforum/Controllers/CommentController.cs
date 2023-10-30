@@ -159,7 +159,7 @@ public class CommentController : Controller
                 };
 
                 // Pass the CommentViewModel to the view
-                return View(viewModel);
+                 return View(viewModel);
             }
             else
             {
@@ -175,32 +175,32 @@ public class CommentController : Controller
     }
     [HttpPost("comment/saveEdit")]
     [Authorize]
-    public async Task<IActionResult> SaveEdit(Comment comment)
+    public async Task<IActionResult> SaveEdit(CommentCreateViewModel viewModel)
     {
         var errorMsg = "";
         var user = await _userManager.GetUserAsync(HttpContext.User);
         if (user != null)
         {
-            comment.User = user;
-            comment.UserId = user.Id;
-            comment.CommentLastEditedAt = DateTime.Now;
+            viewModel.Comment.User = user;
+            viewModel.Comment.UserId = user.Id;
+            viewModel.Comment.CommentLastEditedAt = DateTime.Now;
             ModelState.Remove("comment.User"); //Workaround for invalid modelstate. The model isnt really invalid, but it was evaluated BEFORE the controller added User and UserId. Therefore the validty of the "User" key can be removed 
             //Checks if user is owner or admin before editing
             var userRoles = await _userManager.GetRolesAsync(user);
-            if (user.Id != comment.UserId && !userRoles.Contains("Admin"))
+            if (user.Id != viewModel.Comment.UserId && !userRoles.Contains("Admin"))
             {
                 errorMsg = "Could not verify that you are the owner of the Thread";
                 return RedirectToAction("Error", "Home", new { errorMsg });
             }
             if (ModelState.IsValid)
             {
-                bool returnOk = await _commentRepository.Update(comment);
+                bool returnOk = await _commentRepository.Update(viewModel.Comment);
                 if (returnOk)
-                    return RedirectToAction("Thread", "Thread", new {comment.ThreadId});
+                    return RedirectToAction("Thread", "Thread", new {viewModel.Comment.ThreadId});
             }
         }
         
-        _logger.LogWarning("[CommentController] Comment edit failed {@comment}", comment);
+        _logger.LogWarning("[CommentController] Comment edit failed {@comment}", viewModel.Comment);
         errorMsg = "Comment edit failed";
         return RedirectToAction("Error", "Home", new {errorMsg});
     }
@@ -221,7 +221,7 @@ public class CommentController : Controller
 
                 foreach (var child in childcomments)
                 {
-                    //Deletes all child comments 
+                    //Deletes all child comments and saves changes
                     _commentRepository.Remove(child);
                     await _commentRepository.SaveChangesAsync();
                 }

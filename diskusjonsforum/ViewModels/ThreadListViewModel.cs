@@ -1,4 +1,4 @@
-﻿using Thread = Diskusjonsforum.Models.Thread;
+﻿ using Thread = Diskusjonsforum.Models.Thread;
 
 namespace diskusjonsforum.ViewModels
 {
