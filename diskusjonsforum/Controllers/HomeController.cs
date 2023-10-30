@@ -17,6 +17,7 @@ namespace diskusjonsforum.Controllers
             _threadRepository = threadRepository;
         }
 
+        //Loads homepage/Index view with a list of threads
         public IActionResult Index()
         {
             var threads = GetThreads(); // Call your GetThreads method to fetch the list of threads.
@@ -27,26 +28,29 @@ namespace diskusjonsforum.Controllers
 
             return View(threadListViewModel);
         }
-
+        
+        // Fetch threads from repository
         public IEnumerable<Thread> GetThreads()
-        {
+        { ///STILIAN SJEKK USAGES. Den er vel duplikat av threadcontroller.getall? 
             try
             {
-                var threads = _threadRepository.GetAll();
-                return threads;
+                var threads = _threadRepository.GetAll(); // Retrieve all threads
+                return threads; // Return list
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "[HomeController] An error occurred in the GetThreads method.");
-                return new List<Thread>();
+                return new List<Thread>(); // Return empty list if an error occurs
             }
         }
-
+        
+        // Show error message on Error view
         public IActionResult Error(string errorMsg)
         {
             //Log error message using logger
             _logger.LogError("[HomeController] Error: {0}", errorMsg);
             //View error message in view
+            ///STILIAN GÅ GJENNOM OG FIKS FEILMELDINGER HER 
             ViewBag.ErrorMsg = errorMsg;
             return View();
         }

@@ -43,9 +43,9 @@ public class ThreadController : Controller
             {
                 thread.ThreadComments?.AddRange(GetComments(thread));
             }
-
+            // Create view model for thread and displays them
             var threadListViewModel = new ThreadListViewModel(threads, "Table");
-            return View(threadListViewModel);
+            return View(threadListViewModel); 
         }
         catch (Exception ex)
         {
@@ -54,15 +54,14 @@ public class ThreadController : Controller
             return RedirectToAction("Error", "Home", new { errorMsg });
         }
     }
-
+    
     //Returns comments for a given thread 
     public IQueryable<Comment> GetComments(Thread thread)
     {
         try
         {
             return _commentRepository.GetThreadComments(thread);
-        }
-        catch (Exception ex)
+        } catch (Exception ex)
         {
             _logger.LogError(ex, "[ThreadController] An error occurred in the GetComments method.");
             return Enumerable.Empty<Comment>().AsQueryable(); //Returns empty collection
@@ -102,20 +101,22 @@ public class ThreadController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "[ThreadController] An error occurred in the Thread action for thread ID: {0}",
-                threadId);
+            _logger.LogError(ex, "[ThreadController] An error occurred in the Thread action for thread ID: {0}", threadId);
+            // Redirect to Error view if error occurs
             return RedirectToAction("Error", "Home", new { errorMsg = "An error occurred while loading the thread." });
-
+            
         }
 
     }
-
+    
+    // Sort comments based on their parent-child
     public List<Comment> SortComments(List<Comment> comments)
     {
         try
         {
             var sortedComments = new List<Comment>();
-
+            
+            // Go through comments without a parent comment and sorts them
             foreach (var comment in comments.Where(c => c.ParentCommentId == null))
             {
                 sortedComments.Add(comment);
@@ -131,15 +132,17 @@ public class ThreadController : Controller
         }
     }
 
+    // Add child comment to sortedComments list
     private void AddChildComments(Comment parent, List<Comment> allComments, List<Comment> sortedComments)
     {
         try
         {
+            // Find child comments for respective parent comment and add them to the sorted comment list
             var childComments = allComments.Where(c => c.ParentCommentId == parent.CommentId).ToList();
             foreach (var comment in childComments)
             {
                 sortedComments.Add(comment);
-                AddChildComments(comment, allComments, sortedComments);
+                AddChildComments(comment, allComments, sortedComments); // Find children of this child comment
             }
         }
         catch (Exception ex)
@@ -148,20 +151,20 @@ public class ThreadController : Controller
         }
     }
 
+    // If user is authenticated, retrieve thread categories from repository to the view
     [HttpGet]
     public IActionResult Create()
     {
         try
         {
-            if (HttpContext.User.Identity!.IsAuthenticated)
+            if (HttpContext.User.Identity!.IsAuthenticated) // Check if user is logged in
             {
                 // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
-                var categories = _categoryRepository.GetCategories(); // Fetch all categories from the database.
+                var categories = _categoryRepository.GetCategories();// Fetch all categories from the database.
                 ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
                 return View();
 
             }
-
             // Redirects to the login page if the user is not logged in
             return RedirectToPage("/Account/Login", new { area = "Identity" });
 
@@ -179,11 +182,11 @@ public class ThreadController : Controller
     {
         var errorMsg = "";
 
-        if (HttpContext.User.Identity!.IsAuthenticated)
+        if (HttpContext.User.Identity!.IsAuthenticated) // Check if user is logged in
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            if (user != null)
+            if (user != null) // Check user is retrieved
             {
                 thread.UserId = user.Id;
                 thread.User = user;
@@ -196,13 +199,14 @@ public class ThreadController : Controller
                     // Content is empty, add a model error
                     ModelState.AddModelError("ThreadContent", "Thread content is required.");
                     // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
-                    var categories = _categoryRepository.GetCategories(); // Fetch all categories from the database.
+                    var categories = _categoryRepository.GetCategories();// Fetch all categories from the database.
                     ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
                     return View(thread);
                 }
 
                 try
                 {
+                    // If the  model is valid, add the thread
                     if (ModelState.IsValid)
                     {
                         bool returnOk = await _threadRepository.Add(thread);
@@ -236,7 +240,6 @@ public class ThreadController : Controller
             _logger.LogWarning("[ThreadController] User is not authenticated in the Create action.");
             return View(thread);
         }
-
         errorMsg = "[ThreadController] An error occurred in the Edit method.";
         _logger.LogError("[ThreadController] An error occurred in the Edit method.");
         return RedirectToAction("Error", "Home", new { errorMsg });
@@ -252,11 +255,13 @@ public class ThreadController : Controller
                 // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
                 var categories = _categoryRepository.GetCategories(); //Fetch all categories from the database.
                 ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
-
-                Thread threadToEdit = _threadRepository.GetThreadById(threadId);
-                var user = await _userManager.GetUserAsync(HttpContext.User);
+                
+                Thread threadToEdit = _threadRepository.GetThreadById(threadId);  // Retrieve thread to edit with threadId
+                var user = await _userManager.GetUserAsync(HttpContext.User); // Get the user
                 var userIsAdmin = await _userManager.IsInRoleAsync(user, "Admin");
-                if (user.Id == threadToEdit.UserId || userIsAdmin)
+                
+                // Checks if the user is the owner or admin before allowing to edit
+                if (user.Id == threadToEdit.UserId || userIsAdmin) 
                 {
                     return View(threadToEdit);
                 }
@@ -280,6 +285,7 @@ public class ThreadController : Controller
     }
 
     [HttpPost]
+    // Saves edits made to a thread
     public async Task<IActionResult> SaveEdit(Thread thread)
     {
         string errorMsg = "An error occured when trying to save your edit";
@@ -288,7 +294,7 @@ public class ThreadController : Controller
             var user = await _userManager.GetUserAsync(HttpContext.User); //Gets the current user 
             if (user != null)
             {
-                ModelState.Remove("User");
+                ModelState.Remove("User"); //Workaround for invalid modelstate. The model isnt really invalid, but it was evaluated BEFORE the controller added User and UserId. Therefore the validty of the "User" key can be removed
 
                 // Add custom validation for the thread content
                 if (string.IsNullOrWhiteSpace(thread.ThreadBody) || string.IsNullOrWhiteSpace(thread.ThreadTitle))
@@ -340,18 +346,20 @@ public class ThreadController : Controller
             return RedirectToAction("Error", "Home", new { errorMsg });
         }
     }
-
+    
+    // Delete thread with given threadId if user has permission
     public async Task<IActionResult> DeleteThread(int threadId)
     {
         Thread thread = _threadRepository.GetThreadById(threadId);
-
+        
+        // Checks if the user is either the owner of the comment or an admin before deleting
         var user = await _userManager.GetUserAsync(HttpContext.User);
         var userRoles = await _userManager.GetRolesAsync(user);
         string errorMsg = "";
 
         try
         {
-            if (thread.UserId != user.Id && !userRoles.Contains("Admin"))
+            if (thread.UserId != user.Id && !userRoles.Contains("Admin")) //If user is admin or owner
             {
                 errorMsg = "You do not have permission to delete this thread.";
                 return RedirectToAction("Error", "Home", new { errorMsg });
@@ -368,6 +376,8 @@ public class ThreadController : Controller
             return RedirectToAction("Error", "Home", new { errorMsg });
         }
     }
+    
+    // Search for posts in the database with provided search query
     public IActionResult SearchPosts(string searchQuery)
     {
         var threads = _threadRepository.GetAll();
@@ -385,4 +395,7 @@ public class ThreadController : Controller
         // Return the search results as JSON
         return Json(searchResults);
     }
+
+
+
 }

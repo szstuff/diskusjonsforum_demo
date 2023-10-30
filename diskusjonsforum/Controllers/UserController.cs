@@ -21,12 +21,14 @@ public class UserController : Controller
         _threadRepository = threadRepository;
         _commentRepository = commentRepository;
     }
-
+    
 	public async Task<IActionResult> Table()
     {
         var errorMsg = "";
         var user = await _userManager.GetUserAsync(HttpContext.User);
         var userRoles = await _userManager.GetRolesAsync(user);
+        
+        // Check if current user is admin, if not, redirect to error page
         if (!userRoles.Contains("Admin"))
         {
             errorMsg = "You are not authorised to access this page";
@@ -35,6 +37,7 @@ public class UserController : Controller
 
         try
         {
+            // Fetch all users and create view model for user table view
             var users = _userManager.Users.ToList();
             var userListViewModel = new UserListViewModel(users, "Table");
             return View(userListViewModel);
@@ -46,12 +49,12 @@ public class UserController : Controller
             return RedirectToAction("Error", "Home", new {errorMsg});
         }
     }
-
+    
     public List<ApplicationUser> GetUsers()
     {
         try
         {
-            var users = new List<ApplicationUser>();
+            var users = new List<ApplicationUser>(); 
             return users;
         }
         catch (Exception ex)
@@ -62,6 +65,7 @@ public class UserController : Controller
     }
 
 
+    // Change role of current user to/from admin role
     public async Task<IActionResult> MakeAdmin()
     {
         var errorMsg = "An error occured when attempting to switch your roles";
@@ -69,19 +73,19 @@ public class UserController : Controller
         {
             if (HttpContext.User.Identity!.IsAuthenticated)
             {
-                var user = await _userManager.GetUserAsync(HttpContext.User);
+                var user = await _userManager.GetUserAsync(HttpContext.User); // Fetch current user
 
                 if (user != null)
                 {
-                    var userRoles = await _userManager.GetRolesAsync(user);
+                    var userRoles = await _userManager.GetRolesAsync(user); // Fetch roles of current user
 
                     if (userRoles.Contains("Admin"))
                     {
-                        await _userManager.RemoveFromRoleAsync(user, "Admin");
+                        await _userManager.RemoveFromRoleAsync(user, "Admin"); // Remove user from admin role
                     }
                     else
                     {
-                        await _userManager.AddToRoleAsync(user, "Admin");
+                        await _userManager.AddToRoleAsync(user, "Admin"); // Add user to admin role
                     }
                 }
                 else
@@ -97,7 +101,7 @@ public class UserController : Controller
                 return RedirectToAction("Error", "Home", new {errorMsg});
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home"); // Redirect to Index page from HomeController after changing role
         }
         catch (Exception ex)
         {

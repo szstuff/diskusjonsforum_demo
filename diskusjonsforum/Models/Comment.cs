@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using SQLite;namespace Diskusjonsforum.Models
@@ -10,16 +10,16 @@ using SQLite;namespace Diskusjonsforum.Models
         public String CommentBody { get; set; }
 
         public DateTime CommentCreatedAt { get; set; } = DateTime.Now;
-        public DateTime CommentLastEditedAt { get; set; } = DateTime.Now;
+        public DateTime CommentLastEditedAt { get; set; } = DateTime.Now; //Initialises as DateTime.Now since the last edit was at the time of creation
         public int ThreadId { get; set; }
 
-        public virtual Thread? Thread { get; set; } = default!;  //skal egt IKKE være nullable (?), men får invalid ModelState hvis den ikke er det. Løsning: https://stackoverflow.com/questions/70966537/modelstate-isvalid-includes-a-navigation-property-always-false-only-net-6-0
-
-        public int? ParentCommentId { get; set; }
-        public virtual Comment? ParentComment { get; set; } = default!; //FK av samme klasse må deklareres slik: https://stackoverflow.com/questions/7585076/code-first-with-an-existing-database
+        public virtual Thread? Thread { get; set; } = default!;  //Nullable as Thread is not always set correctly upon creation of comment. Instead, we set the Thread upon creation as this proved to be more reliable 
+        //STILIAN PC og Thread skal ha ForeignKey??? 
+        public int? ParentCommentId { get; set; } //Nullable: ParentcCommentId null means that the comment is a direct reply to the thread 
+        public virtual Comment? ParentComment { get; set; } = default!; //Nullable for same reason as Thread 
         
         [ForeignKey("ApplicationUser")]
-        public string? UserId { get; set; }
+        public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }  = default!; //ApplicationUser skal egt IKKE være nullable (?), men får invalid ModelState hvis den ikke er det. Løsning: https://stackoverflow.com/questions/70966537/modelstate-isvalid-includes-a-navigation-property-always-false-only-net-6-0
     }
 }
