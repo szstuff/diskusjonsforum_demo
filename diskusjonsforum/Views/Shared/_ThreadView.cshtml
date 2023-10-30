@@ -1,16 +1,18 @@
 @model Thread
 
+<link rel="stylesheet" href="~/css/ThreadStyle.css" asp-append-version="true" />
+
 <div class="container mt-5">
     @if (Model != null)
     {
-        <div class="row mt-4 col-12 mb-4 p-4 border border-bottom d-flex justify-content-start align-items-stretch flex-fill thread-container">
+        <div id="displayPost">
             <!-- Thread title -->
             <h1 class="thread-title-current"> @Model.ThreadTitle</h1>
                 
             <div class="thread-information">
                 <!-- Thread information: user, category, post date, last edited date -->
                 <p>
-                    <p class="OGpost">@Model.ThreadBody</p>
+                    <p>@Model.ThreadBody</p>
                     Posted in @Model.CategoryName by @Model.User.UserName <br/>
                     Posted: @Model.ThreadCreatedAt.
                     <!-- Display last edited date if different -->
