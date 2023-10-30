@@ -15,7 +15,7 @@
 }
 
 <div class="vertical-button-container">
-    <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-threadId="@Model.ThreadId"> Reply to Thread @Model.ThreadId </a>
+    <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-parentCommentId="0" asp-route-threadId="@Model.ThreadId"> Reply to Thread @Model.ThreadId </a>
     @if (userId == Model.UserId)
     {
         <a class="btn btn-primary" asp-controller="Thread" asp-action="Edit" asp-route-threadId="@Model.ThreadId"> Edit @Model.ThreadId </a>
@@ -46,10 +46,11 @@
         <div class="nested-container">
             <div class="commentDiv">
                 <div class="commentBody">
-                    <p class="subheading"> Posted by @comment.User.UserName on @comment.CommentCreatedAt.
-                        @if (comment.CommentCreatedAt != comment.CommentLastEditedAt)
+                    
+                    <p class="subheading"> Posted by <b>@comment.User.UserName</b> on <b>@comment.CommentCreatedAt.ToString("yyyy-MM-dd HH:mm")</b>.
+                        @if (Math.Abs((comment.CommentCreatedAt - comment.CommentLastEditedAt).TotalMinutes) >= 1) //Comments edited up to 1 min after creation don't show the LastEditedAt property
                         {
-                            <b> Last edited at @comment.CommentLastEditedAt.</b>
+                            <i> Last edited at @comment.CommentLastEditedAt.</i>
                         }
                     </p>
                     <p class="commentbody"> @comment.CommentBody</p>

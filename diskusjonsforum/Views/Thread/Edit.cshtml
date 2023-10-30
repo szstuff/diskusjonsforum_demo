@@ -26,7 +26,7 @@
                 <div class="form-group">
                     <label asp-for="CategoryName"></label><span class="text-danger"></span>
                     <select asp-for="CategoryName" asp-items="@ViewBag.Categories" class="form-control">
-                        <option value="">Select a category</option>
+                        <option value="" disabled="disabled">Select a category</option>
                     </select>
                     <span asp-validation-for="CategoryName" class="text-danger"></span>
                 </div>

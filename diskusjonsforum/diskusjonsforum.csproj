@@ -40,5 +40,7 @@
     <_ContentIncludedByDefault Remove="Views\Authorization\Error.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Authorization\Login.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Authorization\Register.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Category\Category.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Category\Table.cshtml" />
   </ItemGroup>
 </Project>

@@ -1,7 +1,5 @@
 ﻿@model CommentCreateViewModel
 
-<div asp-validation-summary="All" class="text-danger"></div>
-
 <div class="container mt-5">
     <div class="row mt-4 col-12 mb-4 p-4 d-flex justify-content-center align-items-stretch flex-fill crud-thread">
         <div class="row mt-4 col-12 mb-4 p-4 crud-container">
@@ -27,9 +25,8 @@
 
 <div class="form">
     <h2 class="crud-title"> Create a reply </h2>
-    @using (Html.BeginForm("Create", "Comment", FormMethod.Post))
+    @using (Html.BeginForm("Save", "Comment", FormMethod.Post))
     {
-        <form asp-controller="Comment" asp-action="Create">
             <input type="hidden" asp-for="Comment.ThreadId" value="@Model.Thread.ThreadId" />
             <input type="hidden" asp-for="Comment.ParentCommentId" value="@Model.ParentComment?.CommentId" />
 
@@ -38,9 +35,8 @@
                 <input asp-for="Comment.CommentBody" class="form-control"/>
                 <span asp-validation-for="Comment.CommentBody" class="text-danger"></span>
             </div>
-
-            <input type="submit" value="Post reply" class="btn btn-primary" onclick="location.href='@Url.Action("Create", "Comment")'" />
+            <input type="submit" value="Post reply" class="btn btn-primary" />
             <a asp-controller="Thread" asp-action="Thread" asp-route-threadId="@Model.ThreadId" class="btn btn-secondary"> Return </a>
-        </form>}
+        }
 </div>
 

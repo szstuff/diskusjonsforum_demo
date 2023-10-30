@@ -38,10 +38,11 @@ public class CommentController : Controller
     }
     
     [HttpGet("create/{parentCommentId}/{threadId}")] //URL when user replies to a comment
-    [HttpGet("create/{threadId}")]  //URL when user replies to thread
     [Authorize]
-    public async Task<IActionResult> Create(int parentCommentId, int threadId)
+    public async Task<IActionResult> Create(int? parentCommentId, int threadId)
     {
+        if (parentCommentId == 0) {parentCommentId = null;}
+
         try
         {
             if (HttpContext.User.Identity!.IsAuthenticated)
@@ -60,7 +61,6 @@ public class CommentController : Controller
                 };
 
                 // Pass the CommentViewModel to the view
-                TempData["ViewModel"] = JsonConvert.SerializeObject(viewModel);
                 return View(viewModel);
             }
             else
@@ -78,10 +78,11 @@ public class CommentController : Controller
         }
     }
 
-    [HttpPost("create")]
+    [HttpPost("save")]
     [Authorize]
-    public async Task<IActionResult> Create(Comment comment)
+    public async Task<IActionResult> Save(Comment comment)
     {
+        //Comment comment = model.Comment;
         try
         {
             var errorMsg = "";
@@ -95,19 +96,17 @@ public class CommentController : Controller
 
                 if (string.IsNullOrWhiteSpace(comment.CommentBody))
                 {
-                    //Content is empty. Return create view with error
+                    // Content is empty. Add a model error.
                     ModelState.AddModelError("CommentBody", "Comment can't be empty.");
-                    //Get ViewModel from ViewBag
-                    var viewModelString = TempData["ViewModel"] as string;
-                    //Recreate ViewModel
-                    var viewModel = new CommentCreateViewModel();
-                    if (viewModelString != null)
+                    var viewModel = new CommentCreateViewModel()
                     {
-                        viewModel = JsonConvert.DeserializeObject<CommentCreateViewModel>(viewModelString);
-                    }
-
-                    // Pass the CommentViewModel to the view
-                    return View(viewModel);
+                        ThreadId = comment.ThreadId,
+                        ParentCommentId = comment.ParentCommentId,
+                        ParentComment = _commentRepository.GetById(comment.ParentCommentId),
+                        Thread = _threadRepository.GetThreadById(comment.ThreadId)
+                    };
+                    // Pass the CommentViewModel to the view along with ModelState.
+                    return View("Create", viewModel);
                 }
             }
 
@@ -182,6 +181,7 @@ public class CommentController : Controller
         {
             comment.User = user;
             comment.UserId = user.Id;
+            comment.CommentLastEditedAt = DateTime.Now;
             ModelState.Remove("comment.User"); //Workaround for invalid modelstate. The model isnt really invalid, but it was evaluated BEFORE the controller added User and UserId. Therefore the validty of the "User" key can be removed 
             //Checks if user is owner or admin before editing
             var userRoles = await _userManager.GetRolesAsync(user);
