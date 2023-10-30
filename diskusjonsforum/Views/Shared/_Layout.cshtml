@@ -13,10 +13,12 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const searchInput = document.getElementById("searchInput");
+        const searchBar = document.getElementById("searchBar");
         const searchResultsDropdown = document.getElementById('searchResultsDropdown');
+        
+        searchResultsDropdown.style.display = 'none';
     
-        searchInput.addEventListener("input", function () {
+        searchBar.addEventListener("input", function () {
             handleSearchInput();
         });
     });
@@ -38,10 +40,9 @@
                     </li> 
                 </ul>
                 <div class="position-relative">
-                    <input id="searchBar" class="form-control" placeholder="Search" type="text" id="searchInput">
+                    <input id="searchBar" class="form-control" placeholder="Search" type="text">
                     <div id="searchResultsDropdown" class="search-results"></div>
                 </div>
-                <div id="searchResultsDropdown" style="position: absolute; width: 100%;"></div>
                 <partial name="_LoginPartial"/>
             </div>
         </div>
@@ -61,4 +62,5 @@
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
 

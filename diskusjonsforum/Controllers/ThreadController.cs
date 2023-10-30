@@ -20,7 +20,10 @@ public class ThreadController : Controller
     private readonly ICommentRepository _commentRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<ThreadController> _logger;
-    public ThreadController(IThreadRepository threadDbContext, ICategoryRepository categoryRepository, ICommentRepository commentRepository, UserManager<ApplicationUser> userManager, ILogger<ThreadController> logger)
+
+    public ThreadController(IThreadRepository threadDbContext, ICategoryRepository categoryRepository,
+        ICommentRepository commentRepository, UserManager<ApplicationUser> userManager,
+        ILogger<ThreadController> logger)
     {
         _threadRepository = threadDbContext;
         _categoryRepository = categoryRepository;
@@ -40,6 +43,7 @@ public class ThreadController : Controller
             {
                 thread.ThreadComments?.AddRange(GetComments(thread));
             }
+
             var threadListViewModel = new ThreadListViewModel(threads, "Table");
             return View(threadListViewModel);
         }
@@ -50,14 +54,15 @@ public class ThreadController : Controller
             return RedirectToAction("Error", "Home", new { errorMsg });
         }
     }
-    
+
     //Returns comments for a given thread 
     public IQueryable<Comment> GetComments(Thread thread)
     {
         try
         {
             return _commentRepository.GetThreadComments(thread);
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             _logger.LogError(ex, "[ThreadController] An error occurred in the GetComments method.");
             return Enumerable.Empty<Comment>().AsQueryable(); //Returns empty collection
@@ -97,13 +102,14 @@ public class ThreadController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "[ThreadController] An error occurred in the Thread action for thread ID: {0}", threadId);
+            _logger.LogError(ex, "[ThreadController] An error occurred in the Thread action for thread ID: {0}",
+                threadId);
             return RedirectToAction("Error", "Home", new { errorMsg = "An error occurred while loading the thread." });
-            
+
         }
 
     }
-    
+
     public List<Comment> SortComments(List<Comment> comments)
     {
         try
@@ -150,11 +156,12 @@ public class ThreadController : Controller
             if (HttpContext.User.Identity!.IsAuthenticated)
             {
                 // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
-                var categories = _categoryRepository.GetCategories();// Fetch all categories from the database.
+                var categories = _categoryRepository.GetCategories(); // Fetch all categories from the database.
                 ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
                 return View();
 
             }
+
             // Redirects to the login page if the user is not logged in
             return RedirectToPage("/Account/Login", new { area = "Identity" });
 
@@ -168,7 +175,8 @@ public class ThreadController : Controller
     }
 
     [HttpPost]
-        public async Task<IActionResult> Create(Thread thread){
+    public async Task<IActionResult> Create(Thread thread)
+    {
         var errorMsg = "";
 
         if (HttpContext.User.Identity!.IsAuthenticated)
@@ -188,7 +196,7 @@ public class ThreadController : Controller
                     // Content is empty, add a model error
                     ModelState.AddModelError("ThreadContent", "Thread content is required.");
                     // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
-                    var categories = _categoryRepository.GetCategories();// Fetch all categories from the database.
+                    var categories = _categoryRepository.GetCategories(); // Fetch all categories from the database.
                     ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
                     return View(thread);
                 }
@@ -228,10 +236,11 @@ public class ThreadController : Controller
             _logger.LogWarning("[ThreadController] User is not authenticated in the Create action.");
             return View(thread);
         }
+
         errorMsg = "[ThreadController] An error occurred in the Edit method.";
         _logger.LogError("[ThreadController] An error occurred in the Edit method.");
         return RedirectToAction("Error", "Home", new { errorMsg });
-        }
+    }
 
     [HttpGet("edit/{threadId}")]
     public async Task<IActionResult> Edit(int threadId)
@@ -287,12 +296,12 @@ public class ThreadController : Controller
                     // Content is empty, add a model error
                     ModelState.AddModelError("ThreadContent", "Thread content is required.");
                     // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
-                    var categories = _categoryRepository.GetCategories();// Fetch all categories from the database.
+                    var categories = _categoryRepository.GetCategories(); // Fetch all categories from the database.
                     ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
                     Thread threadToEdit = _threadRepository.GetThreadById(thread.ThreadId);
                     return View("Edit", threadToEdit);
                 }
-                
+
                 // Checks if the user is the owner or admin before editing
                 var userRoles = await _userManager.GetRolesAsync(user);
                 if (user.Id != thread.UserId && !userRoles.Contains("Admin"))
@@ -301,6 +310,7 @@ public class ThreadController : Controller
                     _logger.LogError(errorMsg);
                     return RedirectToAction("Error", "Home", new { errorMsg });
                 }
+
                 ModelState.Remove("Category");
                 try
                 {
@@ -310,7 +320,8 @@ public class ThreadController : Controller
                         if (returnOk)
                             return RedirectToAction("Thread", "Thread", new { thread.ThreadId });
                     }
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     _logger.LogError(ex, "[ThreadController] Error editing thread: {0}", thread.ThreadId);
                     errorMsg = "Could not edit your thread due to a database error.";
@@ -357,18 +368,21 @@ public class ThreadController : Controller
             return RedirectToAction("Error", "Home", new { errorMsg });
         }
     }
-
-    [Route("SearchPost")]
     public IActionResult SearchPosts(string searchQuery)
     {
-        // Perform a database search using the searchQuery parameter
-        // You should have a service or repository that handles database interactions
-        var searchResults = _threadRepository.SearchPosts(searchQuery);
+        var threads = _threadRepository.GetAll();
+        
+        // Checks if whatever the user is typing exists
+        if (!string.IsNullOrEmpty(searchQuery))
+        {
+            threads = threads.Where(t => t.ThreadTitle.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        // Create an object with both threadTitle and threadId
+        var searchResults = threads.Select(t => new { threadTitle = t.ThreadTitle, threadId = t.ThreadId });
 
         // Return the search results as JSON
         return Json(searchResults);
     }
-
-
-
 }

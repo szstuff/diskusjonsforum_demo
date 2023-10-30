@@ -67,15 +67,5 @@ public class ThreadRepository : IThreadRepository
     {
         await _threadDbContext.SaveChangesAsync();
     }
-    public IEnumerable<Thread> SearchPosts(string searchQuery)
-    {
-        var searchResults = _threadDbContext.Threads
-            .Where(thread => EF.Functions.Like(thread.ThreadTitle, $"%{searchQuery}%") ||
-                             EF.Functions.Like(thread.ThreadBody, $"%{searchQuery}%"))
-            .ToList();
-
-        return searchResults;
-    }
-
 
 }

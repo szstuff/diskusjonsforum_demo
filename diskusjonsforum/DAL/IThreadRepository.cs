@@ -10,5 +10,4 @@ public interface IThreadRepository
     Task<bool>Update(Thread thread);
     Task Remove(Thread thread);
     Task SaveChangesAsync();
-    IEnumerable<Thread> SearchPosts(string searchQuery);
 }

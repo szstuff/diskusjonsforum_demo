@@ -10,6 +10,7 @@ namespace diskusjonsforum.Controllers
         //Initialise controllers and interfaces for constructor
         private readonly ILogger<HomeController> _logger;
         private readonly IThreadRepository _threadRepository;
+
         public HomeController(ILogger<HomeController> logger, IThreadRepository threadRepository)
         {
             _logger = logger;
@@ -49,6 +50,7 @@ namespace diskusjonsforum.Controllers
             ViewBag.ErrorMsg = errorMsg;
             return View();
         }
+        
     }
 }
 

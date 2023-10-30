@@ -144,9 +144,43 @@ header {
 }
 
 #searchBar{
-    border-radius: 50px;
+    border-radius: 20px 20px 0 0;
     display: flex;
     width: 400px;
+}
+
+#searchBar {
+    border-radius: 20px;
+    display: flex;
+    width: 400px;
+}
+
+#searchBar:focus {
+    border-radius: 20px 20px 0 0;
+}
+
+#searchResultsDropdown{
+    position: absolute;
+    padding-top: 10px;
+    color: black;
+    font-size: 14px;
+    border-radius: 0 0 10px 10px;
+    background-color: white;
+    width: 400px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#searchResultsDropdown ul {
+    list-style: none;
+}
+
+#searchResultsDropdown li {
+    cursor: pointer;
+    padding: 5px; 
+}
+
+#searchResultsDropdown li:hover {
+    background-color: lightgray;
 }
 
 #explore {

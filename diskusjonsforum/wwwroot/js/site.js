@@ -13,24 +13,19 @@ function scrollFunction() {
     }
 }
 
-// When the user clicks on the button, scroll to the top of the document
-function topFunction() {
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-}
-
 function handleSearchInput() {
-    const searchInput = document.getElementById('searchInput');
-    const searchResults = document.getElementById('searchResultsDropdown'); // Updated to use the new id
+    const searchBar = document.getElementById('searchBar');
+    const searchResults = document.getElementById('searchResultsDropdown');
 
-    let searchTerm = searchInput.value.toLowerCase();
+    searchResults.style.display = 'none'; // Start with display: none
 
-    if (searchTerm.length >= 2) {
-        // Use the correct URL for your controller
-        fetch(`/Thread/SearchPost?searchQuery=${searchTerm}`)
+    let searchTerm = searchBar.value.trim().toLowerCase();
+
+    if (searchTerm.length >= 1) {
+        fetch(`/Thread/SearchPosts?searchQuery=${searchTerm}`)
             .then(response => response.json())
             .then(data => {
-                // Handle the JSON response
+                // For testing purposes
                 console.log(data);
 
                 // Clear previous search results
@@ -45,10 +40,11 @@ function handleSearchInput() {
                     data.forEach(result => {
                         const listItem = document.createElement('li');
                         listItem.textContent = result.threadTitle;
-                        // Add a click event listener to the list item to handle selection
+
+                        // Add a click event to the list item to handle the redirection
                         listItem.addEventListener('click', () => {
-                            // Handle the selection, e.g., navigate to the selected thread
-                            // You can use the result.threadId to identify the selected thread
+                            const threadId = result.threadId;
+                            window.location.href = `/Thread/Thread?threadID=${threadId}`;
                         });
 
                         resultList.appendChild(listItem);
@@ -62,10 +58,17 @@ function handleSearchInput() {
                 } else {
                     searchResults.style.display = 'none'; // No results, hide the container
                 }
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
     } else {
         searchResults.style.display = 'none';
     }
 }
+
+
+
+
 
 
