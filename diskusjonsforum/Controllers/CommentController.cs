@@ -9,8 +9,6 @@ using Newtonsoft.Json;
 using Thread = Diskusjonsforum.Models.Thread;
 
 
-//using diskusjonsforum.ViewModels; //Kan slettes hvis vi ikke lager ViewModels
-
 namespace diskusjonsforum.Controllers;
 
 
@@ -217,17 +215,18 @@ public class CommentController : Controller
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var userRoles = await _userManager.GetRolesAsync(user);
 
-            if (comment.UserId == user.Id || userRoles.Contains("Admin"))
+            if (comment.UserId == user.Id || userRoles.Contains("Admin")) //If user is admin or owner
             {
-                List<Comment> childcomments = AddChildren(comment);
+                List<Comment> childcomments = AddChildren(comment); 
 
                 foreach (var child in childcomments)
                 {
+                    //Deletes all child comments 
                     _commentRepository.Remove(child);
                     await _commentRepository.SaveChangesAsync();
                 }
 
-                _commentRepository.Remove(comment);
+                _commentRepository.Remove(comment); //Deletes the comment user wanted to delete after children are deleted 
                 await _commentRepository.SaveChangesAsync();
 
                 return RedirectToAction("Thread", "Thread", new { comment.ThreadId });
@@ -247,7 +246,7 @@ public class CommentController : Controller
         }
     }
 
-    //Rekursiv metode for DeleteComment
+    //recursively finds all replies to the comment 
     private List<Comment> AddChildren(Comment parentComment)
     {
         List<Comment> newChildren = _commentRepository.GetChildren(parentComment);
