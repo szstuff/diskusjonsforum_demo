@@ -1,4 +1,4 @@
-﻿using diskusjonsforum.DAL;
+using diskusjonsforum.DAL;
 using Microsoft.AspNetCore.Mvc;
 using diskusjonsforum.ViewModels;
 using Thread = Diskusjonsforum.Models.Thread;
@@ -16,6 +16,7 @@ namespace diskusjonsforum.Controllers
             _threadRepository = threadRepository;
         }
 
+        //Loads homepage/Index view
         public IActionResult Index()
         {
             var threads = GetThreads(); // Call your GetThreads method to fetch the list of threads.
@@ -28,7 +29,7 @@ namespace diskusjonsforum.Controllers
         }
 
         public IEnumerable<Thread> GetThreads()
-        {
+        { ///STILIAN SJEKK USAGES. Den er vel duplikat av threadcontroller.getall? 
             try
             {
                 var threads = _threadRepository.GetAll();
@@ -46,6 +47,7 @@ namespace diskusjonsforum.Controllers
             //Log error message using logger
             _logger.LogError("[HomeController] Error: {0}", errorMsg);
             //View error message in view
+            ///STILIAN GÅ GJENNOM OG FIKS FEILMELDINGER HER 
             ViewBag.ErrorMsg = errorMsg;
             return View();
         }
