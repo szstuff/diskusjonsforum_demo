@@ -9,11 +9,11 @@ namespace diskusjonsforum.Controllers;
 
 public class UserController : Controller
 {
+    //Initialise controllers and interfaces for constructor
 	private UserManager<ApplicationUser> _userManager;
     private readonly IThreadRepository _threadRepository;
     private readonly ICommentRepository _commentRepository;
 	private readonly ILogger<UserController> _logger;
-
 	public UserController(UserManager<ApplicationUser> userManager, IThreadRepository threadRepository, ICommentRepository commentRepository, ILogger<UserController> logger)
 	{
 		_userManager = userManager;

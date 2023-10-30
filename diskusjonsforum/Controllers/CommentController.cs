@@ -16,13 +16,11 @@ namespace diskusjonsforum.Controllers;
 
 public class CommentController : Controller
 {
+    //Initialise controllers and interfaces for constructor
     private readonly ICommentRepository _commentRepository;
     private readonly IThreadRepository _threadRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<CommentController> _logger;
-    
-
-
     public CommentController(ICommentRepository commentRepository, IThreadRepository threadRepository, UserManager<ApplicationUser> userManager, ILogger<CommentController> logger)
     {
         _commentRepository = commentRepository;

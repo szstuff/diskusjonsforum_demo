@@ -7,9 +7,9 @@ namespace diskusjonsforum.Controllers
 {
     public class HomeController : Controller
     {
+        //Initialise controllers and interfaces for constructor
         private readonly ILogger<HomeController> _logger;
         private readonly IThreadRepository _threadRepository;
-
         public HomeController(ILogger<HomeController> logger, IThreadRepository threadRepository)
         {
             _logger = logger;

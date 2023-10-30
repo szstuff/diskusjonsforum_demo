@@ -29,6 +29,7 @@ public class ThreadRepository : IThreadRepository
             .Include(t => t.ThreadComments)
             .ThenInclude(c => c.User)
             .FirstOrDefault(t => t.ThreadId == threadId);
+            //Access the entry for the thread to load Users into memory. Prevents issue where Users sometimes aren't loaded despite being included
             _threadDbContext.Entry(thread)
             .Reference(t => t!.User)
             .Load();

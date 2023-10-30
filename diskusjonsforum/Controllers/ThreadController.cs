@@ -5,20 +5,21 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 // Add this namespace
 using diskusjonsforum.DAL;
-using Microsoft.EntityFrameworkCore;
 using Thread = Diskusjonsforum.Models.Thread;
+//The comment below disables certain irrelevant warnings in JetBrains IDE
+// ReSharper disable RedundantAssignment
 
 namespace diskusjonsforum.Controllers;
 
 
 public class ThreadController : Controller
 {
+    //Initialise controllers and interfaces for constructor
     private readonly IThreadRepository _threadRepository;
     private readonly ICategoryRepository _categoryRepository;
     private readonly ICommentRepository _commentRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<ThreadController> _logger;
-
     public ThreadController(IThreadRepository threadDbContext, ICategoryRepository categoryRepository, ICommentRepository commentRepository, UserManager<ApplicationUser> userManager, ILogger<ThreadController> logger)
     {
         _threadRepository = threadDbContext;
@@ -28,14 +29,16 @@ public class ThreadController : Controller
         _logger = logger;
     }
 
+    //Returns Thread Table Razor view
     public IActionResult Table()
     {
+        var errorMsg = "";
         try
         {
             var threads = _threadRepository.GetAll();
             foreach (var thread in threads)
             {
-                thread.ThreadComments.AddRange(GetComments(thread));
+                thread.ThreadComments?.AddRange(GetComments(thread));
             }
             var threadListViewModel = new ThreadListViewModel(threads, "Table");
             return View(threadListViewModel);
@@ -43,15 +46,26 @@ public class ThreadController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "[ThreadController] An error occurred in the Table action.");
-            return RedirectToAction("Error", "Home", new { errorMsg = "An error occurred while loading threads." });
+            errorMsg = "An error occurred while loading threads";
+            return RedirectToAction("Error", "Home", new { errorMsg });
+        }
+    }
+    
+    //Returns comments for a given thread 
+    public IQueryable<Comment> GetComments(Thread thread)
+    {
+        try
+        {
+            return _commentRepository.GetThreadComments(thread);
+        } catch (Exception ex)
+        {
+            _logger.LogError(ex, "[ThreadController] An error occurred in the GetComments method.");
+            return Enumerable.Empty<Comment>().AsQueryable(); //Returns empty collection
+
         }
     }
 
-    public IQueryable<Comment> GetComments(Thread thread)
-    {
-        return _commentRepository.GetThreadComments(thread);
-    }
-
+    //Returns a list of threads
     public List<Thread> GetThreads()
     {
         try
@@ -62,8 +76,7 @@ public class ThreadController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "[ThreadController] An error occurred in the GetThreads method.");
-            
-            return new List<Thread>();
+            return new List<Thread>(); //Returns empty list 
         }
     }
 
@@ -85,8 +98,8 @@ public class ThreadController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "[ThreadController] An error occurred in the Thread action for thread ID: {0}", threadId);
-            // Handle the error or return an error response if needed.
             return RedirectToAction("Error", "Home", new { errorMsg = "An error occurred while loading the thread." });
+            
         }
 
     }
@@ -108,7 +121,6 @@ public class ThreadController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "[ThreadController] An error occurred in the SortComments method.");
-            // Handle the error or return an error response if needed.
             return new List<Comment>();
         }
     }
@@ -127,7 +139,6 @@ public class ThreadController : Controller
         catch (Exception ex)
         {
             _logger.LogError(ex, "[ThreadController] An error occurred in the AddChildComments method.");
-            // Handle the error or return an error response if needed.
         }
     }
 
@@ -207,8 +218,8 @@ public class ThreadController : Controller
             }
             else
             {
-                _logger.LogError("[ThreadController] Error authenticating the user in the Create action.");
-                errorMsg = "Could not create your thread because there was an issue authenticating you. Please log out and in, and try again";
+                _logger.LogError("[ThreadController] Error when loading Create view.");
+                errorMsg = "An error occured when loading the page";
                 return RedirectToAction("Error", "Home", new { errorMsg });
             }
         }
@@ -217,8 +228,9 @@ public class ThreadController : Controller
             _logger.LogWarning("[ThreadController] User is not authenticated in the Create action.");
             return View(thread);
         }
-
-        return null;
+        errorMsg = "[ThreadController] An error occurred in the Edit method.";
+        _logger.LogError("[ThreadController] An error occurred in the Edit method.");
+        return RedirectToAction("Error", "Home", new { errorMsg });
         }
 
     [HttpGet("edit/{threadId}")]
@@ -269,6 +281,18 @@ public class ThreadController : Controller
             {
                 ModelState.Remove("User");
 
+                // Add custom validation for the thread content
+                if (string.IsNullOrWhiteSpace(thread.ThreadBody) || string.IsNullOrWhiteSpace(thread.ThreadTitle))
+                {
+                    // Content is empty, add a model error
+                    ModelState.AddModelError("ThreadContent", "Thread content is required.");
+                    // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
+                    var categories = _categoryRepository.GetCategories();// Fetch all categories from the database.
+                    ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
+                    Thread threadToEdit = _threadRepository.GetThreadById(thread.ThreadId);
+                    return View("Edit", threadToEdit);
+                }
+                
                 // Checks if the user is the owner or admin before editing
                 var userRoles = await _userManager.GetRolesAsync(user);
                 if (user.Id != thread.UserId && !userRoles.Contains("Admin"))
@@ -278,20 +302,29 @@ public class ThreadController : Controller
                     return RedirectToAction("Error", "Home", new { errorMsg });
                 }
                 ModelState.Remove("Category");
-                if (ModelState.IsValid)
+                try
                 {
-                    bool returnOk = await _threadRepository.Update(thread);
-                    if (returnOk)
-                        return RedirectToAction("Thread", "Thread", new { thread.ThreadId });
+                    if (ModelState.IsValid)
+                    {
+                        bool returnOk = await _threadRepository.Update(thread);
+                        if (returnOk)
+                            return RedirectToAction("Thread", "Thread", new { thread.ThreadId });
+                    }
+                } catch (Exception ex)
+                {
+                    _logger.LogError(ex, "[ThreadController] Error editing thread: {0}", thread.ThreadId);
+                    errorMsg = "Could not edit your thread due to a database error.";
+                    return RedirectToAction("Error", "Home", new { errorMsg });
                 }
             }
 
+            _logger.LogError("[ThreadController] Error occurred when saving the changes you made to the thread");
             errorMsg = "Error occurred when saving the changes you made to the thread";
-            _logger.LogError(errorMsg);
             return RedirectToAction("Error", "Home", new { errorMsg });
         }
         catch (Exception ex)
         {
+            errorMsg = "Error occurred when saving the changes you made to the thread";
             _logger.LogError(ex, "[ThreadController] An error occurred in the SaveEdit method.");
             return RedirectToAction("Error", "Home", new { errorMsg });
         }
