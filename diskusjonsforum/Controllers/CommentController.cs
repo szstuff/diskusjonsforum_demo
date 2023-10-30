@@ -1,4 +1,4 @@
-﻿
+
 using diskusjonsforum.DAL;
 using Microsoft.AspNetCore.Mvc;
 using Diskusjonsforum.Models;
@@ -29,21 +29,23 @@ public class CommentController : Controller
         _logger = logger;
     }
 
+    //Returns list of all comments
     public Task<List<Comment>> GetComments()
     {
         var comments = new List<Comment>();
         return Task.FromResult(comments);
     }
     
-    [HttpGet("create/{parentCommentId}/{threadId}")] //URL when user replies to a comment
+    //Returns Comment/Create view
+    [HttpGet("create/{parentCommentId}/{threadId}")] //URL when user replies to a comment or thread 
     [Authorize]
     public async Task<IActionResult> Create(int? parentCommentId, int threadId)
     {
-        if (parentCommentId == 0) {parentCommentId = null;}
+        if (parentCommentId == 0) {parentCommentId = null;} //If parentCommentId == 0, the comment is a direct reply to the thread
 
         try
         {
-            if (HttpContext.User.Identity!.IsAuthenticated)
+            if (HttpContext.User.Identity!.IsAuthenticated) //If user is authenticated
             {
                 Comment parentComment = _commentRepository.GetById(parentCommentId);
                 var thread = _threadRepository.GetThreadById(threadId);
@@ -76,26 +78,28 @@ public class CommentController : Controller
         }
     }
 
+    //Saves comment submitted through the Create view 
     [HttpPost("save")]
     [Authorize]
     public async Task<IActionResult> Save(Comment comment)
     {
-        //Comment comment = model.Comment;
         try
         {
             var errorMsg = "";
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var user = await _userManager.GetUserAsync(HttpContext.User); //Gets current user 
             if (user != null)
             {
+                //Set comment details to current user 
                 comment.UserId = user.Id;
                 comment.User = user;
                 ModelState.Remove(
-                    "comment.User"); //Workaround for invalid modelstate. The model isnt really invalid, but it was evaluated BEFORE the controller added User and UserId. Therefore the validty of the "User" key can be removed 
+                    "comment.User"); //Workaround for invalid modelstate. 
 
                 if (string.IsNullOrWhiteSpace(comment.CommentBody))
                 {
-                    // Content is empty. Add a model error.
+                    //Input validation: adds modelerror if submitted CommentBody is empty 
                     ModelState.AddModelError("CommentBody", "Comment can't be empty.");
+                    //Recreates the Create-viewmodel and returns a new Comment/Create view
                     var viewModel = new CommentCreateViewModel()
                     {
                         ThreadId = comment.ThreadId,
@@ -103,7 +107,6 @@ public class CommentController : Controller
                         ParentComment = _commentRepository.GetById(comment.ParentCommentId),
                         Thread = _threadRepository.GetThreadById(comment.ThreadId)
                     };
-                    // Pass the CommentViewModel to the view along with ModelState.
                     return View("Create", viewModel);
                 }
             }
@@ -112,8 +115,11 @@ public class CommentController : Controller
             {
                 bool returnOk = await _commentRepository.Add(comment);
                 if (returnOk)
-                    return RedirectToAction("Thread", "Thread", new { comment.ThreadId });
-            }
+                    return RedirectToAction("Thread", "Thread", new { comment.ThreadId }); //Returns the thread if comment submission was successful 
+            } else {
+                errorMsg = "There was an issue submitting your comment";
+                
+}
         }
         catch (Exception ex)
         {
