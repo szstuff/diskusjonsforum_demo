@@ -3,14 +3,9 @@
 /* CREATE NEW THREAD STYLING BELOW */
 
 .crud-thread {
-    /*padding: 10px 10px 10px 15px;
-    border: 3px outset #feeeef;
-    border-radius: 30px;
-    background-color: #002c45;*/
+  
     color: #000000;
-/*    max-width: 800px;
-    padding-left: 20px;
-    margin-bottom: 20px;*/
+
 }
 
 .crud-title {
@@ -103,8 +98,6 @@
     position: relative; /* Set position to relative */
     overflow: hidden;
     font-weight: 300;
-/*    height: 40%;
-    width: 100%;*/
 }
 
 .crud-comment-info, h1{
