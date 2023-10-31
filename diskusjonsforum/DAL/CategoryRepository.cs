@@ -20,6 +20,7 @@ public class CategoryRepository : ICategoryRepository
             .ToList();
     }
     
+    //All the methods below are implemented, but not used in the application. 
     public List<Diskusjonsforum.Models.Thread> GetThreads(Category category)
     {
         return _threadDbContext.Threads
