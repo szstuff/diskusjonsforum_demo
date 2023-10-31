@@ -203,11 +203,13 @@ header {
     border-color: grey; /* Change the underline color on hover */
 }
 
+/*footer placement and design*/
 .footer{
     background-color: white;
     padding-top: 10px;
     padding-bottom: 40px;
     position: sticky;
+    
 }
 
 .login-container-new, .register-container-new {
