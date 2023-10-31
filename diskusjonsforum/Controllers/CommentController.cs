@@ -5,7 +5,6 @@ using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Newtonsoft.Json;
 using Thread = Diskusjonsforum.Models.Thread;
 
 
@@ -81,9 +80,9 @@ public class CommentController : Controller
     [Authorize]
     public async Task<IActionResult> Save(Comment comment)
     {
+        var errorMsg = "";
         try
         {
-            var errorMsg = "";
             var user = await _userManager.GetUserAsync(HttpContext.User); //Gets current user 
             if (user != null)
             {
@@ -116,7 +115,7 @@ public class CommentController : Controller
                     return RedirectToAction("Thread", "Thread", new { comment.ThreadId }); //Returns the thread if comment submission was successful 
             } else {
                 errorMsg = "There was an issue submitting your comment";
-                
+                return RedirectToAction("Error", "Home", new { errorMsg });
 }
         }
         catch (Exception ex)
@@ -126,13 +125,13 @@ public class CommentController : Controller
             // Log the specific exception and its message
             _logger.LogError(ex, "[CommentController] Exception: {0}, Message: {1}", ex.GetType(), ex.Message);
 
-            var errorMsg = "Comment creation failed";
+            errorMsg = "Comment creation failed";
             return RedirectToAction("Error", "Home", new { errorMsg });
         }
 
         // If no other return occurred, return a generic error page or redirect
-        var genericErrorMsg = "An error occurred while creating the comment.";
-        return RedirectToAction("Error", "Home", new { errorMsg = genericErrorMsg });
+        errorMsg = "An error occurred while creating the comment.";
+        return RedirectToAction("Error", "Home", new { errorMsg = errorMsg });
     }
 
     [HttpGet("edit/{{commentId}}/{{threadId}}")]
@@ -175,32 +174,32 @@ public class CommentController : Controller
     }
     [HttpPost("comment/saveEdit")]
     [Authorize]
-    public async Task<IActionResult> SaveEdit(CommentCreateViewModel viewModel)
+    public async Task<IActionResult> SaveEdit(Comment comment)
     {
         var errorMsg = "";
         var user = await _userManager.GetUserAsync(HttpContext.User);
         if (user != null)
         {
-            viewModel.Comment.User = user;
-            viewModel.Comment.UserId = user.Id;
-            viewModel.Comment.CommentLastEditedAt = DateTime.Now;
+            comment.User = user;
+            comment.UserId = user.Id;
+            comment.CommentLastEditedAt = DateTime.Now;
             ModelState.Remove("comment.User"); //Workaround for invalid modelstate. The model isnt really invalid, but it was evaluated BEFORE the controller added User and UserId. Therefore the validty of the "User" key can be removed 
             //Checks if user is owner or admin before editing
             var userRoles = await _userManager.GetRolesAsync(user);
-            if (user.Id != viewModel.Comment.UserId && !userRoles.Contains("Admin"))
+            if (user.Id != comment.UserId && !userRoles.Contains("Admin"))
             {
                 errorMsg = "Could not verify that you are the owner of the Thread";
                 return RedirectToAction("Error", "Home", new { errorMsg });
             }
             if (ModelState.IsValid)
             {
-                bool returnOk = await _commentRepository.Update(viewModel.Comment);
+                bool returnOk = await _commentRepository.Update(comment);
                 if (returnOk)
-                    return RedirectToAction("Thread", "Thread", new {viewModel.Comment.ThreadId});
+                    return RedirectToAction("Thread", "Thread", new {comment.ThreadId});
             }
         }
         
-        _logger.LogWarning("[CommentController] Comment edit failed {@comment}", viewModel.Comment);
+        _logger.LogWarning("[CommentController] Comment edit failed {@comment}", comment);
         errorMsg = "Comment edit failed";
         return RedirectToAction("Error", "Home", new {errorMsg});
     }
@@ -215,9 +214,9 @@ public class CommentController : Controller
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var userRoles = await _userManager.GetRolesAsync(user);
 
-            if (comment.UserId == user.Id || userRoles.Contains("Admin")) //If user is admin or owner
+            if (comment.UserId == user.Id || userRoles.Contains("Admin"))
             {
-                List<Comment> childcomments = AddChildren(comment); 
+                List<Comment> childcomments = AddChildren(comment);
 
                 foreach (var child in childcomments)
                 {
@@ -226,7 +225,7 @@ public class CommentController : Controller
                     await _commentRepository.SaveChangesAsync();
                 }
 
-                _commentRepository.Remove(comment); //Deletes the comment user wanted to delete after children are deleted 
+                _commentRepository.Remove(comment);
                 await _commentRepository.SaveChangesAsync();
 
                 return RedirectToAction("Thread", "Thread", new { comment.ThreadId });

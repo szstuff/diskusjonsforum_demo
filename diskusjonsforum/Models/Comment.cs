@@ -19,7 +19,7 @@ using SQLite;namespace Diskusjonsforum.Models
         public virtual Comment? ParentComment { get; set; } = default!; //Nullable for same reason as Thread 
         
         [ForeignKey("ApplicationUser")]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         public virtual ApplicationUser User { get; set; }  = default!; //ApplicationUser skal egt IKKE være nullable (?), men får invalid ModelState hvis den ikke er det. Løsning: https://stackoverflow.com/questions/70966537/modelstate-isvalid-includes-a-navigation-property-always-false-only-net-6-0
     }
 }
