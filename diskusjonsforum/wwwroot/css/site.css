@@ -27,7 +27,7 @@ body {
         transition: all 0.2s;
         height: 2px;
         width: 100%;
-        background-color: #feeeef;
+        background-color: grey;
         position: absolute;
         bottom: 0;
         left: 0;
@@ -93,7 +93,7 @@ header {
 }
 
 .offcanvas-header {
-    color: #feeeef;
+    color: grey;
     font-style: italic;
 }
 
@@ -200,11 +200,15 @@ header {
 }
 
 #explore:hover::before {
-    border-color: #feeeef; /* Change the underline color on hover */
+    border-color: grey; /* Change the underline color on hover */
 }
 
 .footer{
     background-color: white;
     padding-top: 10px;
     padding-bottom: 40px;
+}
+
+.login-container-new, .register-container-new {
+    padding-top: 50px;
 }
