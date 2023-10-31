@@ -20,13 +20,13 @@
 </div>
 
 <div class="container">
-    <div class="row">
+    <div id="postContainer" class="row">
         @foreach (var thread in Model.Threads.OrderByDescending(t => t.ThreadCreatedAt).Take(6))
         {
-            <div class="col-md-12">
+            <div class="post col-md-12">
                 <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">
-                    <div class="post">
-                        <div> <p class="thread-information"> <b>@thread.User.UserName</b> posted in <b>@thread.Category.CategoryName</b> on the <b>@thread.ThreadCreatedAt.ToString("yyyy-MM-dd HH:mm")</b></p></div>
+                    <div>
+                        <div> <p class="thread-information"> <b>@thread.User.UserName</b> posted in <b class="category">@thread.Category.CategoryName</b> on the <b>@thread.ThreadCreatedAt.ToString("yyyy-MM-dd HH:mm")</b></p></div>
                         <hr/>
                         <div><p class="title-thread"><b>@thread.ThreadTitle</b></p></div>
                         <div><p class="thread-text">@Html.Raw(thread.ThreadBody)</p></div> <!-- Displays first 75 characters of a the ThreadBody -->

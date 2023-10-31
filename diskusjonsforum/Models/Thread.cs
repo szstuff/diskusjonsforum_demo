@@ -1,7 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using SQLite;
-using SQLitePCL;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Diskusjonsforum.Models
 {

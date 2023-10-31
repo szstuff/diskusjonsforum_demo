@@ -12,28 +12,23 @@
             <div class="container crud-comment-info">
                 @if (@Model.CommentToEdit.UserId == userId)
                 {
-                    <h1> You're editing your comment: </h1>
+                    <h1> You're editing your comment </h1>
                 }
                 else
                 {
-                    <h1> You're editing @Model.CommentToEdit.User.UserName's comment: </h1>
+                    <h1> You're editing @Model.CommentToEdit.User.UserName's comment </h1>
                 }
-
-                @* <p> Thread: @(Model.Thread != null ? Model.Thread.ThreadTitle : "Thread not found")</p> *@
-                @* <p> Thread: @Model.ParentComment?.Thread?.ThreadTitle</p> *@
-                <p>
+<p>
                     Posted by <b>@Model.CommentToEdit.User.UserName</b> on @Model.CommentToEdit?.CommentCreatedAt
                     @if (@Model.CommentToEdit?.CommentCreatedAt != @Model.CommentToEdit?.CommentLastEditedAt)
                     {
                         <b> Last edited: @Model.CommentToEdit?.CommentLastEditedAt</b>
                     }
                 </p>
-                <p> Comment: @Model.CommentToEdit?.CommentBody </p>
             </div>
         </div>
 
 
-        <h2 class="crud-title"> Edit your reply </h2>
 
         <div class="form">
             @using (Html.BeginForm("SaveEdit", "Comment", FormMethod.Post))
@@ -43,7 +38,6 @@
                     <input type="hidden" asp-for="Comment.CommentId" value="@Model.CommentToEdit.CommentId" />
 
                     <div class="form-group">
-                        <label asp-for="Comment.CommentBody">New, edited comment:</label><span class="text-danger"></span>
                         <input asp-for="Comment.CommentBody" class="form-control" value="@Model.CommentToEdit.CommentBody" />
                         <span asp-validation-for="Comment.CommentBody" class="text-danger"></span>
                     </div>

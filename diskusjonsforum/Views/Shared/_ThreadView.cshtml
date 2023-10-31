@@ -14,12 +14,13 @@
                 <!-- Thread information: user, category, post date, last edited date -->
                 <p>
                     <p>@Model.ThreadBody</p>
-                    Posted in @Model.CategoryName by @Model.User.UserName <br/>
-                    Posted: @Model.ThreadCreatedAt.
+                    <hr/>
+                    Posted by <b>@Model.User.UserName</b> in <b>@Model.CategoryName</b> <br/>
+                Posted: <b>@Model.ThreadCreatedAt</b>.
                     <!-- Display last edited date if different -->
                     @if (Model.ThreadCreatedAt != Model.ThreadLastEditedAt)
                     {
-                        <b> Last edited: @Model.ThreadLastEditedAt </b>
+                        <i> Last edited: @Model.ThreadLastEditedAt </i>
                     }
                 </p>
             </div>
