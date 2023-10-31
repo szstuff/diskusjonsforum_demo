@@ -105,18 +105,39 @@
     font-style: italic;
 }
 
+.thread-container {
+    background-color: #ffff;
+    max-width: 400px;
+    border-radius: 10px;
+    margin: 1px;
+}
+
+.create-post {
+    max-width: 350px;
+}
+
+.custom-container {
+    max-width: 700px;
+}
+
+@media (min-width: 991px) {
+    .custom-container {
+
+    }
+}
+
 /* media query that specifies condition based on maximum screen width*/
 @media (max-width: 991px) {
     #offcanvasNavbar {
         background-color: rgba(255, 255, 255, 0.15);
         backdrop-filter: blur(10px);
     }
+
     #searchBar {
         width: 90%; /* Adjust the width for smaller screens as needed */
         max-width: 37.5rem; /* You can set a max-width to control the maximum width */
         margin: 0 auto;
     }
-    
 }
 
 .thread-button{
@@ -178,7 +199,7 @@
 }
 
 .footer{
-    margin-top: 7%;
+    position: absolute;
     padding-top: 10px;
     padding-bottom: 40px;
 }

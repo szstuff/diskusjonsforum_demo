@@ -3,48 +3,53 @@
     ViewData["Title"] = "Home Page";
 }
 
-
 <div class="container">
-    <input name="PostText" class="form-control" placeholder="Create Post" type="text" onclick="redirectToCreatePage()">
-</div>
+    <div class="container d-flex justify-content-center align-items-center">
+        <input name="PostText" class="form-control create-post" placeholder="Create Post" type="text" onclick="redirectToCreatePage()">
+    </div>
 
-<script>
-    // Redirect the user to the "create" page when the input is clicked
-    function redirectToCreatePage() {
-        window.location.href = "\Thread\Create.cshtml";
-    }
-</script>
-
-<br/>
-
-<div class="container">
-    <h4>Recent posts:</h4>
-</div>
-
-<div class="container">
-    <div class="row">
-        @foreach (var thread in Model.Threads.OrderByDescending(t => t.ThreadCreatedAt).Take(6))
-        {
-            <div class="col-md-6">
-                <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">
-                    <div class="post">
-                        <div class="user"> <p>posted by: @thread.User.UserName</p></div>
-                        <div class="title">@thread.ThreadTitle</div>
-                        <div class="content">@thread.ThreadBody</div>
-                        <div class="comments">Comments: @thread.ThreadComments?.Count</div>
-                    </div>
-                </a>
-                <p></p>
-            </div>
+    <script>
+        // Redirect the user to the "create" page when the input is clicked
+        function redirectToCreatePage() {
+            window.location.href = "/Thread/Create";
         }
+    </script>
+
+    <br/>
+
+    <div class="container d-flex justify-content-center align-items-center text-white">
+        <h3>Recent posts:</h3>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-around align-items-start">
+                @foreach (var thread in Model.Threads.OrderByDescending(t => t.ThreadCreatedAt).Take(6))
+                {
+                    <div class="col-4">
+                        <div class="thread-container p-4 border border-bottom d-flex justify-content-start align-items-stretch flex-fill">
+                            <div class="custom-container">
+                                    <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">
+                                        <div class="post">
+                                            <div class="user"><p>Posted by: @thread.User.UserName</p></div>
+                                            <div class="title">@thread.ThreadTitle</div>
+                                            <div class="content">@thread.ThreadBody</div>
+                                            <div class="comments">Comments: @thread.ThreadComments?.Count</div>
+                                        </div>
+                                    </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>
 
 
-<h1>OBS: Følgende feil/mangler: </h1>
+@* <h1>OBS: Følgende feil/mangler: </h1>
 <p> - Klient-side input validation på alle Razor Views (eks. når du lager ny tråd. Du kan submitte selv hvis kategori er tom, som gir feilmelding. Se Canvas moduler eller https://learn.microsoft.com/en-us/aspnet/web-pages/overview/ui-layouts-and-themes/validating-user-input-in-aspnet-web-pages-sites</p>
 <p> - Dokumentasjon (som alle vet men dgb) </p>
 <p> - Når admin redigerer tråd: "Error occurred when saving the changes you made to the thread" </p>
 <p> - Tråder i kategori "moderation" må kun vises til brukere med admin-rollen </p>
 <p> - Enkel Admin-portal med liste over brukere og toggle for admin-view (stilian fikser:)) </p>
-<p> - Hvis du oppdager noe som du ikke rekker å fikse: SKRIV DET HER! Denne listen finner du under Views/Home/Index</p>
+<p> - Hvis du oppdager noe som du ikke rekker å fikse: SKRIV DET HER! Denne listen finner du under Views/Home/Index</p> *@
