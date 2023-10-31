@@ -1,20 +1,6 @@
 
 /*CSS Styles for Thread table and Thread single view*/
 
-
-/*THREAD SINGLE VIEW STYLING BELOW*/
-
-/*Styles for thread body*/
-/*.threadbody {
-    !*Font and background styles for thread body*!
-    font-size: 17px;
-    padding: 10px 10px 10px 15px;
-    border: 3px outset #ff6a52;
-    border-radius: 30px;
-    color: #feeeef;
-    background-color: #ff6a52;
-}*/
-
 /*Styles for comments heading*/
 .comments-heading {
     /*Font size and weight*/
@@ -230,4 +216,12 @@
     .container-fluid {
         margin-top: 50px;
     }
+}
+
+.pb-3{
+    margin-bottom:60px;
+}
+
+.post:hover{
+    color: blue;
 }
