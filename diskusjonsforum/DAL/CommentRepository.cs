@@ -1,5 +1,6 @@
 using Diskusjonsforum.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using ILogger = Castle.Core.Logging.ILogger;
 using Thread = Diskusjonsforum.Models.Thread;
 
@@ -79,4 +80,14 @@ public class CommentRepository : ICommentRepository
     {
         return _threadDbContext.Comments.Where(c => c.ParentCommentId == parentComment.CommentId).ToList();
     }
+
+    public void DetachEntity(Comment comment)
+    {
+        //Detach a loaded entity. This is used when two comments with identical commentId are loaded in the context
+        //When two identical entities exist (such as in CommentController/SaveEdit, EFCore does not know which one to modify. 
+        EntityEntry<Comment> entry = _threadDbContext.Entry(comment);
+        if (entry.State != EntityState.Detached)
+        {
+            entry.State = EntityState.Detached;
+        }    }
 }

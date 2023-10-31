@@ -288,7 +288,7 @@ public class ThreadController : Controller
     // Saves edits made to a thread
     public async Task<IActionResult> SaveEdit(Thread thread)
     {
-        string errorMsg = "An error occured when trying to save your edit";
+        var errorMsg = "An error occured when trying to save your edit";
         try
         {
             var user = await _userManager.GetUserAsync(HttpContext.User); //Gets the current user 

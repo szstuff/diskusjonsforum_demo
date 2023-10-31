@@ -5,6 +5,7 @@ using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.VisualStudio.Shell.Interop;
 using Thread = Diskusjonsforum.Models.Thread;
 
 
@@ -180,9 +181,15 @@ public class CommentController : Controller
         var user = await _userManager.GetUserAsync(HttpContext.User);
         if (user != null)
         {
-            comment.User = user;
-            comment.UserId = user.Id;
+            var uneditedComment = _commentRepository.GetById(comment.CommentId);
+            _commentRepository.DetachEntity(uneditedComment); // Detach the comment since there are two instances of the same comment.
+            //Reconstruct the comment before saving 
+            comment.User = uneditedComment.User;
+            comment.UserId = uneditedComment.User.Id;
             comment.CommentLastEditedAt = DateTime.Now;
+            comment.ThreadId = uneditedComment.ThreadId;
+            comment.ParentCommentId = uneditedComment.ParentCommentId;
+            comment.CommentCreatedAt = uneditedComment.CommentCreatedAt;
             ModelState.Remove("comment.User"); //Workaround for invalid modelstate. The model isnt really invalid, but it was evaluated BEFORE the controller added User and UserId. Therefore the validty of the "User" key can be removed 
             //Checks if user is owner or admin before editing
             var userRoles = await _userManager.GetRolesAsync(user);
@@ -200,7 +207,7 @@ public class CommentController : Controller
         }
         
         _logger.LogWarning("[CommentController] Comment edit failed {@comment}", comment);
-        errorMsg = "Comment edit failed";
+        errorMsg = "Could not save your edits";
         return RedirectToAction("Error", "Home", new {errorMsg});
     }
 

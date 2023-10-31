@@ -15,4 +15,5 @@ public interface ICommentRepository
     Task SaveChangesAsync();
     List<Comment> GetChildren(Comment parentComment);
 
+    void DetachEntity(Comment comment);
 }

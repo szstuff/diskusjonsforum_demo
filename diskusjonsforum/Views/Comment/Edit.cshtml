@@ -1,29 +1,34 @@
+@using Microsoft.AspNetCore.Identity
 @model CommentCreateViewModel
+@inject UserManager<ApplicationUser> UserManager
 
+
+@{
+    string userId = UserManager.GetUserId(User);
+}
 <div class="container mt-5">
     <div class="row mt-4 col-12 mb-4 p-4 d-flex justify-content-center align-items-stretch flex-fill crud-thread">
-        @* <div class="container crud-comment-info">
-            <h1>Editing reply for: </h1>
-            <h1>Thread ID: @Model.Thread.ThreadId</h1>
-            <h1>Comment ID: @Model.ParentComment?.CommentBody</h1>
-            <p> Thread: @(Model.Thread != null ? Model.Thread.ThreadTitle : "Thread not found")</p>
-            <p> Thread: @Model.ParentComment?.Thread?.ThreadTitle</p>
-            <p> Comment: @Model.ParentComment?.CommentBody </p>
-        </div> *@
         <div class="row mt-4 col-12 mb-4 p-4 crud-container">
             <div class="container crud-comment-info">
-                <h1> You're editing your comment: </h1>
+                @if (@Model.CommentToEdit.UserId == userId)
+                {
+                    <h1> You're editing your comment: </h1>
+                }
+                else
+                {
+                    <h1> You're editing @Model.CommentToEdit.User.UserName's comment: </h1>
+                }
 
                 @* <p> Thread: @(Model.Thread != null ? Model.Thread.ThreadTitle : "Thread not found")</p> *@
                 @* <p> Thread: @Model.ParentComment?.Thread?.ThreadTitle</p> *@
                 <p>
-                    Posted by <b>You</b> on @Model.ParentComment?.CommentCreatedAt
-                    @if (@Model.ParentComment?.CommentCreatedAt != @Model.ParentComment?.CommentLastEditedAt)
+                    Posted by <b>@Model.CommentToEdit.User.UserName</b> on @Model.CommentToEdit?.CommentCreatedAt
+                    @if (@Model.CommentToEdit?.CommentCreatedAt != @Model.CommentToEdit?.CommentLastEditedAt)
                     {
-                        <b> Last edited: @Model.ParentComment?.CommentLastEditedAt</b>
+                        <b> Last edited: @Model.CommentToEdit?.CommentLastEditedAt</b>
                     }
                 </p>
-                <p> Comment: @Model.ParentComment?.CommentBody </p>
+                <p> Comment: @Model.CommentToEdit?.CommentBody </p>
             </div>
         </div>
 
@@ -35,10 +40,7 @@
 
             {
                 <form asp-controller="Comment" asp-action="Create">
-                    <input type="hidden" asp-for="Comment.ThreadId" value="@Model.Thread.ThreadId" />
-                    <input type="hidden" asp-for="Comment.ParentCommentId" value="@Model.CommentToEdit.ParentCommentId" />
                     <input type="hidden" asp-for="Comment.CommentId" value="@Model.CommentToEdit.CommentId" />
-                    <input type="hidden" asp-for="Comment.CommentCreatedAt" value="@Model.CommentToEdit.CommentCreatedAt" />
 
                     <div class="form-group">
                         <label asp-for="Comment.CommentBody">New, edited comment:</label><span class="text-danger"></span>
