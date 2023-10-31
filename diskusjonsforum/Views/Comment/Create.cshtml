@@ -6,15 +6,15 @@
         
             <div class="container crud-comment-info">
                 <h1> You're replying to: </h1>
-                @await Html.PartialAsync("_ThreadView", @Model.Thread)
-                @if(@Model.Comment != null){ <p>
-                    Posted by <b>@Model.ParentComment?.User.UserName</b> on @Model.ParentComment?.CommentCreatedAt
-                    @if (@Model.ParentComment?.CommentCreatedAt != @Model.ParentComment?.CommentLastEditedAt)
-                    {
-                        <b> Last edited: @Model.ParentComment?.CommentLastEditedAt</b>
-                    }
-                    </p>
-                    <p> Comment: @Model.ParentComment?.CommentBody </p>
+                <div style="border: 1px solid black">@await Html.PartialAsync("_ThreadView", @Model.Thread)</div>
+                @if(@Model.ParentComment != null){ 
+                    <br/>
+                    <div class="commentDiv" style="border-left: 2px solid #ff6a52; padding-left: 10px">
+                        <div class="commentBody">
+                            <p class="subheading"> Posted by <b>@Model.ParentComment.User.UserName</b> on <b>@Model.ParentComment.CommentCreatedAt.ToString("yyyy-MM-dd HH:mm")</b>.</p>
+                            <p class="commentbody"> @Model.ParentComment.CommentBody</p>
+                        </div>
+                    </div>
                 }
             </div>
         </div>
@@ -27,13 +27,13 @@
     <h2 class="crud-title"> Create a reply </h2>
     @using (Html.BeginForm("Save", "Comment", FormMethod.Post))
     {
-            <input type="hidden" asp-for="Comment.ThreadId" value="@Model.Thread.ThreadId" />
-            <input type="hidden" asp-for="Comment.ParentCommentId" value="@Model.ParentComment?.CommentId" />
+            <input type="hidden" asp-for="Comment!.ThreadId" value="@Model.Thread!.ThreadId" />
+            <input type="hidden" asp-for="Comment!.ParentCommentId" value="@Model.ParentComment?.CommentId" />
 
             <div class="form-group">
-                <label asp-for="Comment.CommentBody"></label><span class="text-danger"></span>
-                <input asp-for="Comment.CommentBody" class="form-control"/>
-                <span asp-validation-for="Comment.CommentBody" class="text-danger"></span>
+                <label asp-for="Comment!.CommentBody"> Comment: </label><span class="text-danger"></span>
+                <input asp-for="Comment!.CommentBody" class="form-control"/>
+                <span asp-validation-for="Comment!.CommentBody" class="text-danger"></span>
             </div>
             <input type="submit" value="Post reply" class="btn btn-primary" />
             <a asp-controller="Thread" asp-action="Thread" asp-route-threadId="@Model.ThreadId" class="btn btn-secondary"> Return </a>

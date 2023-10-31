@@ -62,37 +62,7 @@
     color: white;
     background-color: #ffc942 ;
 }
-   
 
-/* Style for the outermost container */
-/* Only padding for spacing within threadbody */
-.outermost-container {
-    padding: 10px; /* Padding for spacing */
-    margin-bottom: 20px; /* Margin to separate containers */
-}
-
-/* Style for nested containers for comments */
-.nested-container {
-    /* Contains the orange border to left */
-    border-left: 2px solid #ff6a52;
-    padding: 10px;
-    margin-top: 10px;
-    position: relative; /* Set position to relative */
-    overflow: hidden;
-    height: 40%;
-    width: 100%;
-}
-
-    /* Additional styles for clarity (optional) */
-    .nested-container .nested-container {
-        margin-top: 5px; /* Reduce margin for deeper nesting */
-    }
-
-/* The inner container for the comment text, made it longer so "Last edited..." is on one line */
-.commentBody {
-    display: inline-block;
-    width: 90%;
-}
 
 /* THREAD TABLE VIEW STYLING BELOW*/
 

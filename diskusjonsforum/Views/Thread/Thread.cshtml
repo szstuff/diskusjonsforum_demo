@@ -32,7 +32,7 @@
 <hr/>
 
 <ul>
-    <div class="outermost-container" style="float: right">
+    <div class="outermost-container">
         @foreach (var comment in Model.ThreadComments!.Where(c => c.ParentCommentId == null))
         {
             await DisplayComment(Model, comment, userId, userIsAdmin);
