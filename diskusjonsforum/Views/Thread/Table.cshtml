@@ -1,6 +1,8 @@
 ﻿@model ThreadListViewModel
 
 <link rel="stylesheet" href="~/css/IndexStyle.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/thread_table.css" asp-append-version="true"/>
+
 
 <h3>Explore discussions</h3>
 <div class="container">
@@ -10,7 +12,7 @@
 <!-- Dropdown for category filtering -->
 <div class="container">
     <select id="categoryFilter" class="form-select">
-        <option value="all">Show All</option>
+        <option value="all">Show all Categories</option>
         <option value="General">General</option>
         <option value="Help">Help</option>
         <option value="Moderation">Moderation</option>
@@ -19,22 +21,21 @@
 
 <div class="container">
     <div class="row">
-        <div id="postContainer">
-            @foreach (var thread in Model.Threads.OrderByDescending(t => t.ThreadCreatedAt))
-            {
-                <div class="post">
-                    <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">
-                        <div class="category">@thread.CategoryName</div>
-                        <div class="user">@thread.User.UserName</div>
-                        <div class="title">
-                            <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">@thread.ThreadTitle</a>
-                        </div>
-                        <div class="comments">Comments: @thread.ThreadComments?.Count</div>
-                    </a>
-                </div>
+        @foreach (var thread in Model.Threads.OrderByDescending(t => t.ThreadCreatedAt).Take(6))
+        {
+            <div class="col-md-12">
+                <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">
+                    <div class="post">
+                        <div> <p class="thread-information"> <b>@thread.User.UserName</b> posted in <b>@thread.Category.CategoryName</b> on the <b>@thread.ThreadCreatedAt.ToString("yyyy-MM-dd HH:mm")</b></p></div>
+                        <hr/>
+                        <div><p class="title-thread"><b>@thread.ThreadTitle</b></p></div>
+                        <div><p class="thread-text">@Html.Raw(thread.ThreadBody.Substring(0, Math.Min(thread.ThreadBody.Length, 75))) @if(thread.ThreadBody.Length > 75){<span>(...)</span>}</p></div> <!-- Displays first 75 characters of a the ThreadBody -->
+                        <div><p class="comment-count">@thread.ThreadComments?.Count replies</p></div>
+                    </div>
+                </a>
                 <p></p>
-            }
-        </div>
+            </div>
+        }
     </div>
 </div>
 

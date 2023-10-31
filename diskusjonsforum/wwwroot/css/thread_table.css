@@ -5,15 +5,15 @@
 /*THREAD SINGLE VIEW STYLING BELOW*/
 
 /*Styles for thread body*/
-.threadbody {
-    /*Font and background styles for thread body*/
+/*.threadbody {
+    !*Font and background styles for thread body*!
     font-size: 17px;
     padding: 10px 10px 10px 15px;
     border: 3px outset #ff6a52;
     border-radius: 30px;
     color: #feeeef;
     background-color: #ff6a52;
-}
+}*/
 
 /*Styles for comments heading*/
 .comments-heading {
@@ -136,9 +136,8 @@
 .title-thread {
     color: #002c45;
     text-decoration: none;
-    font-style: italic;
     font-weight: 400;
-    font-size: 1.25rem;
+    font-size: 1.25em;
     margin-bottom: 10px;
 }
 
@@ -156,7 +155,8 @@
 
 /* Style comment count */
 .comment-count {
-    color: #002c45;
+    color: #363636;
+    font-size: 0.9em;
 }
 
 /* Designs border for the threads*/
@@ -167,12 +167,6 @@
     padding-left: 20px;
     margin-bottom: 20px;
 }
-
-.col-md-6 {
-    width: 600px; /* Adjust the width as needed */
-}
-
-
 .custom-container {
     color: white;
 }

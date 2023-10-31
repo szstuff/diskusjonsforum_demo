@@ -19,7 +19,7 @@ public class ThreadRepository : IThreadRepository
     {
         return _threadDbContext.Threads
             .Include(t => t.ThreadComments)
-            .Include(t => t.User) // Include the User navigation property
+            .Include(t => t.User).Include(t=>t.Category)
             .ToList();
     }
 

@@ -1,10 +1,14 @@
 ﻿@model diskusjonsforum.ViewModels.ThreadListViewModel
+
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <link rel="stylesheet" href="~/css/IndexStyle.css" asp-append-version="true"/>
+<link rel="stylesheet" href="~/css/thread_table.css" asp-append-version="true"/>
 
+
+<h3>Recent posts</h3>
 <div class="container">
     <input name="PostText" class="form-control" placeholder="Create Post" type="text" onclick="redirectToCreatePage()">
 </div>
@@ -16,12 +20,6 @@
     }
 </script>
 
-<br/>
-
-<div class="container">
-    <h4>Recent posts:</h4>
-</div>
-
 <div class="container">
     <div class="row">
         @foreach (var thread in Model.Threads.OrderByDescending(t => t.ThreadCreatedAt).Take(6))
@@ -29,10 +27,11 @@
             <div class="col-md-6">
                 <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">
                     <div class="post">
-                        <div class="user"> <p>posted by: @thread.User.UserName</p></div>
-                        <div class="title">@thread.ThreadTitle</div>
-                        <div class="content">@thread.ThreadBody</div>
-                        <div class="comments">Comments: @thread.ThreadComments?.Count</div>
+                        <div> <p class="thread-information"> <b>@thread.User.UserName</b> posted in <b>@thread.Category.CategoryName</b> on the <b>@thread.ThreadCreatedAt.ToString("yyyy-MM-dd HH:mm")</b></p></div>
+                        <hr/>
+                        <div><p class="title-thread"><b>@thread.ThreadTitle</b></p></div>
+                        <div><p class="thread-text">@Html.Raw(thread.ThreadBody.Substring(0, Math.Min(thread.ThreadBody.Length, 75))) @if(thread.ThreadBody.Length > 75){<span>(...)</span>}</p></div> <!-- Displays first 75 characters of a the ThreadBody -->
+                        <div><p class="comment-count">@thread.ThreadComments?.Count replies</p></div>
                     </div>
                 </a>
                 <p></p>

@@ -31,7 +31,7 @@ namespace diskusjonsforum.Controllers
         
         // Fetch threads from repository
         public IEnumerable<Thread> GetThreads()
-        { ///STILIAN SJEKK USAGES. Den er vel duplikat av threadcontroller.getall? 
+        { 
             try
             {
                 var threads = _threadRepository.GetAll(); // Retrieve all threads
@@ -50,7 +50,6 @@ namespace diskusjonsforum.Controllers
             //Log error message using logger
             _logger.LogError("[HomeController] Error: {0}", errorMsg);
             //View error message in view
-            ///STILIAN GÅ GJENNOM OG FIKS FEILMELDINGER HER 
             ViewBag.ErrorMsg = errorMsg;
             return View();
         }
