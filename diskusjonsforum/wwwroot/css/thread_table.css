@@ -238,6 +238,7 @@
     display: none; /* Initially hide the button container */
 }
 
+/* Define media query for screens smaller than 991px */
 @media (max-width: 991px) {
     .category-container {
         display: none;
@@ -246,7 +247,10 @@
     .button-new-thread {
         display: none;
     }
+}
 
+/* Define media query for screens smaller than 991px */
+@media (max-width: 991px) {
     .button-container {
         display: block; /* Show the button container */
         text-align: center; /* Center align the button */

@@ -3,7 +3,6 @@
     ViewData["Title"] = "Home Page";
 }
 
-<link rel="stylesheet" href="~/css/IndexStyle.css" asp-append-version="true"/>
 
 <div class="container">
     <input name="PostText" class="form-control" placeholder="Create Post" type="text" onclick="redirectToCreatePage()">
@@ -12,7 +11,7 @@
 <script>
     // Redirect the user to the "create" page when the input is clicked
     function redirectToCreatePage() {
-        window.location.href = "/Thread/Create";
+        window.location.href = "\Thread\Create.cshtml";
     }
 </script>
 
