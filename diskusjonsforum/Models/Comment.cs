@@ -21,7 +21,7 @@ using SQLite;namespace Diskusjonsforum.Models
         
         [ForeignKey("ApplicationUser")]
         public string? UserId { get; set; }
-        public virtual ApplicationUser User { get; set; }  = default!; //ApplicationUser skal egt IKKE være nullable (?), men får invalid ModelState hvis den ikke er det. Løsning: https://stackoverflow.com/questions/70966537/modelstate-isvalid-includes-a-navigation-property-always-false-only-net-6-0
+        public virtual ApplicationUser User { get; set; }  = default!;
     }
 }
 

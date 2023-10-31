@@ -7,5 +7,5 @@ public class ApplicationUser : IdentityUser
 {
     //ApplicationUser was implemented in case we want to add properties to the Used in the future 
    
-    //The model is currently just a regular IdentityUser
+    //The model is currently a regular IdentityUser
 }

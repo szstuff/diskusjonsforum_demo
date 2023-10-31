@@ -181,8 +181,27 @@ public class CommentController : Controller
         var user = await _userManager.GetUserAsync(HttpContext.User);
         if (user != null)
         {
+            
             var uneditedComment = _commentRepository.GetById(comment.CommentId);
             _commentRepository.DetachEntity(uneditedComment); // Detach the comment since there are two instances of the same comment.
+            
+            // Add custom validation for the thread content
+            if (string.IsNullOrWhiteSpace(comment.CommentBody) || string.IsNullOrWhiteSpace(comment.CommentBody))
+            {
+                // Content is empty, add a model error
+                ModelState.AddModelError("CommentBody", "Comment content is required.");
+                var viewModel = new CommentCreateViewModel()
+                {
+                    ThreadId = uneditedComment.ThreadId,
+                    ParentCommentId = uneditedComment.ParentCommentId,
+                    ParentComment = uneditedComment.ParentComment,
+                    CommentToEdit = _commentRepository.GetById(comment.CommentId),
+                    Thread = uneditedComment.Thread
+                };
+                // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
+                return View("Edit", viewModel);
+            }
+            
             //Reconstruct the comment before saving 
             comment.User = uneditedComment.User;
             comment.UserId = uneditedComment.User.Id;

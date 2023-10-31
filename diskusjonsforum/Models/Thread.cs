@@ -16,6 +16,6 @@ namespace Diskusjonsforum.Models
         [ForeignKey("ApplicationUser")] 
         public string? UserId { get; set; } 
         public virtual ApplicationUser User { get; set; }  = default!; 
-        public List<Comment>? ThreadComments { get; set; } /*represents collection of comments*/
+        public List<Comment>? ThreadComments { get; set; } 
     }
 }
