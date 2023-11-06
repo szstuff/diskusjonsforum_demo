@@ -176,9 +176,9 @@ body {
     color: rgba(255, 255, 255);
 }
 
-    .two label a:hover {*/
+    .two label a:hover {
         text-decoration: underline;
-    }
+    }*/
 
 @media only screen and (max-width: 540px) {
     .wrapper {
@@ -203,5 +203,5 @@ body {
 
 .form-label {
     padding-left: 10px;
-    padding-top:10px;
+    padding-top: 10px;
 }
