@@ -18,7 +18,7 @@ public class CommentRepository : ICommentRepository
         _threadDbContext = threadDbContext;
     }
 
-    public IEnumerable<Comment> GetAll()
+     public IEnumerable<Comment> GetAll()
     {
         return _threadDbContext.Comments.Include(c => c.User).ToList();
     }
