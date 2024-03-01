@@ -45,6 +45,7 @@ public class ThreadController : Controller
             }
             // Create view model for thread and displays them
             var threadListViewModel = new ThreadListViewModel(threads, "Table");
+            ViewBag.CurrentView = "ThreadTable";
             return View(threadListViewModel); 
         }
         catch (Exception ex)

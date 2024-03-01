@@ -212,10 +212,7 @@
     .col-md-6 {
         width: 600px; /* Set to 75% on medium-sized screens */
     }
-
-    .container-fluid {
-        margin-top: 50px;
-    }
+    
 }
 
 .post:hover{

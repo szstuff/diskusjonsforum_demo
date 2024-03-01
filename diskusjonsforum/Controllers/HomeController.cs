@@ -25,7 +25,7 @@ namespace diskusjonsforum.Controllers
             {
                 Threads = threads
             };
-
+            ViewBag.CurrentView = "Index";
             return View(threadListViewModel);
         }
         

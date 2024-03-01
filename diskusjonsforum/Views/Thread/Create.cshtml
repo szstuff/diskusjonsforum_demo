@@ -12,6 +12,10 @@
                 <br/>
                 <select asp-for="CategoryName" asp-items="@ViewBag.Categories">
                     <option value="" disabled="disabled">Select a category</option>
+                    <option value="General">General</option>
+                    <option value="Help">Help</option>
+                    <option value="Moderation">Moderation</option>
+
                 </select>
                 <span asp-validation-for="CategoryName" class="text-danger"></span>
             </div>
