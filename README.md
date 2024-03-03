@@ -22,10 +22,4 @@ The application supports three usertypes: Viewers, Users, and Admins, with the f
 - **Delete and edit Threads**: Edit other user's threads from the forum for moderation purposes.
 
 ## Video Demonstrations
-
-1. **Access control**
-2. **Viewing and Filtering Threads**
-3. **Searching for Threads**
-4. **Creating and Editing Threads**
-5. **Commenting on Threads**
-
+(coming soon) 
