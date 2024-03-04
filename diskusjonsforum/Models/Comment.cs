@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using SQLite;namespace Diskusjonsforum.Models
+using SQLite;
+
+namespace Diskusjonsforum.Models
 {
     public class Comment
 	{
@@ -19,9 +21,13 @@ using SQLite;namespace Diskusjonsforum.Models
         public int? ParentCommentId { get; set; } //Nullable: ParentcCommentId null means that the comment is a direct reply to the thread 
         public virtual Comment? ParentComment { get; set; } = default!; //Nullable for same reason as Thread 
         
-        [ForeignKey("ApplicationUser")]
+        /*
+        [ForeignKey("User")]
         public string? UserId { get; set; }
-        public virtual ApplicationUser User { get; set; }  = default!;
+        public virtual User User { get; set; }  = default!;
+        */
+        public string UserCookie { get; set; }
+
     }
 }
 

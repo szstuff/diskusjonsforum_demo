@@ -13,7 +13,7 @@
             <div class="thread-information">
                 <!-- Thread information: user, category, post date, last edited date -->
                 <p>
-                    Posted by <b>@Model.User.UserName</b> in <b>@Model.CategoryName</b> <br/>
+                    Posted by <b>@Model.UserCookie</b> in <b>@Model.CategoryName</b> <br/>
                     On the <b>@Model.ThreadCreatedAt</b>.
                     <!-- Display last edited date if different -->
                     @if (Model.ThreadCreatedAt != Model.ThreadLastEditedAt)

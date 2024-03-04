@@ -17,13 +17,11 @@ public class CommentController : Controller
     //Initialise controllers and interfaces for constructor
     private readonly ICommentRepository _commentRepository;
     private readonly IThreadRepository _threadRepository;
-    private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<CommentController> _logger;
-    public CommentController(ICommentRepository commentRepository, IThreadRepository threadRepository, UserManager<ApplicationUser> userManager, ILogger<CommentController> logger)
+    public CommentController(ICommentRepository commentRepository, IThreadRepository threadRepository, ILogger<CommentController> logger)
     {
         _commentRepository = commentRepository;
         _threadRepository = threadRepository;
-        _userManager = userManager;
         _logger = logger;
     }
 
@@ -43,11 +41,12 @@ public class CommentController : Controller
 
         try
         {
-            if (HttpContext.User.Identity!.IsAuthenticated) //If user is authenticated
+            var cookie = HttpContext.Request.Cookies["SessionCookie"];
+            if (cookie == null)
             {
                 Comment parentComment = _commentRepository.GetById(parentCommentId);
                 var thread = _threadRepository.GetThreadById(threadId);
-                thread.User = await _userManager.FindByIdAsync(thread.UserId); //User needs to be set to load Thread and Comment in Comment/Create view 
+                thread.UserCookie = cookie;
                 // Retrieve query parameters
                 // Create a CommentViewModel and populate it with data
                 var viewModel = new CommentCreateViewModel()
@@ -84,14 +83,11 @@ public class CommentController : Controller
         var errorMsg = "";
         try
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User); //Gets current user 
-            if (user != null)
+            var cookie = HttpContext.Request.Cookies["SessionCookie"];
+            if (cookie == null)
             {
                 //Set comment details to current user 
-                comment.UserId = user.Id;
-                comment.User = user;
-                ModelState.Remove(
-                    "comment.User"); //Workaround for invalid modelstate. 
+                comment.UserCookie = cookie;
 
                 if (string.IsNullOrWhiteSpace(comment.CommentBody))
                 {
@@ -178,8 +174,8 @@ public class CommentController : Controller
     public async Task<IActionResult> SaveEdit(Comment comment)
     {
         var errorMsg = "";
-        var user = await _userManager.GetUserAsync(HttpContext.User);
-        if (user != null)
+        var cookie = HttpContext.Request.Cookies["SessionCookie"];
+        if (cookie == null)
         {
             
             var uneditedComment = _commentRepository.GetById(comment.CommentId);
@@ -203,16 +199,13 @@ public class CommentController : Controller
             }
             
             //Reconstruct the comment before saving 
-            comment.User = uneditedComment.User;
-            comment.UserId = uneditedComment.User.Id;
+            comment.UserCookie = uneditedComment.UserCookie;
             comment.CommentLastEditedAt = DateTime.Now;
             comment.ThreadId = uneditedComment.ThreadId;
             comment.ParentCommentId = uneditedComment.ParentCommentId;
             comment.CommentCreatedAt = uneditedComment.CommentCreatedAt;
-            ModelState.Remove("comment.User"); //Workaround for invalid modelstate. The model isnt really invalid, but it was evaluated BEFORE the controller added User and UserId. Therefore the validty of the "User" key can be removed 
-            //Checks if user is owner or admin before editing
-            var userRoles = await _userManager.GetRolesAsync(user);
-            if (user.Id != comment.UserId && !userRoles.Contains("Admin"))
+            //Checks if user is owner before editing
+            if (comment.UserCookie == cookie)
             {
                 errorMsg = "Could not verify that you are the owner of the Thread";
                 return RedirectToAction("Error", "Home", new { errorMsg });
@@ -236,11 +229,9 @@ public class CommentController : Controller
 
         try
         {
-            // Checks if the user is either the owner of the comment or an admin before deleting
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            var userRoles = await _userManager.GetRolesAsync(user);
-
-            if (comment.UserId == user.Id || userRoles.Contains("Admin"))
+            // Checks if the user is the owner of the comment before deleting
+            var cookie = HttpContext.Request.Cookies["SessionCookie"];
+            if (comment.UserCookie == cookie)
             {
                 List<Comment> childcomments = AddChildren(comment);
 

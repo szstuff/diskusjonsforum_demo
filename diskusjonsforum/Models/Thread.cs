@@ -13,9 +13,14 @@ namespace Diskusjonsforum.Models
         public DateTime ThreadCreatedAt { get; set; }  = DateTime.Now;
         public DateTime ThreadLastEditedAt { get; set; } = DateTime.Now; //Initialises as DateTime.Now since the last edit was at the time of creation
 
-        [ForeignKey("ApplicationUser")] 
-        public string? UserId { get; set; } 
-        public virtual ApplicationUser User { get; set; }  = default!; 
+        /*
+        [ForeignKey("User")] 
+        public string? Username { get; set; } 
+        public virtual User User { get; set; }  = default!; 
         public List<Comment>? ThreadComments { get; set; } 
+        */
+        public string? UserCookie { get; set; }
+        public List<Comment>? ThreadComments { get; set; } 
+
     }
 }

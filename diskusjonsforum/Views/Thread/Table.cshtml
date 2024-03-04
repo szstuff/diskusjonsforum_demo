@@ -26,7 +26,7 @@
             <div class="post col-md-12">
                 <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">
                     <div>
-                        <div> <p class="thread-information"> <b>@thread.User.UserName</b> posted in <b class="category">@thread.Category.CategoryName</b> on the <b>@thread.ThreadCreatedAt.ToString("yyyy-MM-dd HH:mm")</b></p></div>
+                        <div> <p class="thread-information"> <b>@thread.UserCookie</b> posted in <b class="category">@thread.Category.CategoryName</b> on the <b>@thread.ThreadCreatedAt.ToString("yyyy-MM-dd HH:mm")</b></p></div>
                         <hr/>
                         <div><p class="title-thread"><b>@thread.ThreadTitle</b></p></div>
                         <div><p class="thread-text">@Html.Raw(thread.ThreadBody)</p></div> <!-- Displays first 75 characters of a the ThreadBody -->

@@ -1,15 +1,11 @@
 ﻿using Diskusjonsforum.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using diskusjonsforum.Areas.Identity.Data;
 using diskusjonsforum.DAL;
 using Microsoft.EntityFrameworkCore.Sqlite.Diagnostics.Internal;
 using Serilog;
 using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("diskusjonsforumIdentityDbContextConnection") ?? throw new 
-    InvalidOperationException("Connection string 'diskusjonsforumIdentityDbContextConnection' not found.");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -33,29 +29,6 @@ loggerConfiguration.Filter.ByExcluding(e => e.Properties.TryGetValue("SourceCont
 
 var logger = loggerConfiguration.CreateLogger();
 builder.Logging.AddSerilog(logger);
-
-
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
-    {
-        // Password settings
-        options.Password.RequireDigit = true;
-        options.Password.RequiredLength = 8;
-        options.Password.RequireNonAlphanumeric = true;
-        options.Password.RequireUppercase = true;
-        options.Password.RequireLowercase = true;
-        options.Password.RequiredUniqueChars = 1;
-
-        // Lockout settings
-        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(60);
-        options.Lockout.MaxFailedAccessAttempts = 5;
-        options.Lockout.AllowedForNewUsers = true;
-
-        // User settings
-        options.User.RequireUniqueEmail = true;
-    })
-    .AddEntityFrameworkStores<ThreadDbContext>()
-    .AddDefaultTokenProviders()
-    .AddDefaultUI();
 
 builder.Services.AddRazorPages(); //order of adding services does not matter
 

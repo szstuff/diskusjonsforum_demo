@@ -1,6 +1,7 @@
 ﻿using diskusjonsforum.DAL;
 using Microsoft.AspNetCore.Mvc;
 using diskusjonsforum.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Thread = Diskusjonsforum.Models.Thread;
 
 namespace diskusjonsforum.Controllers
@@ -19,8 +20,17 @@ namespace diskusjonsforum.Controllers
 
         //Loads homepage/Index view with a list of threads
         public IActionResult Index()
-        {
-            var threads = GetThreads(); // Call your GetThreads method to fetch the list of threads.
+        { 
+            var cookie = HttpContext.Request.Cookies["SessionCookie"];
+            if (cookie == null)
+            {
+                var cookieOptions = new CookieOptions();
+                cookieOptions.Expires = DateTimeOffset.Now.AddDays(1);
+                cookieOptions.Path = "/";
+                cookie = Guid.NewGuid().ToString();                                             
+                HttpContext.Response.Cookies.Append("SessionCookie", cookie, cookieOptions);    
+            }
+            var threads = GetThreads(cookie); 
             var threadListViewModel = new ThreadListViewModel(threads, "Table")
             {
                 Threads = threads
@@ -30,11 +40,11 @@ namespace diskusjonsforum.Controllers
         }
         
         // Fetch threads from repository
-        public IEnumerable<Thread> GetThreads()
+        public IEnumerable<Thread> GetThreads(string cookie)
         { 
             try
             {
-                var threads = _threadRepository.GetAll(); // Retrieve all threads
+                var threads = _threadRepository.GetAll().Where(t => t.UserCookie == cookie || t.UserCookie == "stilian"); // Retrieve all threads
                 return threads; // Return list
             }
             catch (Exception ex)

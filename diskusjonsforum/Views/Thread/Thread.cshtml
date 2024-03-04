@@ -1,22 +1,17 @@
 @using Microsoft.AspNetCore.Identity
 @model Diskusjonsforum.Models.Thread
-@inject UserManager<ApplicationUser> UserManager
 
 @await Html.PartialAsync("_ThreadView")
 
 @{ 
-    string userId = UserManager.GetUserId(User);
+    var userId = Context.Request.Cookies["SessionCookie"];
     bool userIsAdmin = false;
 
-    if (userId != null)
-    {
-        userIsAdmin = await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin");
-    }
 }
 
 <div class="vertical-button-container">
     <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-parentCommentId="0" asp-route-threadId="@Model.ThreadId"> Reply to Thread @Model.ThreadId </a>
-    @if (userId == Model.UserId)
+    @if (userId == Model.UserCookie)
     {
         <a class="btn btn-primary" asp-controller="Thread" asp-action="Edit" asp-route-threadId="@Model.ThreadId"> Edit @Model.ThreadId </a>
         <a class="btn btn-warning" asp-controller="Thread" asp-action="DeleteThread" asp-route-threadId="@Model.ThreadId"> DeleteThread @Model.ThreadId </a>
@@ -47,7 +42,7 @@
             <div class="commentDiv">
                 <div class="commentBody">
                     
-                    <p class="subheading"> Posted by <b>@comment.User.UserName</b> on <b>@comment.CommentCreatedAt.ToString("yyyy-MM-dd HH:mm")</b>.
+                    <p class="subheading"> Posted by <b>@comment.UserCookie</b> on <b>@comment.CommentCreatedAt.ToString("yyyy-MM-dd HH:mm")</b>.
                         @if (Math.Abs((comment.CommentCreatedAt - comment.CommentLastEditedAt).TotalMinutes) >= 1) //Comments edited up to 1 min after creation don't show the LastEditedAt property
                         {
                             <i> Last edited at @comment.CommentLastEditedAt.</i>
@@ -58,7 +53,7 @@
                 
                 <div class="vertical-button-container" style="float: right">
                     <a class="btn btn-primary" asp-controller="Comment" asp-action="Create" asp-route-parentCommentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Reply @comment.CommentId </a>
-                    @if (userId == comment.UserId)
+                    @if (userId == comment.UserCookie)
                     {
                         <a class="btn btn-primary" asp-controller="Comment" asp-action="Edit" asp-route-commentId="@comment.CommentId" asp-route-threadId="@comment.ThreadId"> Edit @comment.CommentId </a>
                         <a class="btn btn-warning" asp-controller="Comment" asp-action="DeleteComment" asp-route-commentId="@comment.CommentId"> DeleteThread @comment.CommentId</a>

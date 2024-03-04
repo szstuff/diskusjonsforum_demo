@@ -18,17 +18,15 @@ public class ThreadController : Controller
     private readonly IThreadRepository _threadRepository;
     private readonly ICategoryRepository _categoryRepository;
     private readonly ICommentRepository _commentRepository;
-    private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<ThreadController> _logger;
 
     public ThreadController(IThreadRepository threadDbContext, ICategoryRepository categoryRepository,
-        ICommentRepository commentRepository, UserManager<ApplicationUser> userManager,
+        ICommentRepository commentRepository,
         ILogger<ThreadController> logger)
     {
         _threadRepository = threadDbContext;
         _categoryRepository = categoryRepository;
         _commentRepository = commentRepository;
-        _userManager = userManager;
         _logger = logger;
     }
 
@@ -158,7 +156,8 @@ public class ThreadController : Controller
     {
         try
         {
-            if (HttpContext.User.Identity!.IsAuthenticated) // Check if user is logged in
+            var cookie = HttpContext.Request.Cookies["SessionCookie"];
+            if (cookie != null)
             {
                 // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
                 var categories = _categoryRepository.GetCategories();// Fetch all categories from the database.
@@ -166,8 +165,8 @@ public class ThreadController : Controller
                 return View();
 
             }
-            // Redirects to the login page if the user is not logged in
-            return RedirectToPage("/Account/Login", new { area = "Identity" });
+            var errormsg = "[ThreadController] An error occurred in the Create method. Your cookie is invalid";
+            return RedirectToAction("Error", "Home", new { errormsg });
 
         }
         catch (Exception ex)
@@ -183,67 +182,50 @@ public class ThreadController : Controller
     {
         var errorMsg = "";
 
-        if (HttpContext.User.Identity!.IsAuthenticated) // Check if user is logged in
+        var cookie = HttpContext.Request.Cookies["SessionCookie"];
+        if (cookie != null) // Check cookie is made
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            thread.UserCookie = cookie;
+            ModelState.Remove("Category");
 
-            if (user != null) // Check user is retrieved
+            // Add custom validation for the thread content
+            if (string.IsNullOrWhiteSpace(thread.ThreadBody) || string.IsNullOrWhiteSpace(thread.ThreadTitle))
             {
-                thread.UserId = user.Id;
-                thread.User = user;
-                ModelState.Remove("User");
-                ModelState.Remove("Category");
-
-                // Add custom validation for the thread content
-                if (string.IsNullOrWhiteSpace(thread.ThreadBody) || string.IsNullOrWhiteSpace(thread.ThreadTitle))
-                {
-                    // Content is empty, add a model error
-                    ModelState.AddModelError("ThreadContent", "Thread content is required.");
-                    // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
-                    var categories = _categoryRepository.GetCategories();// Fetch all categories from the database.
-                    ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
-                    return View(thread);
-                }
-
-                try
-                {
-                    // If the  model is valid, add the thread
-                    if (ModelState.IsValid)
-                    {
-                        bool returnOk = await _threadRepository.Add(thread);
-                        if (returnOk)
-                        {
-                            return RedirectToAction(nameof(Table));
-                        }
-                    }
-                    else
-                    {
-                        errorMsg = "Could not create your thread because there was an issue validating its content";
-                        return RedirectToAction("Error", "Home", new { errorMsg });
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "[ThreadController] Error creating a thread: {0}", thread.ThreadTitle);
-                    errorMsg = "Could not create your thread due to a database error.";
-                    return RedirectToAction("Error", "Home", new { errorMsg });
-                }
+                // Content is empty, add a model error
+                ModelState.AddModelError("ThreadContent", "Thread content is required.");
+                // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
+                var categories = _categoryRepository.GetCategories(); // Fetch all categories from the database.
+                ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
+                return View(thread);
             }
-            else
+
+            try
             {
-                _logger.LogError("[ThreadController] Error when loading Create view.");
-                errorMsg = "An error occured when loading the page";
+                // If the  model is valid, add the thread
+                if (ModelState.IsValid)
+                {
+                    bool returnOk = await _threadRepository.Add(thread);
+                    if (returnOk)
+                    {
+                        return RedirectToAction(nameof(Table));
+                    }
+                }
+                errorMsg = "Could not create your thread because there was an issue validating its content";
+                return RedirectToAction("Error", "Home", new { errorMsg });
+                
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "[ThreadController] Error creating a thread: {0}", thread.ThreadTitle);
+                errorMsg = "Could not create your thread due to a database error.";
                 return RedirectToAction("Error", "Home", new { errorMsg });
             }
         }
-        else
-        {
-            _logger.LogWarning("[ThreadController] User is not authenticated in the Create action.");
-            return View(thread);
-        }
-        errorMsg = "[ThreadController] An error occurred in the Edit method.";
-        _logger.LogError("[ThreadController] An error occurred in the Edit method.");
+    
+        _logger.LogError("[ThreadController] UserCookie is null.");
+        errorMsg = "An error occured when loading the page. Your cookie is invalid";
         return RedirectToAction("Error", "Home", new { errorMsg });
+        
     }
 
     [HttpGet("edit/{threadId}")]
@@ -251,18 +233,17 @@ public class ThreadController : Controller
     {
         try
         {
-            if (HttpContext.User.Identity!.IsAuthenticated)
+            var cookie = HttpContext.Request.Cookies["SessionCookie"];
+            if (cookie != null) // Check cookie is made
             {
                 // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
                 var categories = _categoryRepository.GetCategories(); //Fetch all categories from the database.
                 ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
                 
                 Thread threadToEdit = _threadRepository.GetThreadById(threadId);  // Retrieve thread to edit with threadId
-                var user = await _userManager.GetUserAsync(HttpContext.User); // Get the user
-                var userIsAdmin = await _userManager.IsInRoleAsync(user, "Admin");
                 
                 // Checks if the user is the owner or admin before allowing to edit
-                if (user.Id == threadToEdit.UserId || userIsAdmin) 
+                if (cookie == threadToEdit.UserCookie) 
                 {
                     return View(threadToEdit);
                 }
@@ -292,8 +273,8 @@ public class ThreadController : Controller
         var errorMsg = "An error occured when trying to save your edit";
         try
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User); //Gets the current user 
-            if (user != null)
+            var cookie = HttpContext.Request.Cookies["SessionCookie"];
+            if (cookie != null) // Check cookie is made
             {
                 ModelState.Remove("User"); //Workaround for invalid modelstate. The model isnt really invalid, but it was evaluated BEFORE the controller added User and UserId. Therefore the validty of the "User" key can be removed
 
@@ -308,10 +289,8 @@ public class ThreadController : Controller
                     Thread threadToEdit = _threadRepository.GetThreadById(thread.ThreadId);
                     return View("Edit", threadToEdit);
                 }
-
-                // Checks if the user is the owner or admin before editing
-                var userRoles = await _userManager.GetRolesAsync(user);
-                if (user.Id != thread.UserId && !userRoles.Contains("Admin"))
+                
+                if (cookie != thread.UserCookie)
                 {
                     errorMsg = "Could not verify that you are the owner of the Thread";
                     _logger.LogError(errorMsg);
@@ -354,13 +333,12 @@ public class ThreadController : Controller
         Thread thread = _threadRepository.GetThreadById(threadId);
         
         // Checks if the user is either the owner of the comment or an admin before deleting
-        var user = await _userManager.GetUserAsync(HttpContext.User);
-        var userRoles = await _userManager.GetRolesAsync(user);
+        var cookie = HttpContext.Request.Cookies["SessionCookie"];
         string errorMsg = "";
 
         try
         {
-            if (thread.UserId != user.Id && !userRoles.Contains("Admin")) //If user is admin or owner
+            if (thread.UserCookie != cookie) //If user is admin or owner
             {
                 errorMsg = "You do not have permission to delete this thread.";
                 return RedirectToAction("Error", "Home", new { errorMsg });

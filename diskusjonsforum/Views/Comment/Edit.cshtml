@@ -1,25 +1,24 @@
 @using Microsoft.AspNetCore.Identity
 @model CommentCreateViewModel
-@inject UserManager<ApplicationUser> UserManager
 
 
 @{
-    string userId = UserManager.GetUserId(User);
+    var cookie = Context.Request.Cookies["SessionCookie"];
 }
 <div class="container mt-5">
     <div class="row mt-4 col-12 mb-4 p-4 d-flex justify-content-center align-items-stretch flex-fill crud-thread">
         <div class="row mt-4 col-12 mb-4 p-4 crud-container">
             <div class="container crud-comment-info">
-                @if (@Model.CommentToEdit.UserId == userId)
+                @if (@Model.CommentToEdit.UserCookie == cookie)
                 {
                     <h1> You're editing your comment </h1>
                 }
                 else
                 {
-                    <h1> You're editing @Model.CommentToEdit.User.UserName's comment </h1>
+                    <h1> You're editing @Model.CommentToEdit.UserCookie's comment </h1>
                 }
 <p>
-                    Posted by <b>@Model.CommentToEdit.User.UserName</b> on @Model.CommentToEdit?.CommentCreatedAt
+                    Posted by <b>@Model.CommentToEdit.UserCookie</b> on @Model.CommentToEdit?.CommentCreatedAt
                     @if (@Model.CommentToEdit?.CommentCreatedAt != @Model.CommentToEdit?.CommentLastEditedAt)
                     {
                         <b> Last edited: @Model.CommentToEdit?.CommentLastEditedAt</b>
