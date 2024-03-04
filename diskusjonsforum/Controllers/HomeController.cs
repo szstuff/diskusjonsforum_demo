@@ -44,7 +44,7 @@ namespace diskusjonsforum.Controllers
         { 
             try
             {
-                var threads = _threadRepository.GetAll().Where(t => t.UserCookie == cookie || t.UserCookie == "stilian"); // Retrieve all threads
+                var threads = _threadRepository.GetAll(cookie); // Retrieve all threads
                 return threads; // Return list
             }
             catch (Exception ex)

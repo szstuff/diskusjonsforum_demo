@@ -8,7 +8,6 @@ namespace Diskusjonsforum.Models
         public string ThreadTitle { get; set; } 
         [ForeignKey("Category")] 
         public string CategoryName { get; set; } 
-        public Category Category { get; set; } 
         public string ThreadBody { get; set; }
         public DateTime ThreadCreatedAt { get; set; }  = DateTime.Now;
         public DateTime ThreadLastEditedAt { get; set; } = DateTime.Now; //Initialises as DateTime.Now since the last edit was at the time of creation

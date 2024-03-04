@@ -16,16 +16,15 @@ public class ThreadController : Controller
 {
     //Initialise controllers and interfaces for constructor
     private readonly IThreadRepository _threadRepository;
-    private readonly ICategoryRepository _categoryRepository;
+
     private readonly ICommentRepository _commentRepository;
     private readonly ILogger<ThreadController> _logger;
 
-    public ThreadController(IThreadRepository threadDbContext, ICategoryRepository categoryRepository,
+    public ThreadController(IThreadRepository threadDbContext,
         ICommentRepository commentRepository,
         ILogger<ThreadController> logger)
     {
         _threadRepository = threadDbContext;
-        _categoryRepository = categoryRepository;
         _commentRepository = commentRepository;
         _logger = logger;
     }
@@ -36,11 +35,15 @@ public class ThreadController : Controller
         var errorMsg = "";
         try
         {
-            var threads = _threadRepository.GetAll();
-            foreach (var thread in threads)
+            var cookie = HttpContext.Request.Cookies["SessionCookie"];
+            if (cookie == null)
             {
-                thread.ThreadComments?.AddRange(GetComments(thread));
+                errorMsg = "Error getting threads. Your cookie is invalid";
+                return RedirectToAction("Error", "Home", new { errorMsg });
             }
+            
+            var threads = _threadRepository.GetAll(cookie);
+         
             // Create view model for thread and displays them
             var threadListViewModel = new ThreadListViewModel(threads, "Table");
             ViewBag.CurrentView = "ThreadTable";
@@ -85,9 +88,15 @@ public class ThreadController : Controller
 
     public IActionResult Thread(int threadId)
     {
+        var cookie = HttpContext.Request.Cookies["SessionCookie"];
+        if (cookie == null)
+        {
+            var errorMsg = "Error getting threads. Your cookie is invalid";
+            return RedirectToAction("Error", "Home", new { errorMsg });
+        }
         try
         {
-            var thread = _threadRepository.GetThreadById(threadId);
+            var thread = _threadRepository.GetThreadById(threadId, cookie);
 
             if (thread == null)
             {
@@ -159,9 +168,6 @@ public class ThreadController : Controller
             var cookie = HttpContext.Request.Cookies["SessionCookie"];
             if (cookie != null)
             {
-                // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
-                var categories = _categoryRepository.GetCategories();// Fetch all categories from the database.
-                ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
                 return View();
 
             }
@@ -193,9 +199,6 @@ public class ThreadController : Controller
             {
                 // Content is empty, add a model error
                 ModelState.AddModelError("ThreadContent", "Thread content is required.");
-                // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
-                var categories = _categoryRepository.GetCategories(); // Fetch all categories from the database.
-                ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
                 return View(thread);
             }
 
@@ -236,11 +239,7 @@ public class ThreadController : Controller
             var cookie = HttpContext.Request.Cookies["SessionCookie"];
             if (cookie != null) // Check cookie is made
             {
-                // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
-                var categories = _categoryRepository.GetCategories(); //Fetch all categories from the database.
-                ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
-                
-                Thread threadToEdit = _threadRepository.GetThreadById(threadId);  // Retrieve thread to edit with threadId
+                Thread threadToEdit = _threadRepository.GetThreadById(threadId, cookie);  // Retrieve thread to edit with threadId
                 
                 // Checks if the user is the owner or admin before allowing to edit
                 if (cookie == threadToEdit.UserCookie) 
@@ -283,10 +282,7 @@ public class ThreadController : Controller
                 {
                     // Content is empty, add a model error
                     ModelState.AddModelError("ThreadContent", "Thread content is required.");
-                    // Gets thread categories and passes them to View. Used to generate dropdown list of available thread categories 
-                    var categories = _categoryRepository.GetCategories(); // Fetch all categories from the database.
-                    ViewBag.Categories = new SelectList(categories, "CategoryName", "CategoryName");
-                    Thread threadToEdit = _threadRepository.GetThreadById(thread.ThreadId);
+                    Thread threadToEdit = _threadRepository.GetThreadById(thread.ThreadId, cookie);
                     return View("Edit", threadToEdit);
                 }
                 
@@ -297,7 +293,6 @@ public class ThreadController : Controller
                     return RedirectToAction("Error", "Home", new { errorMsg });
                 }
 
-                ModelState.Remove("Category");
                 try
                 {
                     if (ModelState.IsValid)
@@ -330,12 +325,16 @@ public class ThreadController : Controller
     // Delete thread with given threadId if user has permission
     public async Task<IActionResult> DeleteThread(int threadId)
     {
-        Thread thread = _threadRepository.GetThreadById(threadId);
-        
-        // Checks if the user is either the owner of the comment or an admin before deleting
         var cookie = HttpContext.Request.Cookies["SessionCookie"];
         string errorMsg = "";
-
+        if (cookie == null)
+        {
+            errorMsg = "Error getting threads. Your cookie is invalid";
+            return RedirectToAction("Error", "Home", new { errorMsg });
+        }
+        Thread thread = _threadRepository.GetThreadById(threadId, cookie);
+        
+        // Checks if the user is either the owner of the comment or an admin before deleting
         try
         {
             if (thread.UserCookie != cookie) //If user is admin or owner
@@ -359,7 +358,14 @@ public class ThreadController : Controller
     // Search for posts in the database with provided search query
     public IActionResult SearchPosts(string searchQuery)
     {
-        var threads = _threadRepository.GetAll();
+        var cookie = HttpContext.Request.Cookies["SessionCookie"];
+        if (cookie == null)
+        {
+            var errorMsg = "Error getting threads. Your cookie is invalid";
+            return RedirectToAction("Error", "Home", new { errorMsg });
+        }
+        
+        var threads = _threadRepository.GetAll(cookie);
         
         // Checks if whatever the user is typing exists
         if (!string.IsNullOrEmpty(searchQuery))

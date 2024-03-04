@@ -1,12 +1,9 @@
-@using Microsoft.AspNetCore.Identity
 @model Diskusjonsforum.Models.Thread
 
 @await Html.PartialAsync("_ThreadView")
 
 @{ 
     var userId = Context.Request.Cookies["SessionCookie"];
-    bool userIsAdmin = false;
-
 }
 
 <div class="vertical-button-container">
@@ -15,11 +12,6 @@
     {
         <a class="btn btn-primary" asp-controller="Thread" asp-action="Edit" asp-route-threadId="@Model.ThreadId"> Edit @Model.ThreadId </a>
         <a class="btn btn-warning" asp-controller="Thread" asp-action="DeleteThread" asp-route-threadId="@Model.ThreadId"> DeleteThread @Model.ThreadId </a>
-    }
-    else if (userIsAdmin)
-    {
-        <a class="btn btn-warning" asp-controller="Thread" asp-action="Edit" asp-route-threadId="@Model.ThreadId"> Edit as Admin @Model.ThreadId </a>
-        <a class="btn btn-warning" asp-controller="Thread" asp-action="DeleteThread" asp-route-threadId="@Model.ThreadId"> DeleteThread as Admin @Model.ThreadId </a>
     }
 </div>
 
@@ -30,7 +22,7 @@
     <div class="outermost-container">
         @foreach (var comment in Model.ThreadComments!.Where(c => c.ParentCommentId == null))
         {
-            await DisplayComment(Model, comment, userId, userIsAdmin);
+            await DisplayComment(Model, comment, userId, false);
         }
     </div>
 </ul>

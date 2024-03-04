@@ -2,8 +2,6 @@
 <ul class="navbar-nav justify-content-center align-items-center fs-5 flex-grow-1 pe-3">
     @{     var user = Context.Request.Cookies["SessionCookie"]; }
     
-        <li class="nav-item mx-2">
-            <p> @user </p>
-        </li>
+            <p class="text-info" title="Your session cookie is @user. It will expire within 24 hours."> Demo mode </p>
     
 </ul>

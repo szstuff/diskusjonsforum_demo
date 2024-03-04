@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Home Page";
+    var cookie = Context.Request.Cookies["SessionCookie"];
 }
 
 <link rel="stylesheet" href="~/css/IndexStyle.css" asp-append-version="true"/>
@@ -27,11 +28,11 @@
             <div class="col-md-6">
                 <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">
                     <div class="post">
-                        <div> <p class="thread-information"> <b>@thread.UserCookie</b> posted in <b>@thread.Category.CategoryName</b> on the <b>@thread.ThreadCreatedAt.ToString("yyyy-MM-dd HH:mm")</b></p></div>
+                        <div> <p class="thread-information"> <b>@thread.UserCookie</b> posted in <b>@thread.CategoryName</b> on the <b>@thread.ThreadCreatedAt.ToString("yyyy-MM-dd HH:mm")</b></p></div>
                         <hr/>
                         <div><p class="title-thread"><b>@thread.ThreadTitle</b></p></div>
                         <div><p class="thread-text">@Html.Raw(thread.ThreadBody.Substring(0, Math.Min(thread.ThreadBody.Length, 75))) @if(thread.ThreadBody.Length > 75){<span>(...)</span>}</p></div> <!-- Displays first 75 characters of a the ThreadBody -->
-                        <div><p class="comment-count">@thread.ThreadComments?.Count replies</p></div>
+                        <div><p class="comment-count">@thread.ThreadComments?.Where(t => t.UserCookie == cookie || t.UserCookie == "stilian").Count() replies</p></div>
                     </div>
                 </a>
                 <p></p>

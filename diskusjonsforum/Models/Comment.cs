@@ -26,7 +26,7 @@ namespace Diskusjonsforum.Models
         public string? UserId { get; set; }
         public virtual User User { get; set; }  = default!;
         */
-        public string UserCookie { get; set; }
+        public string? UserCookie { get; set; }
 
     }
 }

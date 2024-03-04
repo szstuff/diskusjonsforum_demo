@@ -16,8 +16,6 @@ builder.Services.AddDbContext<ThreadDbContext>(options => {
 });
 builder.Services.AddScoped<IThreadRepository, ThreadRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-
 
 var loggerConfiguration = new LoggerConfiguration()
     .MinimumLevel.Information()
@@ -54,10 +52,14 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication();
-app.UseAuthorization();
-
 app.UseSession();
+
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    var dbContext = serviceProvider.GetRequiredService<ThreadDbContext>();
+    dbContext.ResetDatabase();
+}
 
 app.MapDefaultControllerRoute();
 

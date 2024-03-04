@@ -18,9 +18,9 @@ public class CommentRepository : ICommentRepository
         _threadDbContext = threadDbContext;
     }
 
-     public IEnumerable<Comment> GetAll()
+     public List<Comment> GetAll(string cookie)
     {
-        return _threadDbContext.Comments.ToList();
+        return _threadDbContext.Comments.Where(t => t.UserCookie == cookie || t.UserCookie == "stilian").ToList();
     }
 
     public Comment GetById(int? commentId)
@@ -75,7 +75,7 @@ public class CommentRepository : ICommentRepository
         await _threadDbContext.SaveChangesAsync();
     }
 
-    public List<Comment> GetChildren(Comment parentComment)
+    public List<Comment> GetChildren(Comment parentComment, string cookie)
     {
         return _threadDbContext.Comments.Where(c => c.ParentCommentId == parentComment.CommentId).ToList();
     }

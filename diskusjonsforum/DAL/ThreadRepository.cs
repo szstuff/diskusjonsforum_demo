@@ -15,18 +15,16 @@ public class ThreadRepository : IThreadRepository
         _logger = logger;
     }
 
-    public IEnumerable<Thread> GetAll()
+    public IEnumerable<Thread> GetAll(string cookie)
     {
-        return _threadDbContext.Threads
-            .Include(t => t.ThreadComments)
-            .Include(t=>t.Category)
+        return _threadDbContext.Threads.Where(t => t.UserCookie == cookie || t.UserCookie == "stilian").Include(t => t.ThreadComments)
             .ToList();
     }
 
-    public Thread GetThreadById(int threadId)
+    public Thread GetThreadById(int threadId, string cookie)
     {
         var thread = _threadDbContext.Threads
-            .Include(t => t.ThreadComments)
+            .Include(t => t.ThreadComments.Where(t => t.UserCookie == cookie || t.UserCookie == "stilian"))
             .FirstOrDefault(t => t.ThreadId == threadId);
             //Access the entry for the thread to load Users into memory. Prevents issue where Users sometimes aren't loaded despite being included
             _threadDbContext.Entry(thread);

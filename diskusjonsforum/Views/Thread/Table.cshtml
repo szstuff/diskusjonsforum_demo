@@ -3,6 +3,9 @@
 <link rel="stylesheet" href="~/css/IndexStyle.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/thread_table.css" asp-append-version="true"/>
 
+@{
+    var cookie = Context.Request.Cookies["SessionCookie"];
+}
 
 <h3>Explore discussions</h3>
 <div class="container">
@@ -21,16 +24,16 @@
 
 <div class="container">
     <div id="postContainer" class="row">
-        @foreach (var thread in Model.Threads.OrderByDescending(t => t.ThreadCreatedAt).Take(6))
+        @foreach (var thread in Model.Threads.OrderByDescending(t => t.ThreadCreatedAt))
         {
             <div class="post col-md-12">
                 <a asp-controller="Thread" asp-action="Thread" asp-route-threadID="@thread.ThreadId">
                     <div>
-                        <div> <p class="thread-information"> <b>@thread.UserCookie</b> posted in <b class="category">@thread.Category.CategoryName</b> on the <b>@thread.ThreadCreatedAt.ToString("yyyy-MM-dd HH:mm")</b></p></div>
+                        <div> <p class="thread-information"> <b>@thread.UserCookie</b> posted in <b class="category">@thread.CategoryName</b> on the <b>@thread.ThreadCreatedAt.ToString("yyyy-MM-dd HH:mm")</b></p></div>
                         <hr/>
                         <div><p class="title-thread"><b>@thread.ThreadTitle</b></p></div>
                         <div><p class="thread-text">@Html.Raw(thread.ThreadBody)</p></div> <!-- Displays first 75 characters of a the ThreadBody -->
-                        <div><p class="comment-count">@thread.ThreadComments?.Count replies</p></div>
+                        <div><p class="comment-count">@thread.ThreadComments?.Where(t => t.UserCookie == cookie || t.UserCookie == "stilian").Count() replies</p></div>
                     </div>
                 </a>
                 <p></p>

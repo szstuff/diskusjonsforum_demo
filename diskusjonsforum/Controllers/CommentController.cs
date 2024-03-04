@@ -3,8 +3,6 @@ using diskusjonsforum.DAL;
 using Microsoft.AspNetCore.Mvc;
 using Diskusjonsforum.Models;
 using diskusjonsforum.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualStudio.Shell.Interop;
 using Thread = Diskusjonsforum.Models.Thread;
 
@@ -26,15 +24,14 @@ public class CommentController : Controller
     }
 
     //Returns list of all comments
-    public Task<List<Comment>> GetComments()
+    public List<Comment> GetComments(string cookie)
     {
-        var comments = new List<Comment>();
-        return Task.FromResult(comments);
+        List<Comment> comments = _commentRepository.GetAll(cookie);
+        return comments;
     }
     
     //Returns Comment/Create view
     [HttpGet("create/{parentCommentId}/{threadId}")] //URL when user replies to a comment or thread 
-    [Authorize]
     public async Task<IActionResult> Create(int? parentCommentId, int threadId)
     {
         if (parentCommentId == 0) {parentCommentId = null;} //If parentCommentId == 0, the comment is a direct reply to the thread
@@ -42,11 +39,10 @@ public class CommentController : Controller
         try
         {
             var cookie = HttpContext.Request.Cookies["SessionCookie"];
-            if (cookie == null)
+            if (cookie != null)
             {
                 Comment parentComment = _commentRepository.GetById(parentCommentId);
-                var thread = _threadRepository.GetThreadById(threadId);
-                thread.UserCookie = cookie;
+                var thread = _threadRepository.GetThreadById(threadId, cookie);
                 // Retrieve query parameters
                 // Create a CommentViewModel and populate it with data
                 var viewModel = new CommentCreateViewModel()
@@ -62,9 +58,8 @@ public class CommentController : Controller
             }
             else
             {
-                //Redirects to login page if user not logged in
-                return RedirectToPage("/Account/Login", new { area = "Identity" });
-
+                var errormsg = "[CommentController] An error occurred in the Create action. Your cookie might be invalid";
+                return RedirectToAction("Error", "Home", new { errormsg });
             }
         }
         catch (Exception ex)
@@ -77,14 +72,13 @@ public class CommentController : Controller
 
     //Saves comment submitted through the Create view 
     [HttpPost("save")]
-    [Authorize]
     public async Task<IActionResult> Save(Comment comment)
     {
         var errorMsg = "";
         try
         {
             var cookie = HttpContext.Request.Cookies["SessionCookie"];
-            if (cookie == null)
+            if (cookie != null)
             {
                 //Set comment details to current user 
                 comment.UserCookie = cookie;
@@ -99,7 +93,7 @@ public class CommentController : Controller
                         ThreadId = comment.ThreadId,
                         ParentCommentId = comment.ParentCommentId,
                         ParentComment = _commentRepository.GetById(comment.ParentCommentId),
-                        Thread = _threadRepository.GetThreadById(comment.ThreadId)
+                        Thread = _threadRepository.GetThreadById(comment.ThreadId, cookie)
                     };
                     return View("Create", viewModel);
                 }
@@ -132,17 +126,17 @@ public class CommentController : Controller
     }
 
     [HttpGet("edit/{{commentId}}/{{threadId}}")]
-    [Authorize]
     public IActionResult Edit(int commentId, int threadId)
     {
         try
         {
-            if (HttpContext.User.Identity!.IsAuthenticated)
+            var cookie = HttpContext.Request.Cookies["SessionCookie"];
+            if (cookie != null)
             {
                 Comment commentToEdit = _commentRepository.GetById(commentId);
                 Comment parentComment =
                     _commentRepository.GetById(commentToEdit.ParentCommentId); //Throws no exception because parentComment can be null (if user replied directly to thread) 
-                Thread thread = _threadRepository.GetThreadById(threadId);
+                Thread thread = _threadRepository.GetThreadById(threadId, cookie);
                 // Retrieve query parameters
                 // Create a CommentViewModel and populate it with data
                 var viewModel = new CommentCreateViewModel()
@@ -159,8 +153,8 @@ public class CommentController : Controller
             }
             else
             {
-                //Redirects to login page if user not logged in
-                return RedirectToPage("/Account/Login", new { area = "Identity" });
+                var errormsg = "[CommentController] An error occurred in the Create action. Your cookie might be invalid";
+                return RedirectToAction("Error", "Home", new { errormsg });
             }
         }
         catch (Exception ex) {
@@ -170,12 +164,11 @@ public class CommentController : Controller
         }
     }
     [HttpPost("comment/saveEdit")]
-    [Authorize]
     public async Task<IActionResult> SaveEdit(Comment comment)
     {
         var errorMsg = "";
         var cookie = HttpContext.Request.Cookies["SessionCookie"];
-        if (cookie == null)
+        if (cookie != null)
         {
             
             var uneditedComment = _commentRepository.GetById(comment.CommentId);
@@ -205,7 +198,7 @@ public class CommentController : Controller
             comment.ParentCommentId = uneditedComment.ParentCommentId;
             comment.CommentCreatedAt = uneditedComment.CommentCreatedAt;
             //Checks if user is owner before editing
-            if (comment.UserCookie == cookie)
+            if (comment.UserCookie != cookie)
             {
                 errorMsg = "Could not verify that you are the owner of the Thread";
                 return RedirectToAction("Error", "Home", new { errorMsg });
@@ -233,7 +226,7 @@ public class CommentController : Controller
             var cookie = HttpContext.Request.Cookies["SessionCookie"];
             if (comment.UserCookie == cookie)
             {
-                List<Comment> childcomments = AddChildren(comment);
+                List<Comment> childcomments = AddChildren(comment, cookie);
 
                 foreach (var child in childcomments)
                 {
@@ -263,13 +256,13 @@ public class CommentController : Controller
     }
 
     //recursively finds all replies to the comment 
-    private List<Comment> AddChildren(Comment parentComment)
+    private List<Comment> AddChildren(Comment parentComment, string cookie)
     {
-        List<Comment> newChildren = _commentRepository.GetChildren(parentComment);
+        List<Comment> newChildren = _commentRepository.GetChildren(parentComment, cookie);
         List<Comment> newerChildren = new List<Comment>();
         foreach (Comment child in newChildren)
         {
-            newerChildren.AddRange(AddChildren(child));
+            newerChildren.AddRange(AddChildren(child, cookie));
         }
         newChildren.AddRange(newerChildren);
         return newChildren;
